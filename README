@@ -1,0 +1,45 @@
+
+    Akmos is a cryptographic library with CLI
+
+=== Overview ===
+
+Akmos provides symmetric encryption/decryption, computing message digests (hashes)
+and calculating a message authentication code (MAC).
+Depends only on the standard C library. Primary develop for the x86_64 architecture.
+
+=== Feauters ===
+
+List of supported algorithms:
+block ciphers:
+ * Anubis
+ * Camellia
+ * CAST6
+ * RC6
+ * Rijndael
+ * Serpent
+ * Threefish
+ * Twofish
+
+digests:
+ * Ripemd (160/256/320)
+ * SHA1
+ * SHA2 (224/256/384/512)
+ * SHA3 (224/256/384/512)
+
+List of supported block cipher modes:
+ * CBC
+ * CFB
+ * CTR
+ * ECB
+ * OFB
+
+List of supported MAC modes:
+ * CMAC
+ * CBC-MAC
+ * HMAC
+
+=== Copyright ===
+
+Akmos is free software, distributed under the BSD License.
+Copyright (C) 2014-2015 Andrew Romamnenko <melanhit@gmail.com>
+

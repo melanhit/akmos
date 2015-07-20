@@ -1,0 +1,400 @@
+'\" t
+.\"     Title: akmos
+.\"    Author: Andrew Romanenko <melanhit@gmail.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: April, 2015
+.\"    Manual: AKMOS CLI REFERENCE
+.\"    Source: akmos 0.1
+.\"  Language: English
+.\"
+.TH "AKMOS" "1" "April, 2015" "akmos 0.1" "AKMOS CLI REFERENCE"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+akmos \- sets of cryptography utils
+.SH "SYNOPSIS"
+.HP \w'\fBakmos\fR\ 'u
+\fBakmos\fR {action} [options]
+.SH "DESCRIPTION"
+.PP
+The
+\fBakmos\fR
+utility is used for encryption/decryption files and streams, compute message digests and other\&.
+.PP
+Here is the list of available actions:
+.PP
+\fBdgst\fR
+.RS 4
+calculate message digests
+.RE
+.PP
+\fBenc\fR, \fBdec\fR
+.RS 4
+symmetric ciphering
+.RE
+.PP
+\fBmac\fR
+.RS 4
+compute message authentication code
+.RE
+.PP
+\fBhelp\fR
+.RS 4
+print short help
+.RE
+.SH "SYMMETRIC CIPHERING"
+.SS ""
+.HP \w'\fBakmos\ enc|dec\fR\ 'u
+\fBakmos enc|dec\fR [\-a\ \fIalgo\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-i\ \fIiter\fR] [\-y] [\-h] {input} {output}
+.SS "Options"
+.PP
+.PP
+\-a\ algo
+.RS 4
+Crypto algorithm to use\&. By default is
+\fBTwofish\fR
+.RE
+.PP
+\-m\ mode
+.RS 4
+Crypto mode to use\&. By default is
+\fBCBC\fR
+.RE
+.PP
+\-k\ keyfile
+.RS 4
+Specifies a file which contains the keyfile
+.sp
+NOTE: size of keyfile is limited by
+\fB1 MiB\fR
+.RE
+.PP
+\-p
+.RS 4
+Use a passphrase as a component of the keyfile
+.RE
+.PP
+\-l\ keylen
+.RS 4
+Key length (in bits) to use with the given crypto algorithm\&. By default is
+\fB128\fR
+.RE
+.PP
+\-i\ iter
+.RS 4
+Number of iterations to use with PKCS#5v2 when processing passphrase component
+.RE
+.PP
+\-y
+.RS 4
+Overwrite output file without promt
+.RE
+.PP
+\-h
+.RS 4
+Print short help
+.RE
+.SS "Algorithms"
+.PP
+Supported crypto algorithms:
+\fIAnubis\fR, \fICamellia\fR, \fICAST6\fR, \fIRC6\fR, \fIRijndael\fR, \fISerpent\fR, \fITwofish\fR, \fIThreefish\-256\fR, \fIThreefish\-512\fR, \fIThreefish\-1024\fR
+.SS "Modes"
+.PP
+Supported crypto modes:
+\fIECB\fR, \fICBC\fR, \fIOFB\fR, \fICTR\fR, \fICFB\fR
+.SS "Key length"
+.TS
+allbox tab(:);
+l l l l l l l.
+T{
+
+T}:T{
+128
+T}:T{
+192
+T}:T{
+256
+T}:T{
+320
+T}:T{
+512
+T}:T{
+1024
+T}
+.T&
+l l l l l l l
+l l l l l l l
+l l l l l l l
+l l l l l l l
+l l l l l l l
+l l l l l l l
+l l l l l l l
+l l l l l l l
+l l l l l l l
+l l l l l l l.
+T{
+Anubis
+T}:T{
+X
+T}:T{
+X
+T}:T{
+X
+T}:T{
+X
+T}:T{
+
+T}:T{
+
+T}
+T{
+Camellia
+T}:T{
+X
+T}:T{
+X
+T}:T{
+X
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}
+T{
+CAST6
+T}:T{
+X
+T}:T{
+X
+T}:T{
+X
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}
+T{
+RC6
+T}:T{
+X
+T}:T{
+X
+T}:T{
+X
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}
+T{
+Rijndael
+T}:T{
+X
+T}:T{
+X
+T}:T{
+X
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}
+T{
+Serpent
+T}:T{
+X
+T}:T{
+X
+T}:T{
+X
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}
+T{
+Twofish
+T}:T{
+X
+T}:T{
+X
+T}:T{
+X
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}
+T{
+Threefish-256
+T}:T{
+
+T}:T{
+
+T}:T{
+X
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}
+T{
+Threefish-512
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}:T{
+X
+T}:T{
+
+T}
+T{
+Threefish-1024
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}:T{
+
+T}:T{
+X
+T}
+.TE
+.sp 1
+.SH "HASHING"
+.SS ""
+.HP \w'\fBakmos\ dgst\fR\ 'u
+\fBakmos dgst\fR [\-a\ \fIalgo\fR] [\-b] [\-h] \fIinput\fR...
+.SS "Options"
+.PP
+.PP
+\-a\ algo
+.RS 4
+Digest algorithm to use\&. By default is
+\fBSHA2\-256\fR
+.RE
+.PP
+\-b
+.RS 4
+Output result in binary format\&. By default use hexadecimal
+.RE
+.PP
+\-h
+.RS 4
+Print short help
+.RE
+.SS "Algorithms"
+.PP
+Supported digest algorithms:
+\fIRIPEMD\-160\fR, \fIRIPEMD\-256\fR, \fIRIPEMD\-320\fR, \fISHA1\fR, \fISHA2\-224\fR, \fISHA2\-256\fR, \fISHA2\-384\fR, \fISHA2\-512\fR, \fISHA3\-224\fR, \fISHA3\-256\fR, \fISHA3\-384\fR, \fISHA3\-512\fR
+.SH "MESSAGE AUTHENTICATION CODE (MAC)"
+.SS ""
+.HP \w'\fBakmos\ mac\fR\ 'u
+\fBakmos mac\fR [\-a\ \fIalgo\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-b] [\-h] \fIinput\fR...
+.SS "Options"
+.PP
+.PP
+\-m\ mode
+.RS 4
+MAC mode to use\&. By default is
+\fBHMAC\fR
+.RE
+.PP
+\-a\ algo
+.RS 4
+Algorithm to use\&. By default is
+\fBSHA2\-256\fR
+for
+\fBHMAC\fR
+mode
+.RE
+.PP
+\-k\ keyfile
+.RS 4
+Specifies a file which contains the keyfile
+.sp
+NOTE: size of keyfile is limited by
+\fB1 MiB\fR
+.RE
+.PP
+\-p
+.RS 4
+Use a passphrase as a component of the keyfile
+.RE
+.PP
+\-l\ keylen
+.RS 4
+Key length (in bits) to use with the given algorithm\&.
+.sp
+NOTE: used in
+\fBCBC\-MAC\fR
+mode
+.RE
+.PP
+\-b
+.RS 4
+Output computed MAC in raw (binary) form\&.
+.RE
+.PP
+\-h
+.RS 4
+Print short help
+.RE
+.SS "Modes"
+.PP
+Supported MAC modes:
+\fIHMAC\fR, \fICBC\-MAC\fR, \fICMAC\fR
+.SH "EXIT STATUS"
+.PP
+The
+\fBakmos\fR
+utility exits
+\fB0\fR
+on successful completion, and
+\fB>0\fR
+otherwise
+.SH "AUTHOR"
+.PP
+\fBAndrew Romanenko\fR <\&melanhit@gmail\&.com\&>
+.RS 4
+.RE

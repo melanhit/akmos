@@ -1,0 +1,16 @@
+Changes to akmos-0.3 (22 May 2015)
+    * add Rijndael (AES) cipher algo
+    * add CMAC, CBC-MAC modes
+    * support MAC in cli util
+    * add assembler version (amd64) of the 'threefish-256' cipher algo
+    * fix build errors on FreeBSD
+    * small fixes, code cleanup
+
+Changes to akmos-0.2.1 (20 Mar 2015):
+    * use secure memory zeroing
+
+Changes to akmos-0.2 (18 Mar 2015):
+    + add cipher modes CFB and CTR
+    + add cipher algo Camellia (64bit optimized)
+    * fix prompt for overwrite output in the CLI
+

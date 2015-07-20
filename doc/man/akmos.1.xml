@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<article xmlns='http://docbook.org/ns/docbook'>
+    <title>AKMOS CLI REFERENCE</title>
+    <refentry xml:id="akmos">
+        <info>
+            <author>
+                <firstname>Andrew</firstname>
+                <surname>Romanenko</surname>
+                <email>melanhit@gmail.com</email>
+                <contrib></contrib>
+            </author>
+            <date>April, 2015</date>
+            <productname>akmos 0.1</productname>
+        </info>
+
+        <refmeta>
+            <refentrytitle>akmos</refentrytitle>
+            <manvolnum>1</manvolnum>
+        </refmeta>
+        <refnamediv>
+            <refname>akmos</refname>
+            <refpurpose>sets of cryptography utils</refpurpose>
+            <refclass>UNIX/Linux</refclass>
+        </refnamediv>
+
+        <refsynopsisdiv>
+            <cmdsynopsis>
+                <command>akmos</command>
+                <arg choice='req'>action</arg>
+                <arg choice='opt'>options</arg>
+            </cmdsynopsis>
+        </refsynopsisdiv>
+
+        <refsect1>
+            <title>Description</title>
+            <para>
+                The <command>akmos</command> utility is used for encryption/decryption files and streams,
+                compute message digests and other.
+            </para>
+            <para>
+                Here is the list of available actions:
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term><command>dgst</command></term>
+                    <listitem>
+                        <para>calculate message digests</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><command>enc</command>, <command>dec</command></term>
+                    <listitem>
+                        <para>symmetric ciphering</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><command>mac</command></term>
+                    <listitem>
+                        <para>compute message authentication code</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><command>help</command></term>
+                    <listitem>
+                        <para>print short help</para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect1>
+
+        <refsect1>
+            <title>Symmetric Ciphering</title>
+            <refsect2>
+                <cmdsynopsis>
+                    <command>akmos enc|dec</command>
+                    <arg>-a <replaceable>algo</replaceable></arg>
+                    <arg>-m <replaceable>mode</replaceable></arg>
+                    <arg>-k <replaceable>keyfile</replaceable></arg>
+                    <arg>-l <replaceable>keylen</replaceable></arg>
+                    <arg>-p</arg>
+                    <arg>-i <replaceable>iter</replaceable></arg>
+                    <arg>-y</arg>
+                    <arg>-h</arg>
+                    <arg choice='req'>input</arg>
+                    <arg choice='req'>output</arg>
+                </cmdsynopsis>
+            </refsect2>
+
+            <refsect2>
+                <title>Options</title>
+                <para>
+                    <variablelist>
+                        <varlistentry>
+                            <term><arg choice="plain">-a algo</arg></term>
+                            <listitem>
+                                <para>Crypto algorithm to use. By default is <constant>Twofish</constant></para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-m mode</arg></term>
+                            <listitem>
+                                <para>Crypto mode to use. By default is <constant>CBC</constant></para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-k keyfile</arg></term>
+                            <listitem>
+                                <para>Specifies a file which contains the keyfile</para>
+                                <para>NOTE: size of keyfile is limited by <constant>1 MiB</constant></para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-p</arg></term>
+                            <listitem>
+                                <para>Use a passphrase as a component of the keyfile</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-l keylen</arg></term>
+                            <listitem>
+                                <para>
+                                    Key length (in bits) to use with the given crypto algorithm.
+                                    By default is <constant>128</constant>
+                                </para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-i iter</arg></term>
+                            <listitem>
+                                <para>Number of iterations to use with PKCS#5v2 when processing passphrase component</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-y</arg></term>
+                            <listitem>
+                                <para>Overwrite output file without promt</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-h</arg></term>
+                            <listitem>
+                                <para>Print short help</para>
+                            </listitem>
+                        </varlistentry>
+                    </variablelist>
+                </para>
+            </refsect2>
+
+            <refsect2>
+                <title>Algorithms</title>
+                <para>
+                    Supported crypto algorithms:
+                    <simplelist type='inline'>
+                        <member><parameter class='command'>Anubis</parameter></member>
+                        <member><parameter class='command'>Camellia</parameter></member>
+                        <member><parameter class='command'>CAST6</parameter></member>
+                        <member><parameter class='command'>RC6</parameter></member>
+                        <member><parameter class='command'>Rijndael</parameter></member>
+                        <member><parameter class='command'>Serpent</parameter></member>
+                        <member><parameter class='command'>Twofish</parameter></member>
+                        <member><parameter class='command'>Threefish-256</parameter></member>
+                        <member><parameter class='command'>Threefish-512</parameter></member>
+                        <member><parameter class='command'>Threefish-1024</parameter></member>
+                    </simplelist>
+                </para>
+            </refsect2>
+
+            <refsect2>
+                <title>Modes</title>
+                <para>
+                    Supported crypto modes:
+                    <simplelist type='inline'>
+                        <member><parameter class='command'>ECB</parameter></member>
+                        <member><parameter class='command'>CBC</parameter></member>
+                        <member><parameter class='command'>OFB</parameter></member>
+                        <member><parameter class='command'>CTR</parameter></member>
+                        <member><parameter class='command'>CFB</parameter></member>
+                    </simplelist>
+                </para>
+            </refsect2>
+
+            <refsect2>
+                <title>Key length</title>
+                <informaltable>
+                    <thead>
+                        <tr>
+                            <td></td><td>128</td><td>192</td><td>256</td><td>320</td><td>512</td><td>1024</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Anubis</td><td>X</td><td>X</td><td>X</td><td>X</td><td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Camellia</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>CAST6</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>RC6</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Rijndael</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Serpent</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Twofish</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Threefish-256</td><td></td><td></td><td>X</td><td></td><td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Threefish-512</td><td></td><td></td><td></td><td></td><td>X</td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Threefish-1024</td><td></td><td></td><td></td><td></td><td></td><td>X</td>
+                        </tr>
+                    </tbody>
+                </informaltable>
+            </refsect2>
+        </refsect1>
+
+        <refsect1>
+            <title>Hashing</title>
+            <refsect2>
+                <cmdsynopsis>
+                    <command>akmos dgst</command>
+                    <arg>-a <replaceable>algo</replaceable></arg>
+                    <arg>-b</arg>
+                    <arg>-h</arg>
+                    <arg rep='repeat' choice='plain'><replaceable>input</replaceable></arg>
+                </cmdsynopsis>
+            </refsect2>
+
+            <refsect2>
+                <title>Options</title>
+                <para>
+                    <variablelist>
+                        <varlistentry>
+                            <term><arg choice="plain">-a algo</arg></term>
+                            <listitem>
+                                <para>Digest algorithm to use. By default is <constant>SHA2-256</constant></para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-b</arg></term>
+                            <listitem>
+                                <para>Output result in binary format. By default use hexadecimal</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-h</arg></term>
+                            <listitem>
+                                <para>Print short help</para>
+                            </listitem>
+                         </varlistentry>
+                    </variablelist>
+                </para>
+            </refsect2>
+
+            <refsect2>
+                <title>Algorithms</title>
+                <para>
+                    Supported digest algorithms:
+                    <simplelist type='inline'>
+                        <member><parameter class='command'>RIPEMD-160</parameter></member>
+                        <member><parameter class='command'>RIPEMD-256</parameter></member>
+                        <member><parameter class='command'>RIPEMD-320</parameter></member>
+                        <member><parameter class='command'>SHA1</parameter></member>
+                        <member><parameter class='command'>SHA2-224</parameter></member>
+                        <member><parameter class='command'>SHA2-256</parameter></member>
+                        <member><parameter class='command'>SHA2-384</parameter></member>
+                        <member><parameter class='command'>SHA2-512</parameter></member>
+                        <member><parameter class='command'>SHA3-224</parameter></member>
+                        <member><parameter class='command'>SHA3-256</parameter></member>
+                        <member><parameter class='command'>SHA3-384</parameter></member>
+                        <member><parameter class='command'>SHA3-512</parameter></member>
+                    </simplelist>
+                </para>
+            </refsect2>
+        </refsect1>
+
+        <refsect1>
+            <title>Message Authentication Code (MAC)</title>
+            <refsect2>
+                <cmdsynopsis>
+                    <command>akmos mac</command>
+                    <arg>-a <replaceable>algo</replaceable></arg>
+                    <arg>-m <replaceable>mode</replaceable></arg>
+                    <arg>-k <replaceable>keyfile</replaceable></arg>
+                    <arg>-l <replaceable>keylen</replaceable></arg>
+                    <arg>-p</arg>
+                    <arg>-b</arg>
+                    <arg>-h</arg>
+                    <arg rep='repeat' choice='plain'><replaceable>input</replaceable></arg>
+                </cmdsynopsis>
+            </refsect2>
+
+            <refsect2>
+                <title>Options</title>
+                <para>
+                    <variablelist>
+                        <varlistentry>
+                            <term><arg choice="plain">-m mode</arg></term>
+                            <listitem>
+                                <para>MAC mode to use. By default is <constant>HMAC</constant></para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-a algo</arg></term>
+                            <listitem>
+                                <para>Algorithm to use. By default is <constant>SHA2-256</constant> for <constant>HMAC</constant> mode</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-k keyfile</arg></term>
+                            <listitem>
+                                <para>Specifies a file which contains the keyfile</para>
+                                <para>NOTE: size of keyfile is limited by <constant>1 MiB</constant></para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-p</arg></term>
+                            <listitem>
+                                <para>Use a passphrase as a component of the keyfile</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-l keylen</arg></term>
+                            <listitem>
+                                <para>Key length (in bits) to use with the given algorithm.</para>
+                                <para>NOTE: used in <constant>CBC-MAC</constant> mode</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-b</arg></term>
+                            <listitem>
+                                <para>Output computed MAC in raw (binary) form.</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-h</arg></term>
+                            <listitem>
+                                <para>Print short help</para>
+                            </listitem>
+                        </varlistentry>
+                    </variablelist>
+                </para>
+            </refsect2>
+
+            <refsect2>
+                <title>Modes</title>
+                <para>
+                    Supported MAC modes:
+                    <simplelist type='inline'>
+                        <member><parameter class='command'>HMAC</parameter></member>
+                        <member><parameter class='command'>CBC-MAC</parameter></member>
+                        <member><parameter class='command'>CMAC</parameter></member>
+                    </simplelist>
+                </para>
+            </refsect2>
+        </refsect1>
+
+        <refsect1>
+            <title>Exit status</title>
+            <para>
+                The <command>akmos</command> utility exits <constant>0</constant> on successful completion,
+                and <constant>&gt;0</constant> otherwise
+            </para>
+        </refsect1>
+    </refentry>
+</article>
