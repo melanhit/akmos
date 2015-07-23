@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -90,6 +90,10 @@ int akmos_digest_init(akmos_digest_ctx **ctx, akmos_algo_id algo)
 
         case AKMOS_ALGO_RIPEMD_320:
             ptr->xalgo = &akmos_xalgo_ripemd_320;
+            break;
+        
+        case AKMOS_ALGO_TIGER:
+            ptr->xalgo = &akmos_xalgo_tiger;
             break;
 
         default:

@@ -43,6 +43,7 @@ set(src_lib
     algo/threefish_1024.c
     algo/camellia.c
     algo/rijndael.c
+    algo/tiger.c
     kdf/kdf2.c
     mode/ecb.c
     mode/cbc.c

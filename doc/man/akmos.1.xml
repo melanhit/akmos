@@ -278,6 +278,7 @@
                         <member><parameter class='command'>SHA3-256</parameter></member>
                         <member><parameter class='command'>SHA3-384</parameter></member>
                         <member><parameter class='command'>SHA3-512</parameter></member>
+                        <member><parameter class='command'>TIGER</parameter></member>
                     </simplelist>
                 </para>
             </refsect2>

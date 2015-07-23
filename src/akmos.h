@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,8 @@ typedef enum {
     AKMOS_ALGO_THREEFISH_512,
     AKMOS_ALGO_THREEFISH_1024,
     AKMOS_ALGO_CAMELLIA,
-    AKMOS_ALGO_RIJNDAEL
+    AKMOS_ALGO_RIJNDAEL,
+    AKMOS_ALGO_TIGER
 } akmos_algo_id;
 
 typedef enum {

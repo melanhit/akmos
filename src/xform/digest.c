@@ -127,3 +127,11 @@ akmos_digest_xalgo_t akmos_xalgo_sha3_512 = {
     (void *)akmos_sha3_update,
     (void *)akmos_sha3_done
 };
+
+akmos_digest_xalgo_t akmos_xalgo_tiger = {
+    AKMOS_ALGO_TIGER, "Tiger",
+    AKMOS_TIGER_BLKLEN, AKMOS_TIGER_DIGLEN,
+    (void *)akmos_tiger_init,
+    (void *)akmos_tiger_update,
+    (void *)akmos_tiger_done
+};

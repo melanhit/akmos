@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -85,6 +85,8 @@ int akmos_str2algo(const char *name)
         return AKMOS_ALGO_CAMELLIA;
     else if(strcasecmp(name, akmos_xalgo_rijndael.name) == 0)
         return AKMOS_ALGO_RIJNDAEL;
+    else if(strcasecmp(name, akmos_xalgo_tiger.name) == 0)
+        return AKMOS_ALGO_TIGER;
     else
         return -1;
 }
@@ -181,6 +183,9 @@ const char *akmos_algo2str(akmos_algo_id algo)
 
         case AKMOS_ALGO_RIJNDAEL:
             return akmos_xalgo_rijndael.name;
+        
+        case AKMOS_ALGO_TIGER:
+            return akmos_xalgo_tiger.name;
 
         default:
             return NULL;
@@ -257,6 +262,9 @@ size_t akmos_diglen(akmos_algo_id algo)
 
         case AKMOS_ALGO_RIPEMD_320:
             return AKMOS_RIPEMD_320_DIGLEN;
+        
+        case AKMOS_ALGO_TIGER:
+            return AKMOS_TIGER_DIGLEN;
 
         default:
             return 0;
@@ -331,6 +339,9 @@ size_t akmos_blklen(akmos_algo_id algo)
 
         case AKMOS_ALGO_RIJNDAEL:
             return AKMOS_RIJNDAEL_BLKLEN;
+        
+        case AKMOS_ALGO_TIGER:
+            return AKMOS_TIGER_BLKLEN;
 
         default:
             return 0;

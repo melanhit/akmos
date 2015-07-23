@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,51 +26,21 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_DIGEST_H
-#define AKMOS_DIGEST_H
+#ifndef AKMOS_ALGO_TIGER_H
+#define AKMOS_ALGO_TIGER_H
 
-#include "algo/ripemd.h"
-#include "algo/sha1.h"
-#include "algo/sha2.h"
-#include "algo/sha3.h"
-#include "algo/tiger.h"
-
-typedef union {
-    akmos_ripemd_t      ripemd;
-    akmos_sha1_t        sha1;
-    akmos_sha2_256_t    sha2_256;
-    akmos_sha2_512_t    sha2_512;
-    akmos_sha3_t        sha3;
-    akmos_tiger_t       tiger;
-} akmos_digest_algo_ctx;
+#define AKMOS_TIGER_DIGLEN      24
+#define AKMOS_TIGER_BLKLEN      64
 
 typedef struct {
-    akmos_algo_id id;
-    char *name;
-    size_t blklen;
-    size_t diglen;
-    void (*init)   (void *);
-    void (*update) (void *, const uint8_t *, size_t);
-    void (*done)   (void *, uint8_t *);
-} akmos_digest_xalgo_t;
+    uint64_t h[3];
+    uint8_t  block[2 * AKMOS_TIGER_BLKLEN];
+    size_t   total;
+    size_t   len;
+} akmos_tiger_t;
 
-struct akmos_digest_s {
-    akmos_digest_xalgo_t    *xalgo;
-    akmos_digest_algo_ctx   actx;
-};
+void akmos_tiger_init   (akmos_tiger_t *);
+void akmos_tiger_update (akmos_tiger_t *, const uint8_t *, size_t);
+void akmos_tiger_done   (akmos_tiger_t *, uint8_t *);
 
-extern akmos_digest_xalgo_t akmos_xalgo_ripemd_160;
-extern akmos_digest_xalgo_t akmos_xalgo_ripemd_256;
-extern akmos_digest_xalgo_t akmos_xalgo_ripemd_320;
-extern akmos_digest_xalgo_t akmos_xalgo_sha1;
-extern akmos_digest_xalgo_t akmos_xalgo_sha2_224;
-extern akmos_digest_xalgo_t akmos_xalgo_sha2_256;
-extern akmos_digest_xalgo_t akmos_xalgo_sha2_384;
-extern akmos_digest_xalgo_t akmos_xalgo_sha2_512;
-extern akmos_digest_xalgo_t akmos_xalgo_sha3_224;
-extern akmos_digest_xalgo_t akmos_xalgo_sha3_256;
-extern akmos_digest_xalgo_t akmos_xalgo_sha3_384;
-extern akmos_digest_xalgo_t akmos_xalgo_sha3_512;
-extern akmos_digest_xalgo_t akmos_xalgo_tiger;
-
-#endif  /* AKMOS_DIGEST_H */
+#endif  /* AKMOS_ALGO_TIGER_H */
