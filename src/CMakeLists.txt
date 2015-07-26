@@ -44,6 +44,7 @@ set(src_lib
     algo/camellia.c
     algo/rijndael.c
     algo/tiger.c
+    algo/whirlpool.c
     kdf/kdf2.c
     mode/ecb.c
     mode/cbc.c

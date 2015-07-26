@@ -62,7 +62,8 @@ typedef enum {
     AKMOS_ALGO_THREEFISH_1024,
     AKMOS_ALGO_CAMELLIA,
     AKMOS_ALGO_RIJNDAEL,
-    AKMOS_ALGO_TIGER
+    AKMOS_ALGO_TIGER,
+    AKMOS_ALGO_WHIRLPOOL
 } akmos_algo_id;
 
 typedef enum {

@@ -87,6 +87,8 @@ int akmos_str2algo(const char *name)
         return AKMOS_ALGO_RIJNDAEL;
     else if(strcasecmp(name, akmos_xalgo_tiger.name) == 0)
         return AKMOS_ALGO_TIGER;
+    else if(strcasecmp(name, akmos_xalgo_whirlpool.name) == 0)
+        return AKMOS_ALGO_WHIRLPOOL;
     else
         return -1;
 }
@@ -183,9 +185,12 @@ const char *akmos_algo2str(akmos_algo_id algo)
 
         case AKMOS_ALGO_RIJNDAEL:
             return akmos_xalgo_rijndael.name;
-        
+
         case AKMOS_ALGO_TIGER:
             return akmos_xalgo_tiger.name;
+
+        case AKMOS_ALGO_WHIRLPOOL:
+            return akmos_xalgo_whirlpool.name;
 
         default:
             return NULL;
@@ -262,9 +267,12 @@ size_t akmos_diglen(akmos_algo_id algo)
 
         case AKMOS_ALGO_RIPEMD_320:
             return AKMOS_RIPEMD_320_DIGLEN;
-        
+
         case AKMOS_ALGO_TIGER:
             return AKMOS_TIGER_DIGLEN;
+
+        case AKMOS_ALGO_WHIRLPOOL:
+            return AKMOS_WHIRLPOOL_DIGLEN;
 
         default:
             return 0;
@@ -339,9 +347,12 @@ size_t akmos_blklen(akmos_algo_id algo)
 
         case AKMOS_ALGO_RIJNDAEL:
             return AKMOS_RIJNDAEL_BLKLEN;
-        
+
         case AKMOS_ALGO_TIGER:
             return AKMOS_TIGER_BLKLEN;
+
+        case AKMOS_ALGO_WHIRLPOOL:
+            return AKMOS_WHIRLPOOL_BLKLEN;
 
         default:
             return 0;

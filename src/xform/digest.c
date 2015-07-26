@@ -135,3 +135,11 @@ akmos_digest_xalgo_t akmos_xalgo_tiger = {
     (void *)akmos_tiger_update,
     (void *)akmos_tiger_done
 };
+
+akmos_digest_xalgo_t akmos_xalgo_whirlpool = {
+    AKMOS_ALGO_WHIRLPOOL, "Whirlpool",
+    AKMOS_WHIRLPOOL_BLKLEN, AKMOS_WHIRLPOOL_DIGLEN,
+    (void *)akmos_whirlpool_init,
+    (void *)akmos_whirlpool_update,
+    (void *)akmos_whirlpool_done
+};

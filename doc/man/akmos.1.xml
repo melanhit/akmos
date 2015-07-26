@@ -279,6 +279,7 @@
                         <member><parameter class='command'>SHA3-384</parameter></member>
                         <member><parameter class='command'>SHA3-512</parameter></member>
                         <member><parameter class='command'>TIGER</parameter></member>
+                        <member><parameter class='command'>WHIRLPOOL</parameter></member>
                     </simplelist>
                 </para>
             </refsect2>

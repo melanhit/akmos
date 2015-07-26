@@ -91,9 +91,13 @@ int akmos_digest_init(akmos_digest_ctx **ctx, akmos_algo_id algo)
         case AKMOS_ALGO_RIPEMD_320:
             ptr->xalgo = &akmos_xalgo_ripemd_320;
             break;
-        
+
         case AKMOS_ALGO_TIGER:
             ptr->xalgo = &akmos_xalgo_tiger;
+            break;
+
+        case AKMOS_ALGO_WHIRLPOOL:
+            ptr->xalgo = &akmos_xalgo_whirlpool;
             break;
 
         default:
