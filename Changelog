@@ -1,3 +1,6 @@
+Changes to akmos-0.3.1 (27 July 2015)
+    * add Tiger and Whirlpool digests algo
+
 Changes to akmos-0.3 (22 May 2015)
     * add Rijndael (AES) cipher algo
     * add CMAC, CBC-MAC modes
