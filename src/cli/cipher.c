@@ -334,7 +334,7 @@ int akmos_cli_cipher(int argc, char **argv, const int enc)
     }
 
     /* Open source and destination */
-    fd_in = open(opt.input, O_RDONLY|O_NONBLOCK);
+    fd_in = open(opt.input, O_RDONLY);
     if(fd_in == -1) {
         err = EXIT_FAILURE;
         printf("%s: %s\n", opt.input, strerror(errno));

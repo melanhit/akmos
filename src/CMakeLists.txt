@@ -39,7 +39,6 @@ set(src_lib
     algo/sha1.c
     algo/sha2.c
     algo/sha3.c
-    algo/threefish_512.c
     algo/threefish_1024.c
     algo/camellia.c
     algo/rijndael.c
@@ -63,10 +62,12 @@ set(src_lib
     mac.c)
 
 set(src_amd64
-    algo/amd64/threefish_256.s)
+    algo/amd64/threefish_256.s
+    algo/amd64/threefish_512.s)
 
 set(src_orig
-    algo/threefish_256.c)
+    algo/threefish_256.c
+    algo/threefish_512.c)
 
 set(src_cli
     cli/main.c
@@ -100,7 +101,7 @@ add_library(akmos_obj OBJECT ${src_lib})
 
 add_definitions(-D_BSD_SOURCE -D_POSIX_C_SOURCE=199309L -D_XOPEN_SOURCE=500)
 add_definitions(-DAKMOS_BUFSZ=8192)
-set(CFLAGS "-fPIC -ansi -Wall -Werror -Wmissing-prototypes")
+set(CFLAGS "-fPIC -DPIC -ansi -Wall -Werror -Wmissing-prototypes")
 separate_arguments(CFLAGS UNIX_COMMAND ${CFLAGS})
 target_compile_options(akmos_obj PRIVATE ${CFLAGS})
 
