@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 
     if(strcmp(argv[1], "dec") == 0)
         opt = AKMOS_CLI_CIPHER_D;
-    
+
     if(strcmp(argv[1], "mac") == 0)
         opt = AKMOS_CLI_MAC;
 
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 
         case AKMOS_CLI_CIPHER_D:
             return akmos_cli_cipher(--argc, ++argv, AKMOS_FORCE_DECRYPT);
-        
+
         case AKMOS_CLI_MAC:
             return akmos_cli_mac(--argc, ++argv);
 

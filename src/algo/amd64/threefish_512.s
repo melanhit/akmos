@@ -416,7 +416,7 @@ akmos_threefish_512_decrypt:
     subq    %r10, %r13
     subq    %r8,  %r15
     subq    %r14, %r9
-    
+
     xorq    %r13, %r8
     xorq    %r15, %r10
     xorq    %r9,  %r12
@@ -429,7 +429,7 @@ akmos_threefish_512_decrypt:
     subq    %r10, %r15
     subq    %r12, %r9
     subq    %r14, %r11
-    
+
     xorq    %r15, %r12
     xorq    %r9,  %r10
     xorq    %r11, %r8
@@ -442,7 +442,7 @@ akmos_threefish_512_decrypt:
     subq    %r10, %r9
     subq    %r8,  %r11
     subq    %r14, %r13
-    
+
     xorq    %r9,  %r8
     xorq    %r11, %r10
     xorq    %r13, %r12
@@ -455,7 +455,7 @@ akmos_threefish_512_decrypt:
     subq    %r10, %r11
     subq    %r12, %r13
     subq    %r14, %r15
-    
+
     subq    $64, %rdi
     subq      (%rdi), %r15
     subq     8(%rdi), %r14
@@ -465,7 +465,7 @@ akmos_threefish_512_decrypt:
     subq    40(%rdi), %r10
     subq    48(%rdi), %r9
     subq    56(%rdi), %r8
-    
+
     xorq    %r11, %r12
     xorq    %r13, %r10
     xorq    %r15, %r8
@@ -478,7 +478,7 @@ akmos_threefish_512_decrypt:
     subq    %r10, %r13
     subq    %r8,  %r15
     subq    %r14, %r9
-    
+
     xorq    %r13, %r8
     xorq    %r15, %r10
     xorq    %r9,  %r12
@@ -491,7 +491,7 @@ akmos_threefish_512_decrypt:
     subq    %r10, %r15
     subq    %r12, %r9
     subq    %r14, %r11
-    
+
     xorq    %r15, %r12
     xorq    %r9,  %r10
     xorq    %r11, %r8
@@ -504,7 +504,7 @@ akmos_threefish_512_decrypt:
     subq    %r10, %r9
     subq    %r8,  %r11
     subq    %r14, %r13
-    
+
     xorq    %r9,  %r8
     xorq    %r11, %r10
     xorq    %r13, %r12
@@ -517,7 +517,7 @@ akmos_threefish_512_decrypt:
     subq    %r10, %r11
     subq    %r12, %r13
     subq    %r14, %r15
-    
+
     subq    $64, %rdi
     subq      (%rdi), %r15
     subq     8(%rdi), %r14
@@ -527,11 +527,11 @@ akmos_threefish_512_decrypt:
     subq    40(%rdi), %r10
     subq    48(%rdi), %r9
     subq    56(%rdi), %r8
-    
+
     inc     %rcx
     cmp     $9, %rcx
     jne     .L21
-    
+
     /* end */
     movq    %r15,   (%rdx)
     movq    %r14,  8(%rdx)
@@ -541,7 +541,7 @@ akmos_threefish_512_decrypt:
     movq    %r10, 40(%rdx)
     movq    %r9,  48(%rdx)
     movq    %r8,  56(%rdx)
-    
+
     popq    %r12
     popq    %r13
     popq    %r14

@@ -39,7 +39,7 @@
 #ifdef HAVE_ERR_H
 #include <err.h>
 #endif
-#endif 
+#endif
 
 #include <sys/types.h>
 #include <sys/stat.h>
