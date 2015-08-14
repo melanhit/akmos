@@ -44,6 +44,7 @@ set(src_lib
     algo/rijndael.c
     algo/tiger.c
     algo/whirlpool.c
+    algo/blowfish.c
     kdf/kdf2.c
     mode/ecb.c
     mode/cbc.c

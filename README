@@ -12,6 +12,7 @@ Depends only on the standard C library. Primary develop for the x86_64 architect
 List of supported algorithms:
 block ciphers:
  * Anubis
+ * Blowfish
  * Camellia
  * CAST6
  * RC6

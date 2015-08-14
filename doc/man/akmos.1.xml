@@ -9,8 +9,8 @@
                 <email>melanhit@gmail.com</email>
                 <contrib></contrib>
             </author>
-            <date>April, 2015</date>
-            <productname>akmos 0.1</productname>
+            <date>August, 2015</date>
+            <productname>akmos 0.3</productname>
         </info>
 
         <refmeta>
@@ -149,18 +149,19 @@
             <refsect2>
                 <title>Algorithms</title>
                 <para>
-                    Supported crypto algorithms:
+                    Supported symmetric crypto algorithms:
                     <simplelist type='inline'>
-                        <member><parameter class='command'>Anubis</parameter></member>
-                        <member><parameter class='command'>Camellia</parameter></member>
-                        <member><parameter class='command'>CAST6</parameter></member>
-                        <member><parameter class='command'>RC6</parameter></member>
-                        <member><parameter class='command'>Rijndael</parameter></member>
-                        <member><parameter class='command'>Serpent</parameter></member>
-                        <member><parameter class='command'>Twofish</parameter></member>
-                        <member><parameter class='command'>Threefish-256</parameter></member>
-                        <member><parameter class='command'>Threefish-512</parameter></member>
-                        <member><parameter class='command'>Threefish-1024</parameter></member>
+                        <member><parameter class='option'>Anubis</parameter></member>
+                        <member><parameter class='option'>Blowfish</parameter></member>
+                        <member><parameter class='option'>Camellia</parameter></member>
+                        <member><parameter class='option'>CAST6</parameter></member>
+                        <member><parameter class='option'>RC6</parameter></member>
+                        <member><parameter class='option'>Rijndael</parameter></member>
+                        <member><parameter class='option'>Serpent</parameter></member>
+                        <member><parameter class='option'>Twofish</parameter></member>
+                        <member><parameter class='option'>Threefish-256</parameter></member>
+                        <member><parameter class='option'>Threefish-512</parameter></member>
+                        <member><parameter class='option'>Threefish-1024</parameter></member>
                     </simplelist>
                 </para>
             </refsect2>
@@ -170,56 +171,132 @@
                 <para>
                     Supported crypto modes:
                     <simplelist type='inline'>
-                        <member><parameter class='command'>ECB</parameter></member>
-                        <member><parameter class='command'>CBC</parameter></member>
-                        <member><parameter class='command'>OFB</parameter></member>
-                        <member><parameter class='command'>CTR</parameter></member>
-                        <member><parameter class='command'>CFB</parameter></member>
+                        <member><parameter class='option'>ECB</parameter></member>
+                        <member><parameter class='option'>CBC</parameter></member>
+                        <member><parameter class='option'>OFB</parameter></member>
+                        <member><parameter class='option'>CTR</parameter></member>
+                        <member><parameter class='option'>CFB</parameter></member>
                     </simplelist>
                 </para>
             </refsect2>
-
+            
             <refsect2>
                 <title>Key length</title>
-                <informaltable>
-                    <thead>
-                        <tr>
-                            <td></td><td>128</td><td>192</td><td>256</td><td>320</td><td>512</td><td>1024</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Anubis</td><td>X</td><td>X</td><td>X</td><td>X</td><td></td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Camellia</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
-                        </tr>
-                        <tr>
-                            <td>CAST6</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
-                        </tr>
-                        <tr>
-                            <td>RC6</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Rijndael</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Serpent</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Twofish</td><td>X</td><td>X</td><td>X</td><td></td><td></td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Threefish-256</td><td></td><td></td><td>X</td><td></td><td></td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Threefish-512</td><td></td><td></td><td></td><td></td><td>X</td><td></td>
-                        </tr>
-                        <tr>
-                            <td>Threefish-1024</td><td></td><td></td><td></td><td></td><td></td><td>X</td>
-                        </tr>
-                    </tbody>
-                </informaltable>
+                <variablelist spacing='compact'>
+                    <varlistentry>
+                        <term><constant>Anubis</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>128</parameter></member>
+                                <member><parameter class='option'>192</parameter></member>
+                                <member><parameter class='option'>256</parameter></member>
+                                <member><parameter class='option'>320</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>Blowfish</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>128</parameter></member>
+                                <member><parameter class='option'>160</parameter></member>
+                                <member><parameter class='option'>192</parameter></member>
+                                <member><parameter class='option'>224</parameter></member>
+                                <member><parameter class='option'>256</parameter></member>
+                                <member><parameter class='option'>288</parameter></member>
+                                <member><parameter class='option'>320</parameter></member>
+                                <member><parameter class='option'>352</parameter></member>
+                                <member><parameter class='option'>384</parameter></member>
+                                <member><parameter class='option'>416</parameter></member>
+                                <member><parameter class='option'>448</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>Camellia</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>128</parameter></member>
+                                <member><parameter class='option'>192</parameter></member>
+                                <member><parameter class='option'>256</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>CAST6</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>128</parameter></member>
+                                <member><parameter class='option'>192</parameter></member>
+                                <member><parameter class='option'>256</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>RC6</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>128</parameter></member>
+                                <member><parameter class='option'>192</parameter></member>
+                                <member><parameter class='option'>256</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>Rijndael</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>128</parameter></member>
+                                <member><parameter class='option'>192</parameter></member>
+                                <member><parameter class='option'>256</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>Serpent</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>128</parameter></member>
+                                <member><parameter class='option'>192</parameter></member>
+                                <member><parameter class='option'>256</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>Threefish-256</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>256</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>Threefish-512</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>512</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>Threefish-1024</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>1024</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>Twofish</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>128</parameter></member>
+                                <member><parameter class='option'>192</parameter></member>
+                                <member><parameter class='option'>256</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                </variablelist>
             </refsect2>
         </refsect1>
 
@@ -266,20 +343,20 @@
                 <para>
                     Supported digest algorithms:
                     <simplelist type='inline'>
-                        <member><parameter class='command'>RIPEMD-160</parameter></member>
-                        <member><parameter class='command'>RIPEMD-256</parameter></member>
-                        <member><parameter class='command'>RIPEMD-320</parameter></member>
-                        <member><parameter class='command'>SHA1</parameter></member>
-                        <member><parameter class='command'>SHA2-224</parameter></member>
-                        <member><parameter class='command'>SHA2-256</parameter></member>
-                        <member><parameter class='command'>SHA2-384</parameter></member>
-                        <member><parameter class='command'>SHA2-512</parameter></member>
-                        <member><parameter class='command'>SHA3-224</parameter></member>
-                        <member><parameter class='command'>SHA3-256</parameter></member>
-                        <member><parameter class='command'>SHA3-384</parameter></member>
-                        <member><parameter class='command'>SHA3-512</parameter></member>
-                        <member><parameter class='command'>TIGER</parameter></member>
-                        <member><parameter class='command'>WHIRLPOOL</parameter></member>
+                        <member><parameter class='option'>RIPEMD-160</parameter></member>
+                        <member><parameter class='option'>RIPEMD-256</parameter></member>
+                        <member><parameter class='option'>RIPEMD-320</parameter></member>
+                        <member><parameter class='option'>SHA1</parameter></member>
+                        <member><parameter class='option'>SHA2-224</parameter></member>
+                        <member><parameter class='option'>SHA2-256</parameter></member>
+                        <member><parameter class='option'>SHA2-384</parameter></member>
+                        <member><parameter class='option'>SHA2-512</parameter></member>
+                        <member><parameter class='option'>SHA3-224</parameter></member>
+                        <member><parameter class='option'>SHA3-256</parameter></member>
+                        <member><parameter class='option'>SHA3-384</parameter></member>
+                        <member><parameter class='option'>SHA3-512</parameter></member>
+                        <member><parameter class='option'>TIGER</parameter></member>
+                        <member><parameter class='option'>WHIRLPOOL</parameter></member>
                     </simplelist>
                 </para>
             </refsect2>
@@ -358,9 +435,9 @@
                 <para>
                     Supported MAC modes:
                     <simplelist type='inline'>
-                        <member><parameter class='command'>HMAC</parameter></member>
-                        <member><parameter class='command'>CBC-MAC</parameter></member>
-                        <member><parameter class='command'>CMAC</parameter></member>
+                        <member><parameter class='option'>HMAC</parameter></member>
+                        <member><parameter class='option'>CBC-MAC</parameter></member>
+                        <member><parameter class='option'>CMAC</parameter></member>
                     </simplelist>
                 </para>
             </refsect2>

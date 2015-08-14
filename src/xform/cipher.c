@@ -41,6 +41,14 @@ akmos_cipher_xalgo_t akmos_xalgo_anubis = {
     (void *)&akmos_anubis_decrypt
 };
 
+akmos_cipher_xalgo_t akmos_xalgo_blowfish = {
+    AKMOS_ALGO_BLOWFISH, "Blowfish",
+    8, 16, 56, 4,
+    (void *)&akmos_blowfish_setkey,
+    (void *)&akmos_blowfish_encrypt,
+    (void *)&akmos_blowfish_decrypt
+};
+
 akmos_cipher_xalgo_t akmos_xalgo_camellia = {
     AKMOS_ALGO_CAMELLIA, "Camellia",
     16, 16, 32, 8,

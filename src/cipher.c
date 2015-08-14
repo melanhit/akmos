@@ -76,6 +76,10 @@ static int cipher_init_algo(akmos_cipher_ctx *ctx, akmos_algo_id algo)
             ctx->xalgo  = &akmos_xalgo_rijndael;
             break;
 
+        case AKMOS_ALGO_BLOWFISH:
+            ctx->xalgo  = &akmos_xalgo_blowfish;
+            break;
+
         default:
             return AKMOS_ERR_ALGOID;
     }

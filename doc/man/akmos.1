@@ -2,12 +2,12 @@
 .\"     Title: akmos
 .\"    Author: Andrew Romanenko <melanhit@gmail.com>
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: April, 2015
+.\"      Date: August, 2015
 .\"    Manual: AKMOS CLI REFERENCE
-.\"    Source: akmos 0.1
+.\"    Source: akmos 0.3
 .\"  Language: English
 .\"
-.TH "AKMOS" "1" "April, 2015" "akmos 0.1" "AKMOS CLI REFERENCE"
+.TH "AKMOS" "1" "August, 2015" "akmos 0.3" "AKMOS CLI REFERENCE"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -113,194 +113,68 @@ Print short help
 .RE
 .SS "Algorithms"
 .PP
-Supported crypto algorithms:
-\fIAnubis\fR, \fICamellia\fR, \fICAST6\fR, \fIRC6\fR, \fIRijndael\fR, \fISerpent\fR, \fITwofish\fR, \fIThreefish\-256\fR, \fIThreefish\-512\fR, \fIThreefish\-1024\fR
+Supported symmetric crypto algorithms:
+\fIAnubis\fR, \fIBlowfish\fR, \fICamellia\fR, \fICAST6\fR, \fIRC6\fR, \fIRijndael\fR, \fISerpent\fR, \fITwofish\fR, \fIThreefish\-256\fR, \fIThreefish\-512\fR, \fIThreefish\-1024\fR
 .SS "Modes"
 .PP
 Supported crypto modes:
 \fIECB\fR, \fICBC\fR, \fIOFB\fR, \fICTR\fR, \fICFB\fR
 .SS "Key length"
-.TS
-allbox tab(:);
-l l l l l l l.
-T{
-
-T}:T{
-128
-T}:T{
-192
-T}:T{
-256
-T}:T{
-320
-T}:T{
-512
-T}:T{
-1024
-T}
-.T&
-l l l l l l l
-l l l l l l l
-l l l l l l l
-l l l l l l l
-l l l l l l l
-l l l l l l l
-l l l l l l l
-l l l l l l l
-l l l l l l l
-l l l l l l l.
-T{
-Anubis
-T}:T{
-X
-T}:T{
-X
-T}:T{
-X
-T}:T{
-X
-T}:T{
-
-T}:T{
-
-T}
-T{
-Camellia
-T}:T{
-X
-T}:T{
-X
-T}:T{
-X
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}
-T{
-CAST6
-T}:T{
-X
-T}:T{
-X
-T}:T{
-X
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}
-T{
-RC6
-T}:T{
-X
-T}:T{
-X
-T}:T{
-X
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}
-T{
-Rijndael
-T}:T{
-X
-T}:T{
-X
-T}:T{
-X
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}
-T{
-Serpent
-T}:T{
-X
-T}:T{
-X
-T}:T{
-X
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}
-T{
-Twofish
-T}:T{
-X
-T}:T{
-X
-T}:T{
-X
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}
-T{
-Threefish-256
-T}:T{
-
-T}:T{
-
-T}:T{
-X
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}
-T{
-Threefish-512
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}:T{
-X
-T}:T{
-
-T}
-T{
-Threefish-1024
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}:T{
-
-T}:T{
-X
-T}
-.TE
-.sp 1
+.PP
+\fBAnubis\fR
+.RS 4
+\fI128\fR, \fI192\fR, \fI256\fR, \fI320\fR
+.RE
+.PP
+\fBBlowfish\fR
+.RS 4
+\fI128\fR, \fI160\fR, \fI192\fR, \fI224\fR, \fI256\fR, \fI288\fR, \fI320\fR, \fI352\fR, \fI384\fR, \fI416\fR, \fI448\fR
+.RE
+.PP
+\fBCamellia\fR
+.RS 4
+\fI128\fR, \fI192\fR, \fI256\fR
+.RE
+.PP
+\fBCAST6\fR
+.RS 4
+\fI128\fR, \fI192\fR, \fI256\fR
+.RE
+.PP
+\fBRC6\fR
+.RS 4
+\fI128\fR, \fI192\fR, \fI256\fR
+.RE
+.PP
+\fBRijndael\fR
+.RS 4
+\fI128\fR, \fI192\fR, \fI256\fR
+.RE
+.PP
+\fBSerpent\fR
+.RS 4
+\fI128\fR, \fI192\fR, \fI256\fR
+.RE
+.PP
+\fBThreefish\-256\fR
+.RS 4
+\fI256\fR
+.RE
+.PP
+\fBThreefish\-512\fR
+.RS 4
+\fI512\fR
+.RE
+.PP
+\fBThreefish\-1024\fR
+.RS 4
+\fI1024\fR
+.RE
+.PP
+\fBTwofish\fR
+.RS 4
+\fI128\fR, \fI192\fR, \fI256\fR
+.RE
 .SH "HASHING"
 .SS ""
 .HP \w'\fBakmos\ dgst\fR\ 'u

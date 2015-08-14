@@ -39,6 +39,7 @@
 #include "algo/threefish.h"
 #include "algo/camellia.h"
 #include "algo/rijndael.h"
+#include "algo/blowfish.h"
 
 #include "mode/ecb.h"
 #include "mode/cbc.h"
@@ -48,6 +49,7 @@
 
 typedef union {
     akmos_anubis_t          anubis;
+    akmos_blowfish_t        blowfish;
     akmos_camellia_t        camellia;
     akmos_cast6_t           cast6;
     akmos_rc6_t             rc6;
@@ -99,6 +101,7 @@ struct akmos_cipher_s {
 };
 
 extern akmos_cipher_xalgo_t akmos_xalgo_anubis;
+extern akmos_cipher_xalgo_t akmos_xalgo_blowfish;
 extern akmos_cipher_xalgo_t akmos_xalgo_camellia;
 extern akmos_cipher_xalgo_t akmos_xalgo_cast6;
 extern akmos_cipher_xalgo_t akmos_xalgo_rc6;
