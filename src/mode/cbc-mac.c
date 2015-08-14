@@ -139,6 +139,7 @@ int akmos_cbcmac_done(akmos_cbcmac_t *ctx, uint8_t *mac)
         goto out;
 
 out:
+    akmos_cipher_free(ctx->actx);
     akmos_memzero(ctx->key, ctx->klen);
     free(ctx->key);
 
