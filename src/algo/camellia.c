@@ -48,36 +48,30 @@
 /* 65..n..127 */
 #define Q2ROTL(x1, x2, n) (((x2) << ((n) - 64)) | ((x1) >> (128 - (n))))
 
+#define U0(x)   ((uint8_t)((x) >> 56))
+#define U1(x)   ((uint8_t)((x) >> 48))
+#define U2(x)   ((uint8_t)((x) >> 40))
+#define U3(x)   ((uint8_t)((x) >> 32))
+#define U4(x)   ((uint8_t)((x) >> 24))
+#define U5(x)   ((uint8_t)((x) >> 16))
+#define U6(x)   ((uint8_t)((x) >>  8))
+#define U7(x)   ((uint8_t)((x)      ))
+
+#define F(x) (SB0[U0(x)] ^ SB1[U1(x)] ^ SB2[U2(x)] ^ SB3[U3(x)] ^ SB4[U4(x)] ^ SB5[U5(x)] ^ SB6[U6(x)] ^ SB7[U7(x)])
+
 #define KEY_KA_SCHED(d1, d2, k, ka) \
 {                                   \
-    d2 ^= f(d1, C0);                \
-    d1 ^= f(d2, C1);                \
+    t   = d1 ^ C0;                  \
+    d2 ^= F(t);                     \
+    t   = d2 ^ C1;                  \
+    d1 ^= F(t);                     \
     d1 ^= k[0];                     \
     d2 ^= k[1];                     \
-    d2 ^= f(d1, C2);                \
-    d1 ^= f(d2, C3);                \
+    t   = d1 ^ C2;                  \
+    d2 ^= F(t);                     \
+    t   = d2 ^ C3;                  \
+    d1 ^= F(t);                     \
     ka[0] = d1; ka[1] = d2;         \
-}
-
-static uint64_t f(uint64_t in, uint64_t k)
-{
-    uint64_t x;
-    uint8_t t[8];
-
-    in ^= k;
-
-    UNPACK64(t, in);
-
-    x  = SB0[t[0]];
-    x ^= SB1[t[1]];
-    x ^= SB2[t[2]];
-    x ^= SB3[t[3]];
-    x ^= SB4[t[4]];
-    x ^= SB5[t[5]];
-    x ^= SB6[t[6]];
-    x ^= SB7[t[7]];
-
-    return x;
 }
 
 static uint64_t fl(uint64_t in, uint64_t k)
@@ -114,7 +108,7 @@ static uint64_t flinv(uint64_t in, uint64_t k)
 
 static void camellia_setkey128(akmos_camellia_t *ctx, const uint8_t *key)
 {
-    uint64_t d1, d2;
+    uint64_t d1, d2, t;
     uint64_t ka[2], k[2];
 
     k[0] = PACK64(key); k[1] = PACK64(key + 8);
@@ -156,7 +150,7 @@ static void camellia_setkey128(akmos_camellia_t *ctx, const uint8_t *key)
 
 static void camellia_setkey256(akmos_camellia_t *ctx, const uint8_t *key, size_t len)
 {
-    uint64_t d1, d2;
+    uint64_t d1, d2, t;
     uint64_t ka[2], kb[2], k[4];
 
     k[0] = PACK64(key     );
@@ -171,8 +165,10 @@ static void camellia_setkey256(akmos_camellia_t *ctx, const uint8_t *key, size_t
     KEY_KA_SCHED(d1, d2, k, ka);
 
     d1 ^= k[2]; d2 ^= k[3];
-    d2 ^= f(d1, C4);
-    d1 ^= f(d2, C5);
+    t   = d1 ^ C4;
+    d2 ^= F(t);
+    t   = d2 ^ C5;
+    d1 ^= F(t);
     kb[0] = d1; kb[1] = d2;
 
     ctx->kw[0] = k[0];
@@ -233,52 +229,52 @@ void akmos_camellia_setkey(akmos_camellia_t *ctx, const uint8_t *key, size_t len
 
 void akmos_camellia_encrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    uint64_t pt[2], ct[2];
+    uint64_t pt[2], ct[2], t;
 
     pt[0] = PACK64(in_blk); pt[1] = PACK64(in_blk + 8);
 
     ct[0] = pt[0] ^ ctx->kw[0];
     ct[1] = pt[1] ^ ctx->kw[1];
 
-    ct[1] ^= f(ct[0], ctx->k[ 0]);
-    ct[0] ^= f(ct[1], ctx->k[ 1]);
-    ct[1] ^= f(ct[0], ctx->k[ 2]);
-    ct[0] ^= f(ct[1], ctx->k[ 3]);
-    ct[1] ^= f(ct[0], ctx->k[ 4]);
-    ct[0] ^= f(ct[1], ctx->k[ 5]);
+    t = ct[0] ^ ctx->k[ 0]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[ 1]; ct[0] ^= F(t);
+    t = ct[0] ^ ctx->k[ 2]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[ 3]; ct[0] ^= F(t);
+    t = ct[0] ^ ctx->k[ 4]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[ 5]; ct[0] ^= F(t);
 
     ct[0] = fl(ct[0], ctx->ke[0]);
     ct[1] = flinv(ct[1], ctx->ke[1]);
-
-    ct[1] ^= f(ct[0], ctx->k[ 6]);
-    ct[0] ^= f(ct[1], ctx->k[ 7]);
-    ct[1] ^= f(ct[0], ctx->k[ 8]);
-    ct[0] ^= f(ct[1], ctx->k[ 9]);
-    ct[1] ^= f(ct[0], ctx->k[10]);
-    ct[0] ^= f(ct[1], ctx->k[11]);
+    
+    t = ct[0] ^ ctx->k[ 6]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[ 7]; ct[0] ^= F(t);
+    t = ct[0] ^ ctx->k[ 8]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[ 9]; ct[0] ^= F(t);
+    t = ct[0] ^ ctx->k[10]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[11]; ct[0] ^= F(t);
 
     ct[0] = fl(ct[0], ctx->ke[2]);
     ct[1] = flinv(ct[1], ctx->ke[3]);
-
-    ct[1] ^= f(ct[0], ctx->k[12]);
-    ct[0] ^= f(ct[1], ctx->k[13]);
-    ct[1] ^= f(ct[0], ctx->k[14]);
-    ct[0] ^= f(ct[1], ctx->k[15]);
-    ct[1] ^= f(ct[0], ctx->k[16]);
-    ct[0] ^= f(ct[1], ctx->k[17]);
+    
+    t = ct[0] ^ ctx->k[12]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[13]; ct[0] ^= F(t);
+    t = ct[0] ^ ctx->k[14]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[15]; ct[0] ^= F(t);
+    t = ct[0] ^ ctx->k[16]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[17]; ct[0] ^= F(t);
 
     if(ctx->bits == 128)
         goto out;
 
     ct[0] = fl(ct[0], ctx->ke[4]);
     ct[1] = flinv(ct[1], ctx->ke[5]);
-
-    ct[1] ^= f(ct[0], ctx->k[18]);
-    ct[0] ^= f(ct[1], ctx->k[19]);
-    ct[1] ^= f(ct[0], ctx->k[20]);
-    ct[0] ^= f(ct[1], ctx->k[21]);
-    ct[1] ^= f(ct[0], ctx->k[22]);
-    ct[0] ^= f(ct[1], ctx->k[23]);
+    
+    t = ct[0] ^ ctx->k[18]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[19]; ct[0] ^= F(t);
+    t = ct[0] ^ ctx->k[20]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[21]; ct[0] ^= F(t);
+    t = ct[0] ^ ctx->k[22]; ct[1] ^= F(t);
+    t = ct[1] ^ ctx->k[23]; ct[0] ^= F(t);
 
 out:
     ct[1] ^= ctx->kw[2];
@@ -289,7 +285,7 @@ out:
 
 void akmos_camellia_decrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    uint64_t pt[2], ct[2];
+    uint64_t pt[2], ct[2], t;
 
     ct[0] = PACK64(in_blk); ct[1] = PACK64(in_blk + 8);
 
@@ -297,43 +293,43 @@ void akmos_camellia_decrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_
     pt[1] = ct[1] ^ ctx->kw[3];
 
     if(ctx->bits != 128) {
-        pt[1] ^= f(pt[0], ctx->k[23]);
-        pt[0] ^= f(pt[1], ctx->k[22]);
-        pt[1] ^= f(pt[0], ctx->k[21]);
-        pt[0] ^= f(pt[1], ctx->k[20]);
-        pt[1] ^= f(pt[0], ctx->k[19]);
-        pt[0] ^= f(pt[1], ctx->k[18]);
+        t = pt[0] ^ ctx->k[23]; pt[1] ^= F(t);
+        t = pt[1] ^ ctx->k[22]; pt[0] ^= F(t);
+        t = pt[0] ^ ctx->k[21]; pt[1] ^= F(t);
+        t = pt[1] ^ ctx->k[20]; pt[0] ^= F(t);
+        t = pt[0] ^ ctx->k[19]; pt[1] ^= F(t);
+        t = pt[1] ^ ctx->k[18]; pt[0] ^= F(t);
 
         pt[0] = fl(pt[0], ctx->ke[5]);
         pt[1] = flinv(pt[1], ctx->ke[4]);
     }
-
-    pt[1] ^= f(pt[0], ctx->k[17]);
-    pt[0] ^= f(pt[1], ctx->k[16]);
-    pt[1] ^= f(pt[0], ctx->k[15]);
-    pt[0] ^= f(pt[1], ctx->k[14]);
-    pt[1] ^= f(pt[0], ctx->k[13]);
-    pt[0] ^= f(pt[1], ctx->k[12]);
+        
+    t = pt[0] ^ ctx->k[17]; pt[1] ^= F(t);
+    t = pt[1] ^ ctx->k[16]; pt[0] ^= F(t);
+    t = pt[0] ^ ctx->k[15]; pt[1] ^= F(t);
+    t = pt[1] ^ ctx->k[14]; pt[0] ^= F(t);
+    t = pt[0] ^ ctx->k[13]; pt[1] ^= F(t);
+    t = pt[1] ^ ctx->k[12]; pt[0] ^= F(t);
 
     pt[0] = fl(pt[0], ctx->ke[3]);
     pt[1] = flinv(pt[1], ctx->ke[2]);
-
-    pt[1] ^= f(pt[0], ctx->k[11]);
-    pt[0] ^= f(pt[1], ctx->k[10]);
-    pt[1] ^= f(pt[0], ctx->k[ 9]);
-    pt[0] ^= f(pt[1], ctx->k[ 8]);
-    pt[1] ^= f(pt[0], ctx->k[ 7]);
-    pt[0] ^= f(pt[1], ctx->k[ 6]);
+    
+    t = pt[0] ^ ctx->k[11]; pt[1] ^= F(t);
+    t = pt[1] ^ ctx->k[10]; pt[0] ^= F(t);
+    t = pt[0] ^ ctx->k[ 9]; pt[1] ^= F(t);
+    t = pt[1] ^ ctx->k[ 8]; pt[0] ^= F(t);
+    t = pt[0] ^ ctx->k[ 7]; pt[1] ^= F(t);
+    t = pt[1] ^ ctx->k[ 6]; pt[0] ^= F(t);
 
     pt[0] = fl(pt[0], ctx->ke[1]);
     pt[1] = flinv(pt[1], ctx->ke[0]);
-
-    pt[1] ^= f(pt[0], ctx->k[ 5]);
-    pt[0] ^= f(pt[1], ctx->k[ 4]);
-    pt[1] ^= f(pt[0], ctx->k[ 3]);
-    pt[0] ^= f(pt[1], ctx->k[ 2]);
-    pt[1] ^= f(pt[0], ctx->k[ 1]);
-    pt[0] ^= f(pt[1], ctx->k[ 0]);
+    
+    t = pt[0] ^ ctx->k[ 5]; pt[1] ^= F(t);
+    t = pt[1] ^ ctx->k[ 4]; pt[0] ^= F(t);
+    t = pt[0] ^ ctx->k[ 3]; pt[1] ^= F(t);
+    t = pt[1] ^ ctx->k[ 2]; pt[0] ^= F(t);
+    t = pt[0] ^ ctx->k[ 1]; pt[1] ^= F(t);
+    t = pt[1] ^ ctx->k[ 0]; pt[0] ^= F(t);
 
     pt[1] ^= ctx->kw[0];
     pt[0] ^= ctx->kw[1];
