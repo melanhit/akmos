@@ -227,8 +227,8 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
         }
     }
 
-    if(opt->keylen > (MAX_KEYLEN*8) || opt->keylen <= 0) {
-        printf("Invalid key length\n");
+    if(opt->keylen > (MAX_KEYLEN*8) || opt->keylen <= 0 || (opt->keylen % 8) != 0) {
+        printf("Invalid key length (err = %d)\n", AKMOS_ERR_KEYLEN);
         return EXIT_FAILURE;
     }
     opt->keylen /= 8;
