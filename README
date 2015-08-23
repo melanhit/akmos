@@ -17,6 +17,7 @@ block ciphers:
  * CAST6
  * RC6
  * Rijndael
+ * SEED
  * Serpent
  * Threefish
  * Twofish

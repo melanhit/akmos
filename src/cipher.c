@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -78,6 +78,10 @@ static int cipher_init_algo(akmos_cipher_ctx *ctx, akmos_algo_id algo)
 
         case AKMOS_ALGO_BLOWFISH:
             ctx->xalgo  = &akmos_xalgo_blowfish;
+            break;
+
+        case AKMOS_ALGO_SEED:
+            ctx->xalgo  = &akmos_xalgo_seed;
             break;
 
         default:

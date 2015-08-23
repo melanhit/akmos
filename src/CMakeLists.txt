@@ -45,6 +45,7 @@ set(src_lib
     algo/tiger.c
     algo/whirlpool.c
     algo/blowfish.c
+    algo/seed.c
     kdf/kdf2.c
     mode/ecb.c
     mode/cbc.c
@@ -88,6 +89,7 @@ endif()
 if(AKMOS_ENABLE_ASM AND AMD64)
     enable_language(ASM-ATT)
     if(CMAKE_ASM-ATT_COMPILER_WORKS)
+        list(SORT src_amd64)
         add_library(akmos_obj_asm OBJECT ${src_amd64})
     endif()
 else()
@@ -95,7 +97,6 @@ else()
 endif()
 
 list(SORT src_lib)
-list(SORT src_amd64)
 list(SORT src_cli)
 
 add_library(akmos_obj OBJECT ${src_lib})

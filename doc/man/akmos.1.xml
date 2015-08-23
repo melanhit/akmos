@@ -157,6 +157,7 @@
                         <member><parameter class='option'>CAST6</parameter></member>
                         <member><parameter class='option'>RC6</parameter></member>
                         <member><parameter class='option'>Rijndael</parameter></member>
+                        <member><parameter class='option'>SEED</parameter></member>
                         <member><parameter class='option'>Serpent</parameter></member>
                         <member><parameter class='option'>Twofish</parameter></member>
                         <member><parameter class='option'>Threefish-256</parameter></member>
@@ -249,6 +250,14 @@
                                 <member><parameter class='option'>128</parameter></member>
                                 <member><parameter class='option'>192</parameter></member>
                                 <member><parameter class='option'>256</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>SEED</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>128</parameter></member>
                             </simplelist>
                         </listitem>
                     </varlistentry>

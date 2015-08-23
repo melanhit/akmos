@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,7 @@
 #include "algo/camellia.h"
 #include "algo/rijndael.h"
 #include "algo/blowfish.h"
+#include "algo/seed.h"
 
 #include "mode/ecb.h"
 #include "mode/cbc.h"
@@ -55,6 +56,7 @@ typedef union {
     akmos_rc6_t             rc6;
     akmos_rijndael_t        rijndael;
     akmos_serpent_t         serpent;
+    akmos_seed_t            seed;
     akmos_threefish_256_t   tf_256;
     akmos_threefish_512_t   tf_512;
     akmos_threefish_1024_t  tf_1024;
@@ -107,6 +109,7 @@ extern akmos_cipher_xalgo_t akmos_xalgo_cast6;
 extern akmos_cipher_xalgo_t akmos_xalgo_rc6;
 extern akmos_cipher_xalgo_t akmos_xalgo_rijndael;
 extern akmos_cipher_xalgo_t akmos_xalgo_serpent;
+extern akmos_cipher_xalgo_t akmos_xalgo_seed;
 extern akmos_cipher_xalgo_t akmos_xalgo_threefish_256;
 extern akmos_cipher_xalgo_t akmos_xalgo_threefish_512;
 extern akmos_cipher_xalgo_t akmos_xalgo_threefish_1024;

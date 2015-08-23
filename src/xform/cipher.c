@@ -89,6 +89,14 @@ akmos_cipher_xalgo_t akmos_xalgo_serpent = {
     (void *)&akmos_serpent_decrypt
 };
 
+akmos_cipher_xalgo_t akmos_xalgo_seed = {
+    AKMOS_ALGO_SEED, "SEED",
+    16, 16, 16, 16,
+    (void *)&akmos_seed_setkey,
+    (void *)&akmos_seed_encrypt,
+    (void *)&akmos_seed_decrypt
+};
+
 akmos_cipher_xalgo_t akmos_xalgo_threefish_256 = {
     AKMOS_ALGO_THREEFISH_256, "Threefish-256",
     32, 32, 32, 32,

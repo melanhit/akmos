@@ -91,6 +91,8 @@ int akmos_str2algo(const char *name)
         return AKMOS_ALGO_WHIRLPOOL;
     else if(strcasecmp(name, akmos_xalgo_blowfish.name) == 0)
         return AKMOS_ALGO_BLOWFISH;
+    else if(strcasecmp(name, akmos_xalgo_seed.name) == 0)
+        return AKMOS_ALGO_SEED;
     else
         return -1;
 }
@@ -196,6 +198,9 @@ const char *akmos_algo2str(akmos_algo_id algo)
 
         case AKMOS_ALGO_BLOWFISH:
             return akmos_xalgo_blowfish.name;
+
+        case AKMOS_ALGO_SEED:
+            return akmos_xalgo_seed.name;
 
         default:
             return NULL;
@@ -361,6 +366,9 @@ size_t akmos_blklen(akmos_algo_id algo)
 
         case AKMOS_ALGO_BLOWFISH:
             return AKMOS_BLOWFISH_BLKLEN;
+
+        case AKMOS_ALGO_SEED:
+            return AKMOS_SEED_BLKLEN;
 
         default:
             return 0;
