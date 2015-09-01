@@ -8,6 +8,7 @@ CHECK_TYPE_SIZE(uint8_t UINT8_T)
 CHECK_TYPE_SIZE(uint32_t UINT32_T)
 CHECK_TYPE_SIZE(uint64_t UINT64_T)
 CHECK_TYPE_SIZE(size_t SIZE_T)
+CHECK_TYPE_SIZE(ssize_t SSIZE_T)
 
 if(NOT HAVE_UINT8_T)
     unset(HAVE_UINT8_T)
@@ -27,6 +28,11 @@ endif()
 if(NOT HAVE_SIZE_T)
     unset(HAVE_SIZE_T)
     message(FATAL_ERROR "size_t is not found")
+endif()
+
+if(NOT HAVE_SSIZE_T)
+    unset(HAVE_SSIZE_T)
+    message(FATAL_ERROR "ssize_t is not found")
 endif()
 
 set(src_lib
