@@ -28,6 +28,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <unistd.h>
 
 #include "../akmos.h"
 #include "../macro.h"
