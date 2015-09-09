@@ -1,3 +1,9 @@
+Changes to akmos-0.3.2 (10 September 2015)
+    * add Blowfish and SEED ciphers algo
+    * optimizations of the 'threefish-512' and 'camellia' ciphers algo
+    * security fixes
+    * small fixes, code cleanup
+
 Changes to akmos-0.3.1 (27 July 2015)
     * add Tiger and Whirlpool digests algo
 
