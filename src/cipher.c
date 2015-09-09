@@ -146,17 +146,6 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
     if(err)
         goto out;
 
-    if(force == AKMOS_FORCE_DECRYPT) {
-        switch(algo) {
-            case AKMOS_ALGO_RIJNDAEL:
-                ptr->xalgo->setkey = (void *)&akmos_rijndael_setkey1;
-                break;
-
-            default:
-                break;
-        }
-    }
-
     err = cipher_init_mode(ptr, mode, force);
     if(err)
         goto out;

@@ -33,7 +33,7 @@
 #include "../cipher.h"
 
 /* cipher algos */
-akmos_cipher_xalgo_t akmos_xalgo_anubis = {
+const akmos_cipher_xalgo_t akmos_xalgo_anubis = {
     AKMOS_ALGO_ANUBIS, "Anubis",
     16, 16, 40, 8,
     (void *)&akmos_anubis_setkey,
@@ -41,7 +41,7 @@ akmos_cipher_xalgo_t akmos_xalgo_anubis = {
     (void *)&akmos_anubis_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_blowfish = {
+const akmos_cipher_xalgo_t akmos_xalgo_blowfish = {
     AKMOS_ALGO_BLOWFISH, "Blowfish",
     8, 16, 56, 4,
     (void *)&akmos_blowfish_setkey,
@@ -49,7 +49,7 @@ akmos_cipher_xalgo_t akmos_xalgo_blowfish = {
     (void *)&akmos_blowfish_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_camellia = {
+const akmos_cipher_xalgo_t akmos_xalgo_camellia = {
     AKMOS_ALGO_CAMELLIA, "Camellia",
     16, 16, 32, 8,
     (void *)&akmos_camellia_setkey,
@@ -57,7 +57,7 @@ akmos_cipher_xalgo_t akmos_xalgo_camellia = {
     (void *)&akmos_camellia_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_cast6 = {
+const akmos_cipher_xalgo_t akmos_xalgo_cast6 = {
     AKMOS_ALGO_CAST6, "CAST6",
     16, 16, 32, 8,
     (void *)&akmos_cast6_setkey,
@@ -65,7 +65,7 @@ akmos_cipher_xalgo_t akmos_xalgo_cast6 = {
     (void *)&akmos_cast6_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_rc6 = {
+const akmos_cipher_xalgo_t akmos_xalgo_rc6 = {
     AKMOS_ALGO_RC6, "RC6",
     16, 16, 32, 8,
     (void *)&akmos_rc6_setkey,
@@ -73,7 +73,7 @@ akmos_cipher_xalgo_t akmos_xalgo_rc6 = {
     (void *)&akmos_rc6_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_rijndael = {
+const akmos_cipher_xalgo_t akmos_xalgo_rijndael = {
     AKMOS_ALGO_RIJNDAEL, "Rijndael",
     16, 16, 32, 8,
     (void *)&akmos_rijndael_setkey,
@@ -81,7 +81,7 @@ akmos_cipher_xalgo_t akmos_xalgo_rijndael = {
     (void *)&akmos_rijndael_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_serpent = {
+const akmos_cipher_xalgo_t akmos_xalgo_serpent = {
     AKMOS_ALGO_SERPENT, "Serpent",
     16, 16, 32, 8,
     (void *)&akmos_serpent_setkey,
@@ -89,7 +89,7 @@ akmos_cipher_xalgo_t akmos_xalgo_serpent = {
     (void *)&akmos_serpent_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_seed = {
+const akmos_cipher_xalgo_t akmos_xalgo_seed = {
     AKMOS_ALGO_SEED, "SEED",
     16, 16, 16, 16,
     (void *)&akmos_seed_setkey,
@@ -97,7 +97,7 @@ akmos_cipher_xalgo_t akmos_xalgo_seed = {
     (void *)&akmos_seed_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_threefish_256 = {
+const akmos_cipher_xalgo_t akmos_xalgo_threefish_256 = {
     AKMOS_ALGO_THREEFISH_256, "Threefish-256",
     32, 32, 32, 32,
     (void *)&akmos_threefish_256_setkey,
@@ -105,7 +105,7 @@ akmos_cipher_xalgo_t akmos_xalgo_threefish_256 = {
     (void *)&akmos_threefish_256_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_threefish_512 = {
+const akmos_cipher_xalgo_t akmos_xalgo_threefish_512 = {
     AKMOS_ALGO_THREEFISH_512, "Threefish-512",
     64, 64, 64, 64,
     (void *)&akmos_threefish_512_setkey,
@@ -113,7 +113,7 @@ akmos_cipher_xalgo_t akmos_xalgo_threefish_512 = {
     (void *)&akmos_threefish_512_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_threefish_1024 = {
+const akmos_cipher_xalgo_t akmos_xalgo_threefish_1024 = {
     AKMOS_ALGO_THREEFISH_1024, "Threefish-1024",
     128, 128, 128, 128,
     (void *)&akmos_threefish_1024_setkey,
@@ -121,7 +121,7 @@ akmos_cipher_xalgo_t akmos_xalgo_threefish_1024 = {
     (void *)&akmos_threefish_1024_decrypt
 };
 
-akmos_cipher_xalgo_t akmos_xalgo_twofish = {
+const akmos_cipher_xalgo_t akmos_xalgo_twofish = {
     AKMOS_ALGO_TWOFISH, "Twofish",
     16, 16, 32, 8,
     (void *)&akmos_twofish_setkey,
@@ -130,7 +130,7 @@ akmos_cipher_xalgo_t akmos_xalgo_twofish = {
 };
 
 /* cipher modes */
-akmos_cipher_xmode_t akmos_xmode_ecb = {
+const akmos_cipher_xmode_t akmos_xmode_ecb = {
     AKMOS_MODE_ECB, "ECB",
     NULL,
     (void *)&akmos_ecb_encrypt,
@@ -138,7 +138,7 @@ akmos_cipher_xmode_t akmos_xmode_ecb = {
     NULL
 };
 
-akmos_cipher_xmode_t akmos_xmode_cbc = {
+const akmos_cipher_xmode_t akmos_xmode_cbc = {
     AKMOS_MODE_CBC, "CBC",
     (void *)&akmos_cbc_setiv,
     (void *)&akmos_cbc_encrypt,
@@ -146,7 +146,7 @@ akmos_cipher_xmode_t akmos_xmode_cbc = {
     (void *)&akmos_cbc_zero
 };
 
-akmos_cipher_xmode_t akmos_xmode_cfb = {
+const akmos_cipher_xmode_t akmos_xmode_cfb = {
     AKMOS_MODE_CFB, "CFB",
     (void *)&akmos_cfb_setiv,
     (void *)&akmos_cfb_encrypt,
@@ -155,7 +155,7 @@ akmos_cipher_xmode_t akmos_xmode_cfb = {
 };
 
 /* some modes use only encrypt() routines */
-akmos_cipher_xmode_t akmos_xmode_ctr = {
+const akmos_cipher_xmode_t akmos_xmode_ctr = {
     AKMOS_MODE_CTR, "CTR",
     (void *)&akmos_ctr_setiv,
     (void *)&akmos_ctr_encrypt,
@@ -163,7 +163,7 @@ akmos_cipher_xmode_t akmos_xmode_ctr = {
     (void *)&akmos_ctr_zero
 };
 
-akmos_cipher_xmode_t akmos_xmode_ofb = {
+const akmos_cipher_xmode_t akmos_xmode_ofb = {
     AKMOS_MODE_OFB, "OFB",
     (void *)&akmos_ofb_setiv,
     (void *)&akmos_ofb_encrypt,

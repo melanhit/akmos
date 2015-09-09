@@ -32,12 +32,12 @@
 #define AKMOS_RIJNDAEL_BLKLEN 16
 
 typedef struct {
-    uint32_t k[4*(14+1)];
+    uint32_t ke[4*(14+1)];
+    uint32_t kd[4*(14+1)];
     size_t   r;
 } akmos_rijndael_t;
 
 void akmos_rijndael_setkey (akmos_rijndael_t *, const uint8_t *, size_t);
-void akmos_rijndael_setkey1(akmos_rijndael_t *, const uint8_t *, size_t);
 void akmos_rijndael_encrypt(akmos_rijndael_t *, const uint8_t *, uint8_t *);
 void akmos_rijndael_decrypt(akmos_rijndael_t *, const uint8_t *, uint8_t *);
 

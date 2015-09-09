@@ -93,32 +93,32 @@ typedef struct {
 
 struct akmos_cipher_s {
     /* algo */
-    akmos_cipher_xalgo_t    *xalgo;
-    akmos_cipher_algo_ctx   actx;
+    const akmos_cipher_xalgo_t  *xalgo;
+    akmos_cipher_algo_ctx       actx;
     /* mode */
-    akmos_cipher_xmode_t    *xmode;
-    akmos_cipher_mode_ctx   mctx;
+    const akmos_cipher_xmode_t  *xmode;
+    akmos_cipher_mode_ctx       mctx;
     /* enc/dec */
-    void (*crypt)           (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
+    void (*crypt)               (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
 };
 
-extern akmos_cipher_xalgo_t akmos_xalgo_anubis;
-extern akmos_cipher_xalgo_t akmos_xalgo_blowfish;
-extern akmos_cipher_xalgo_t akmos_xalgo_camellia;
-extern akmos_cipher_xalgo_t akmos_xalgo_cast6;
-extern akmos_cipher_xalgo_t akmos_xalgo_rc6;
-extern akmos_cipher_xalgo_t akmos_xalgo_rijndael;
-extern akmos_cipher_xalgo_t akmos_xalgo_serpent;
-extern akmos_cipher_xalgo_t akmos_xalgo_seed;
-extern akmos_cipher_xalgo_t akmos_xalgo_threefish_256;
-extern akmos_cipher_xalgo_t akmos_xalgo_threefish_512;
-extern akmos_cipher_xalgo_t akmos_xalgo_threefish_1024;
-extern akmos_cipher_xalgo_t akmos_xalgo_twofish;
+extern const akmos_cipher_xalgo_t akmos_xalgo_anubis;
+extern const akmos_cipher_xalgo_t akmos_xalgo_blowfish;
+extern const akmos_cipher_xalgo_t akmos_xalgo_camellia;
+extern const akmos_cipher_xalgo_t akmos_xalgo_cast6;
+extern const akmos_cipher_xalgo_t akmos_xalgo_rc6;
+extern const akmos_cipher_xalgo_t akmos_xalgo_rijndael;
+extern const akmos_cipher_xalgo_t akmos_xalgo_serpent;
+extern const akmos_cipher_xalgo_t akmos_xalgo_seed;
+extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_256;
+extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_512;
+extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_1024;
+extern const akmos_cipher_xalgo_t akmos_xalgo_twofish;
 
-extern akmos_cipher_xmode_t akmos_xmode_ecb;
-extern akmos_cipher_xmode_t akmos_xmode_cbc;
-extern akmos_cipher_xmode_t akmos_xmode_cfb;
-extern akmos_cipher_xmode_t akmos_xmode_ctr;
-extern akmos_cipher_xmode_t akmos_xmode_ofb;
+extern const akmos_cipher_xmode_t akmos_xmode_ecb;
+extern const akmos_cipher_xmode_t akmos_xmode_cbc;
+extern const akmos_cipher_xmode_t akmos_xmode_cfb;
+extern const akmos_cipher_xmode_t akmos_xmode_ctr;
+extern const akmos_cipher_xmode_t akmos_xmode_ofb;
 
 #endif  /* AKMOS_CIPHER_H */

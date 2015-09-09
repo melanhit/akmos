@@ -32,7 +32,7 @@
 #include "../akmos.h"
 #include "../mac.h"
 
-akmos_mac_xmode_t akmos_xmode_hmac = {
+const akmos_mac_xmode_t akmos_xmode_hmac = {
     AKMOS_MODE_HMAC, "HMAC",
     (void *)&akmos_hmac_init,
     (void *)&akmos_hmac_setkey,
@@ -40,7 +40,7 @@ akmos_mac_xmode_t akmos_xmode_hmac = {
     (void *)&akmos_hmac_done
 };
 
-akmos_mac_xmode_t akmos_xmode_cmac = {
+const akmos_mac_xmode_t akmos_xmode_cmac = {
     AKMOS_MODE_CMAC, "CMAC",
     (void *)&akmos_cmac_init,
     (void *)&akmos_cmac_setkey,
@@ -48,7 +48,7 @@ akmos_mac_xmode_t akmos_xmode_cmac = {
     (void *)&akmos_cmac_done
 };
 
-akmos_mac_xmode_t akmos_xmode_cbcmac = {
+const akmos_mac_xmode_t akmos_xmode_cbcmac = {
     AKMOS_MODE_CBCMAC, "CBC-MAC",
     (void *)&akmos_cbcmac_init,
     (void *)&akmos_cbcmac_setkey,

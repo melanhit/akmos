@@ -32,7 +32,7 @@
 #include "../akmos.h"
 #include "../digest.h"
 
-akmos_digest_xalgo_t akmos_xalgo_ripemd_160 = {
+const akmos_digest_xalgo_t akmos_xalgo_ripemd_160 = {
     AKMOS_ALGO_RIPEMD_160, "RIPEMD-160",
     AKMOS_RIPEMD_160_BLKLEN, AKMOS_RIPEMD_160_DIGLEN,
     (void *)akmos_ripemd_160_init,
@@ -40,7 +40,7 @@ akmos_digest_xalgo_t akmos_xalgo_ripemd_160 = {
     (void *)akmos_ripemd_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_ripemd_256 = {
+const akmos_digest_xalgo_t akmos_xalgo_ripemd_256 = {
     AKMOS_ALGO_RIPEMD_256, "RIPEMD-256",
     AKMOS_RIPEMD_256_BLKLEN, AKMOS_RIPEMD_256_DIGLEN,
     (void *)akmos_ripemd_256_init,
@@ -48,7 +48,7 @@ akmos_digest_xalgo_t akmos_xalgo_ripemd_256 = {
     (void *)akmos_ripemd_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_ripemd_320 = {
+const akmos_digest_xalgo_t akmos_xalgo_ripemd_320 = {
     AKMOS_ALGO_RIPEMD_320, "RIPEMD-320",
     AKMOS_RIPEMD_320_BLKLEN, AKMOS_RIPEMD_320_DIGLEN,
     (void *)akmos_ripemd_320_init,
@@ -56,7 +56,7 @@ akmos_digest_xalgo_t akmos_xalgo_ripemd_320 = {
     (void *)akmos_ripemd_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_sha1 = {
+const akmos_digest_xalgo_t akmos_xalgo_sha1 = {
     AKMOS_ALGO_SHA1, "SHA1",
     AKMOS_SHA1_BLKLEN, AKMOS_SHA1_DIGLEN,
     (void *)akmos_sha1_init,
@@ -64,7 +64,7 @@ akmos_digest_xalgo_t akmos_xalgo_sha1 = {
     (void *)akmos_sha1_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_sha2_224 = {
+const akmos_digest_xalgo_t akmos_xalgo_sha2_224 = {
     AKMOS_ALGO_SHA2_224, "SHA2-224",
     AKMOS_SHA2_224_BLKLEN, AKMOS_SHA2_224_DIGLEN,
     (void *)akmos_sha2_224_init,
@@ -72,7 +72,7 @@ akmos_digest_xalgo_t akmos_xalgo_sha2_224 = {
     (void *)akmos_sha2_256_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_sha2_256 = {
+const akmos_digest_xalgo_t akmos_xalgo_sha2_256 = {
     AKMOS_ALGO_SHA2_256, "SHA2-256",
     AKMOS_SHA2_256_BLKLEN, AKMOS_SHA2_256_DIGLEN,
     (void *)akmos_sha2_256_init,
@@ -80,7 +80,7 @@ akmos_digest_xalgo_t akmos_xalgo_sha2_256 = {
     (void *)akmos_sha2_256_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_sha2_384 = {
+const akmos_digest_xalgo_t akmos_xalgo_sha2_384 = {
     AKMOS_ALGO_SHA2_384, "SHA2-384",
     AKMOS_SHA2_384_BLKLEN, AKMOS_SHA2_384_DIGLEN,
     (void *)akmos_sha2_384_init,
@@ -88,7 +88,7 @@ akmos_digest_xalgo_t akmos_xalgo_sha2_384 = {
     (void *)akmos_sha2_512_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_sha2_512 = {
+const akmos_digest_xalgo_t akmos_xalgo_sha2_512 = {
     AKMOS_ALGO_SHA2_512, "SHA2-512",
     AKMOS_SHA2_512_BLKLEN, AKMOS_SHA2_512_DIGLEN,
     (void *)akmos_sha2_512_init,
@@ -96,7 +96,7 @@ akmos_digest_xalgo_t akmos_xalgo_sha2_512 = {
     (void *)akmos_sha2_512_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_sha3_224 = {
+const akmos_digest_xalgo_t akmos_xalgo_sha3_224 = {
     AKMOS_ALGO_SHA3_224, "SHA3-224",
     AKMOS_SHA3_224_BLKLEN, AKMOS_SHA3_224_DIGLEN,
     (void *)akmos_sha3_224_init,
@@ -104,7 +104,7 @@ akmos_digest_xalgo_t akmos_xalgo_sha3_224 = {
     (void *)akmos_sha3_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_sha3_256 = {
+const akmos_digest_xalgo_t akmos_xalgo_sha3_256 = {
     AKMOS_ALGO_SHA3_256, "SHA3-256",
     AKMOS_SHA3_256_BLKLEN, AKMOS_SHA3_256_DIGLEN,
     (void *)akmos_sha3_256_init,
@@ -112,7 +112,7 @@ akmos_digest_xalgo_t akmos_xalgo_sha3_256 = {
     (void *)akmos_sha3_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_sha3_384 = {
+const akmos_digest_xalgo_t akmos_xalgo_sha3_384 = {
     AKMOS_ALGO_SHA3_384, "SHA3-384",
     AKMOS_SHA3_384_BLKLEN, AKMOS_SHA3_384_DIGLEN,
     (void *)akmos_sha3_384_init,
@@ -120,7 +120,7 @@ akmos_digest_xalgo_t akmos_xalgo_sha3_384 = {
     (void *)akmos_sha3_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_sha3_512 = {
+const akmos_digest_xalgo_t akmos_xalgo_sha3_512 = {
     AKMOS_ALGO_SHA3_512, "SHA3-512",
     AKMOS_SHA3_512_BLKLEN, AKMOS_SHA3_512_DIGLEN,
     (void *)akmos_sha3_512_init,
@@ -128,7 +128,7 @@ akmos_digest_xalgo_t akmos_xalgo_sha3_512 = {
     (void *)akmos_sha3_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_tiger = {
+const akmos_digest_xalgo_t akmos_xalgo_tiger = {
     AKMOS_ALGO_TIGER, "Tiger",
     AKMOS_TIGER_BLKLEN, AKMOS_TIGER_DIGLEN,
     (void *)akmos_tiger_init,
@@ -136,7 +136,7 @@ akmos_digest_xalgo_t akmos_xalgo_tiger = {
     (void *)akmos_tiger_done
 };
 
-akmos_digest_xalgo_t akmos_xalgo_whirlpool = {
+const akmos_digest_xalgo_t akmos_xalgo_whirlpool = {
     AKMOS_ALGO_WHIRLPOOL, "Whirlpool",
     AKMOS_WHIRLPOOL_BLKLEN, AKMOS_WHIRLPOOL_DIGLEN,
     (void *)akmos_whirlpool_init,

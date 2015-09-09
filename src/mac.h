@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -50,12 +50,12 @@ typedef struct {
 } akmos_mac_xmode_t;
 
 struct akmos_mac_s {
-    akmos_mac_xmode_t   *xmode;
-    akmos_mac_mode_ctx  mctx;
+    const akmos_mac_xmode_t *xmode;
+    akmos_mac_mode_ctx      mctx;
 };
 
-extern akmos_mac_xmode_t akmos_xmode_hmac;
-extern akmos_mac_xmode_t akmos_xmode_cmac;
-extern akmos_mac_xmode_t akmos_xmode_cbcmac;
+extern const akmos_mac_xmode_t akmos_xmode_hmac;
+extern const akmos_mac_xmode_t akmos_xmode_cmac;
+extern const akmos_mac_xmode_t akmos_xmode_cbcmac;
 
 #endif  /* AKMOS_MAC_H */

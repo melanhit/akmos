@@ -63,12 +63,6 @@ static const uint32_t R[11] = {
     s[2] = w[2] ^ k[2]; s[3] = w[3] ^ k[3]; \
 }
 
-#define AddRoundKeyI(k, w, s)               \
-{                                           \
-    s[0] = w[0] ^ k[3]; s[1] = w[1] ^ k[2]; \
-    s[2] = w[2] ^ k[1]; s[3] = w[3] ^ k[0]; \
-}
-
 static void rijndael_setkey128(uint32_t *k)
 {
     uint32_t i, t;
@@ -110,41 +104,41 @@ static void rijndael_setkey256(uint32_t *k)
 
 void akmos_rijndael_setkey(akmos_rijndael_t *ctx, const uint8_t *key, size_t len)
 {
-    size_t i;
+    uint32_t *k;
+    int i;
 
     for(i = 0; i < len / sizeof(uint32_t); i++)
-        ctx->k[i] = PACK32(key + (i * sizeof(uint32_t)));
+        ctx->ke[i] = PACK32(key + (i * sizeof(uint32_t)));
 
     switch(len) {
         case 16:
-            rijndael_setkey128(ctx->k);
+            rijndael_setkey128(ctx->ke);
             ctx->r = RIJNDAEL_R128;
             break;
 
         case 24:
-            rijndael_setkey192(ctx->k);
+            rijndael_setkey192(ctx->ke);
             ctx->r = RIJNDAEL_R192;
             break;
 
         case 32:
-            rijndael_setkey256(ctx->k);
+            rijndael_setkey256(ctx->ke);
             ctx->r = RIJNDAEL_R256;
             break;
 
         default:
             return;
     }
-}
 
-void akmos_rijndael_setkey1(akmos_rijndael_t *ctx, const uint8_t *key, size_t len)
-{
-    uint32_t *k, i;
+    for(i = 0, j = ctx->r*4; i <= ctx->r*4; i += 4, j -= 4) {
+        ctx->kd[i    ] = ctx->ke[j    ];
+        ctx->kd[i + 1] = ctx->ke[j + 1];
+        ctx->kd[i + 2] = ctx->ke[j + 2];
+        ctx->kd[i + 3] = ctx->ke[j + 3];
+    }
 
-    akmos_rijndael_setkey(ctx, key, len);
-    
-    k = ctx->k + (((ctx->r + 1) * 4) - 8);
-        
-    for(i = 1; i < ctx->r; i++, k -= 4) {
+    k = ctx->kd + 4;
+    for(i = 1; i < ctx->r; i++, k += 4) {
         k[0] =  SI0[S4[(k[0] >> 24)       ] & 0xff] ^
                 SI1[S4[(k[0] >> 16) & 0xff] & 0xff] ^
                 SI2[S4[(k[0] >>  8) & 0xff] & 0xff] ^
@@ -162,6 +156,7 @@ void akmos_rijndael_setkey1(akmos_rijndael_t *ctx, const uint8_t *key, size_t le
                 SI2[S4[(k[3] >>  8) & 0xff] & 0xff] ^
                 SI3[S4[(k[3]      ) & 0xff] & 0xff];
     }
+
 }
 
 void akmos_rijndael_encrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -171,7 +166,7 @@ void akmos_rijndael_encrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_
     w[0] = PACK32(in_blk    ); w[1] = PACK32(in_blk +  4);
     w[2] = PACK32(in_blk + 8); w[3] = PACK32(in_blk + 12);
 
-    k = ctx->k;
+    k = ctx->ke;
 
     AddRoundKey(k, w, s);
     k += 4;
@@ -214,12 +209,12 @@ void akmos_rijndael_decrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_
     w[0] = PACK32(in_blk    ); w[1] = PACK32(in_blk +  4);
     w[2] = PACK32(in_blk + 8); w[3] = PACK32(in_blk + 12);
 
-    k = ctx->k + (((ctx->r + 1) * 4) - 4);
+    k = ctx->kd;
 
     AddRoundKey(k, w, s);
-    k -= 4;
+    k += 4;
 
-    for(i = 1; i < ctx->r; i++, k -= 4) {
+    for(i = 1; i < ctx->r; i++, k += 4) {
         w[0] = SI0[s[0] >> 24] ^ SI1[(s[3] >> 16) & 0xff] ^ SI2[(s[2] >> 8) & 0xff] ^ SI3[s[1] & 0xff];
         w[1] = SI0[s[1] >> 24] ^ SI1[(s[0] >> 16) & 0xff] ^ SI2[(s[3] >> 8) & 0xff] ^ SI3[s[2] & 0xff];
         w[2] = SI0[s[2] >> 24] ^ SI1[(s[1] >> 16) & 0xff] ^ SI2[(s[0] >> 8) & 0xff] ^ SI3[s[3] & 0xff];
