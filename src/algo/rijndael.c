@@ -105,7 +105,7 @@ static void rijndael_setkey256(uint32_t *k)
 void akmos_rijndael_setkey(akmos_rijndael_t *ctx, const uint8_t *key, size_t len)
 {
     uint32_t *k;
-    int i;
+    int i, j;
 
     for(i = 0; i < len / sizeof(uint32_t); i++)
         ctx->ke[i] = PACK32(key + (i * sizeof(uint32_t)));
