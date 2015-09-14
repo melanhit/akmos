@@ -172,10 +172,10 @@ void akmos_twofish_setkey(akmos_twofish_t *ctx, const uint8_t *in_key, size_t le
     ctx->k_len = len / 8;   /* 2, 3 or 4 */
 
     for (i = 0; i < ctx->k_len; ++i) {
-        a = PACK32R(in_key + i + i);
+        a = PACK32R(in_key + i*8);
         me_key[i] = a;
 
-        b = PACK32R(in_key + i + i + 1);
+        b = PACK32R(in_key + ((i+i+1)*4));
         mo_key[i] = b;
 
         s_key[ctx->k_len - i - 1] = mds_rem(a, b);
