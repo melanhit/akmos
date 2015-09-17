@@ -45,34 +45,9 @@ typedef union {
     akmos_tiger_t       tiger;
 } akmos_digest_algo_ctx;
 
-typedef struct {
-    akmos_algo_id id;
-    char *name;
-    size_t blklen;
-    size_t diglen;
-    void (*init)   (void *);
-    void (*update) (void *, const uint8_t *, size_t);
-    void (*done)   (void *, uint8_t *);
-} akmos_digest_xalgo_t;
-
 struct akmos_digest_s {
     const akmos_digest_xalgo_t  *xalgo;
     akmos_digest_algo_ctx       actx;
 };
-
-extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_160;
-extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_256;
-extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_320;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha1;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_224;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_256;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_384;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_512;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_224;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_256;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_384;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_512;
-extern const akmos_digest_xalgo_t akmos_xalgo_tiger;
-extern const akmos_digest_xalgo_t akmos_xalgo_whirlpool;
 
 #endif  /* AKMOS_DIGEST_H */

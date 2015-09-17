@@ -71,18 +71,6 @@ typedef union {
 } akmos_cipher_mode_ctx;
 
 typedef struct {
-    akmos_algo_id id;
-    char   *name;
-    size_t blklen;
-    size_t keymin;
-    size_t keymax;
-    size_t keystep;
-    void (*setkey)  (void *, const uint8_t *, size_t);
-    void (*encrypt) (void *, const uint8_t *, uint8_t *);
-    void (*decrypt) (void *, const uint8_t *, uint8_t *);
-} akmos_cipher_xalgo_t;
-
-typedef struct {
     akmos_mode_id   id;
     char            *name;
     void (*setiv)   (akmos_cipher_ctx *, const uint8_t *);
@@ -101,19 +89,6 @@ struct akmos_cipher_s {
     /* enc/dec */
     void (*crypt)               (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
 };
-
-extern const akmos_cipher_xalgo_t akmos_xalgo_anubis;
-extern const akmos_cipher_xalgo_t akmos_xalgo_blowfish;
-extern const akmos_cipher_xalgo_t akmos_xalgo_camellia;
-extern const akmos_cipher_xalgo_t akmos_xalgo_cast6;
-extern const akmos_cipher_xalgo_t akmos_xalgo_rc6;
-extern const akmos_cipher_xalgo_t akmos_xalgo_rijndael;
-extern const akmos_cipher_xalgo_t akmos_xalgo_serpent;
-extern const akmos_cipher_xalgo_t akmos_xalgo_seed;
-extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_256;
-extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_512;
-extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_1024;
-extern const akmos_cipher_xalgo_t akmos_xalgo_twofish;
 
 extern const akmos_cipher_xmode_t akmos_xmode_ecb;
 extern const akmos_cipher_xmode_t akmos_xmode_cbc;

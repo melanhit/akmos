@@ -131,4 +131,55 @@ size_t akmos_padrem(uint8_t *, size_t);
 
 int akmos_perror(akmos_err_id);
 
+/* xform objects */
+typedef struct akmos_cipher_xalgo_s {
+    akmos_algo_id id;
+    char   *name;
+    size_t blklen;
+    size_t keymin;
+    size_t keymax;
+    size_t keystep;
+    void (*setkey)  (void *, const uint8_t *, size_t);
+    void (*encrypt) (void *, const uint8_t *, uint8_t *);
+    void (*decrypt) (void *, const uint8_t *, uint8_t *);
+} akmos_cipher_xalgo_t;
+
+typedef struct akmos_digest_xalgo_s {
+    akmos_algo_id id;
+    char *name;
+    size_t blklen;
+    size_t diglen;
+    void (*init)   (void *);
+    void (*update) (void *, const uint8_t *, size_t);
+    void (*done)   (void *, uint8_t *);
+} akmos_digest_xalgo_t;
+
+extern const akmos_cipher_xalgo_t akmos_xalgo_anubis;
+extern const akmos_cipher_xalgo_t akmos_xalgo_blowfish;
+extern const akmos_cipher_xalgo_t akmos_xalgo_camellia;
+extern const akmos_cipher_xalgo_t akmos_xalgo_cast6;
+extern const akmos_cipher_xalgo_t akmos_xalgo_rc6;
+extern const akmos_cipher_xalgo_t akmos_xalgo_rijndael;
+extern const akmos_cipher_xalgo_t akmos_xalgo_serpent;
+extern const akmos_cipher_xalgo_t akmos_xalgo_seed;
+extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_256;
+extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_512;
+extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_1024;
+extern const akmos_cipher_xalgo_t akmos_xalgo_twofish;
+
+extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_160;
+extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_256;
+extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_320;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha1;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha2_224;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha2_256;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha2_384;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha2_512;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha3_224;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha3_256;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha3_384;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha3_512;
+extern const akmos_digest_xalgo_t akmos_xalgo_tiger;
+extern const akmos_digest_xalgo_t akmos_xalgo_whirlpool;
+
 #endif  /* AKMOS_H */
