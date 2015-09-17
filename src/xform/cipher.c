@@ -43,7 +43,7 @@ const akmos_cipher_xalgo_t akmos_xalgo_anubis = {
 
 const akmos_cipher_xalgo_t akmos_xalgo_blowfish = {
     AKMOS_ALGO_BLOWFISH, "Blowfish",
-    8, 16, 56, 4,
+    8, 8, 56, 4,
     (void *)&akmos_blowfish_setkey,
     (void *)&akmos_blowfish_encrypt,
     (void *)&akmos_blowfish_decrypt
