@@ -33,64 +33,6 @@
 #include "akmos.h"
 #include "cipher.h"
 
-static int cipher_init_algo(akmos_cipher_ctx *ctx, akmos_algo_id algo)
-{
-    switch(algo) {
-        case AKMOS_ALGO_ANUBIS:
-            ctx->xalgo  = &akmos_xalgo_anubis;
-            break;
-
-        case AKMOS_ALGO_CAST6:
-            ctx->xalgo  = &akmos_xalgo_cast6;
-            break;
-
-        case AKMOS_ALGO_RC6:
-            ctx->xalgo  = &akmos_xalgo_rc6;
-            break;
-
-        case AKMOS_ALGO_SERPENT:
-            ctx->xalgo  = &akmos_xalgo_serpent;
-            break;
-
-        case AKMOS_ALGO_TWOFISH:
-            ctx->xalgo  = &akmos_xalgo_twofish;
-            break;
-
-        case AKMOS_ALGO_THREEFISH_256:
-            ctx->xalgo  = &akmos_xalgo_threefish_256;
-            break;
-
-        case AKMOS_ALGO_THREEFISH_512:
-            ctx->xalgo  = &akmos_xalgo_threefish_512;
-            break;
-
-        case AKMOS_ALGO_THREEFISH_1024:
-            ctx->xalgo  = &akmos_xalgo_threefish_1024;
-            break;
-
-        case AKMOS_ALGO_CAMELLIA:
-            ctx->xalgo  = &akmos_xalgo_camellia;
-            break;
-
-        case AKMOS_ALGO_RIJNDAEL:
-            ctx->xalgo  = &akmos_xalgo_rijndael;
-            break;
-
-        case AKMOS_ALGO_BLOWFISH:
-            ctx->xalgo  = &akmos_xalgo_blowfish;
-            break;
-
-        case AKMOS_ALGO_SEED:
-            ctx->xalgo  = &akmos_xalgo_seed;
-            break;
-
-        default:
-            return AKMOS_ERR_ALGOID;
-    }
-
-    return AKMOS_ERR_SUCCESS;
-}
-
 static int cipher_init_mode(akmos_cipher_ctx *ctx, akmos_mode_id mode, akmos_force_id force)
 {
     if(force != AKMOS_FORCE_ENCRYPT && force != AKMOS_FORCE_DECRYPT)
@@ -142,9 +84,11 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
 
     memset(ptr, 0, sizeof(akmos_cipher_ctx));
 
-    err = cipher_init_algo(ptr, algo);
-    if(err)
+    ptr->xalgo = akmos_xalgo_cipher(algo);
+    if(!ptr->xalgo) {
+        err = AKMOS_ERR_ALGOID;
         goto out;
+    }
 
     err = cipher_init_mode(ptr, mode, force);
     if(err)

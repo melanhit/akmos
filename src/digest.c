@@ -43,66 +43,10 @@ int akmos_digest_init(akmos_digest_ctx **ctx, akmos_algo_id algo)
 
     memset(ptr, 0, sizeof(akmos_digest_ctx));
 
-    switch(algo) {
-        case AKMOS_ALGO_SHA1:
-            ptr->xalgo = &akmos_xalgo_sha1;
-            break;
-
-        case AKMOS_ALGO_SHA2_224:
-            ptr->xalgo = &akmos_xalgo_sha2_224;
-            break;
-
-        case AKMOS_ALGO_SHA2_256:
-            ptr->xalgo = &akmos_xalgo_sha2_256;
-            break;
-
-        case AKMOS_ALGO_SHA2_384:
-            ptr->xalgo = &akmos_xalgo_sha2_384;
-            break;
-
-        case AKMOS_ALGO_SHA2_512:
-            ptr->xalgo = &akmos_xalgo_sha2_512;
-            break;
-
-        case AKMOS_ALGO_SHA3_224:
-            ptr->xalgo = &akmos_xalgo_sha3_224;
-            break;
-
-        case AKMOS_ALGO_SHA3_256:
-            ptr->xalgo = &akmos_xalgo_sha3_256;
-            break;
-
-        case AKMOS_ALGO_SHA3_384:
-            ptr->xalgo = &akmos_xalgo_sha3_384;
-            break;
-
-        case AKMOS_ALGO_SHA3_512:
-            ptr->xalgo = &akmos_xalgo_sha3_512;
-            break;
-
-        case AKMOS_ALGO_RIPEMD_160:
-            ptr->xalgo = &akmos_xalgo_ripemd_160;
-            break;
-
-        case AKMOS_ALGO_RIPEMD_256:
-            ptr->xalgo = &akmos_xalgo_ripemd_256;
-            break;
-
-        case AKMOS_ALGO_RIPEMD_320:
-            ptr->xalgo = &akmos_xalgo_ripemd_320;
-            break;
-
-        case AKMOS_ALGO_TIGER:
-            ptr->xalgo = &akmos_xalgo_tiger;
-            break;
-
-        case AKMOS_ALGO_WHIRLPOOL:
-            ptr->xalgo = &akmos_xalgo_whirlpool;
-            break;
-
-        default:
-            free(ptr);
-            return AKMOS_ERR_ALGOID;
+    ptr->xalgo = akmos_xalgo_digest(algo);
+    if(!ptr->xalgo) {
+        free(ptr);
+        return AKMOS_ERR_ALGOID;
     }
 
     ptr->xalgo->init(&ptr->actx);

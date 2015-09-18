@@ -437,3 +437,126 @@ void akmos_memzero(volatile void *p, size_t len)
     while(len--)
         *_p++=0;
 }
+
+const akmos_cipher_xalgo_t *akmos_xalgo_cipher(akmos_algo_id algo)
+{
+    const akmos_cipher_xalgo_t *xalgo;
+
+    switch(algo) {
+        case AKMOS_ALGO_ANUBIS:
+            xalgo = &akmos_xalgo_anubis;
+            break;
+
+        case AKMOS_ALGO_BLOWFISH:
+            xalgo = &akmos_xalgo_blowfish;
+            break;
+
+        case AKMOS_ALGO_CAMELLIA:
+            xalgo = &akmos_xalgo_camellia;
+            break;
+
+        case AKMOS_ALGO_CAST6:
+            xalgo = &akmos_xalgo_cast6;
+            break;
+
+        case AKMOS_ALGO_RC6:
+            xalgo = &akmos_xalgo_rc6;
+            break;
+
+        case AKMOS_ALGO_RIJNDAEL:
+            xalgo = &akmos_xalgo_rijndael;
+            break;
+
+        case AKMOS_ALGO_SEED:
+            xalgo = &akmos_xalgo_seed;
+            break;
+
+        case AKMOS_ALGO_SERPENT:
+            xalgo = &akmos_xalgo_serpent;
+            break;
+
+        case AKMOS_ALGO_THREEFISH_256:
+            xalgo = &akmos_xalgo_threefish_256;
+            break;
+
+        case AKMOS_ALGO_THREEFISH_512:
+            xalgo = &akmos_xalgo_threefish_512;
+            break;
+
+        case AKMOS_ALGO_THREEFISH_1024:
+            xalgo = &akmos_xalgo_threefish_1024;
+            break;
+
+        case AKMOS_ALGO_TWOFISH:
+            xalgo = &akmos_xalgo_twofish;
+            break;
+
+        default:
+            return NULL;
+    }
+
+    return xalgo;
+}
+
+const akmos_digest_xalgo_t *akmos_xalgo_digest(akmos_algo_id algo)
+{
+    const akmos_digest_xalgo_t *xalgo;
+
+    switch(algo) {
+        case AKMOS_ALGO_RIPEMD_160:
+            xalgo = &akmos_xalgo_ripemd_160;
+            break;
+
+        case AKMOS_ALGO_RIPEMD_256:
+            xalgo = &akmos_xalgo_ripemd_256;
+            break;
+
+        case AKMOS_ALGO_RIPEMD_320:
+            xalgo = &akmos_xalgo_ripemd_320;
+            break;
+
+        case AKMOS_ALGO_SHA1:
+            xalgo = &akmos_xalgo_sha1;
+            break;
+
+        case AKMOS_ALGO_SHA2_224:
+            xalgo = &akmos_xalgo_sha2_224;
+            break;
+
+        case AKMOS_ALGO_SHA2_256:
+            xalgo = &akmos_xalgo_sha2_256;
+            break;
+
+        case AKMOS_ALGO_SHA2_384:
+            xalgo = &akmos_xalgo_sha2_384;
+            break;
+
+        case AKMOS_ALGO_SHA2_512:
+            xalgo = &akmos_xalgo_sha2_512;
+            break;
+
+        case AKMOS_ALGO_SHA3_224:
+            xalgo = &akmos_xalgo_sha3_224;
+            break;
+
+        case AKMOS_ALGO_SHA3_256:
+            xalgo = &akmos_xalgo_sha3_256;
+            break;
+
+        case AKMOS_ALGO_SHA3_384:
+            xalgo = &akmos_xalgo_sha3_384;
+            break;
+
+        case AKMOS_ALGO_SHA3_512:
+            xalgo = &akmos_xalgo_sha3_512;
+            break;
+
+        case AKMOS_ALGO_WHIRLPOOL:
+            xalgo = &akmos_xalgo_whirlpool;
+            break;
+
+        default:
+            return NULL;
+    }
+    return xalgo;
+}

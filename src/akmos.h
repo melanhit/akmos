@@ -154,6 +154,9 @@ typedef struct akmos_digest_xalgo_s {
     void (*done)   (void *, uint8_t *);
 } akmos_digest_xalgo_t;
 
+const akmos_cipher_xalgo_t *akmos_xalgo_cipher(akmos_algo_id);
+const akmos_digest_xalgo_t *akmos_xalgo_digest(akmos_algo_id);
+
 extern const akmos_cipher_xalgo_t akmos_xalgo_anubis;
 extern const akmos_cipher_xalgo_t akmos_xalgo_blowfish;
 extern const akmos_cipher_xalgo_t akmos_xalgo_camellia;
