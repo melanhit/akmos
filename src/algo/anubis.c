@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) Paulo S.L.M. Barreto, Vincent Rijmen
  *   All rights reserved.
  *
@@ -37,19 +37,19 @@
 #include "anubis_sb32.h"
 
 static const uint32_t rc[] = {
-    0xa7d3e671, 0xd0ac4d79, 0x3ac991fc, 0x1e4754bd,
-    0x8ca57afb, 0x63b8ddd4, 0xe5b3c5be, 0xa9880ca2,
-    0x39df29da, 0x2ba8cb4c, 0x4b22aa24, 0x4170a6f9,
-    0x5ae2b036, 0x7de433ff, 0x6020088b, 0x5eab7f78,
-    0x7c2c57d2, 0xdc6d7e0d, 0x5394c328
+    0xba542f74, 0x53d3d24d, 0x50ac8dbf, 0x70529a4c,
+    0xead597d1, 0x33515ba6, 0xde48a899, 0xdb32b7fc,
+    0xe39e919b, 0xe2bb416e, 0xa5cb6b95, 0xa1f3b102,
+    0xccc41d14, 0xc363da5d, 0x5fdc7dcd, 0x7f5a6c5c,
+    0xf726ffed, 0xe89d6f8e, 0x19a0f089
 };
 
 void akmos_anubis_setkey(akmos_anubis_t *ctx, const uint8_t *key, size_t len)
 {
-    int N, R, i, j, r, v;
+    int N, R, i, j, r;
     uint32_t kappa[AKMOS_ANUBIS_MAX_N];
     uint32_t inter[AKMOS_ANUBIS_MAX_N];
-    uint32_t K0, K1, K2, K3;
+    uint32_t v, K0, K1, K2, K3;
 
     N = (len * 8) >> 5;
     ctx->R = R = 8 + N;
