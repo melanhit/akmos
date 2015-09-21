@@ -58,7 +58,7 @@ int test_path_cipher(akmos_algo_id algo, akmos_mode_id mode, size_t keylen, char
     s = strdup(argv0);
     dir_name = dirname(s);
 
-    snprintf(vname, sizeof(vname), "%s-%s-%zd.bin", mode_name, alg_name, keylen);
+    sprintf(vname, "%s-%s-%zd.bin", mode_name, alg_name, keylen);
 
     for(i = 0; i < strlen(vname); i++)
         vname[i] = tolower(vname[i]);
