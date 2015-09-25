@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,71 +26,78 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 
-#include "../akmos.h"
-#include "../cipher.h"
+#include "pxor.h"
 
-void akmos_cbc_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
+void akmos_pxor8(const uint8_t *in_blk1, const uint8_t *in_blk2, uint8_t *out_blk)
 {
-    akmos_cbc_t *ptr = &ctx->mctx.cbc;
+    uint64_t a, b;
 
-    if(!iv)
-        memset(ptr->iv, 0, ctx->xalgo->blklen);
-    else
-        memcpy(ptr->iv, iv, ctx->xalgo->blklen);
+    memcpy(a, in_blk1, 8);
+    memcpy(b, in_blk2, 8);
+
+    b ^= a;
+
+    memcpy(out_blk, b, 8);
 }
 
-void akmos_cbc_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+void akmos_pxor16(const uint8_t *in_blk1, const uint8_t *in_blk2, uint8_t *out_blk)
 {
-    akmos_cbc_t *ptr;
-    size_t i, nb, blklen;
+    uint64_t a[2], b[2];
 
-    ptr = &ctx->mctx.cbc;
-    blklen = ctx->xalgo->blklen;
+    memcpy(a, in_blk1, 16);
+    memcpy(b, in_blk2, 16);
 
-    nb = in_len / blklen;
+    b[0] ^= a[0]; b[1] ^= a[1];
 
-    for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen) {
-        ctx->pxor(ptr->iv, in_blk, ptr->iv);
-
-        ctx->xalgo->encrypt(&ctx->actx, ptr->iv, out_blk);
-
-        memcpy(ptr->iv, out_blk, blklen);
-    }
+    memcpy(out_blk, b, 16);
 }
 
-void akmos_cbc_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+void akmos_pxor32(const uint8_t *in_blk1, const uint8_t *in_blk2, uint8_t *out_blk)
 {
-    akmos_cbc_t *ptr;
-    size_t i, nb, blklen;
+    uint64_t a[4], b[4];
 
-    ptr = &ctx->mctx.cbc;
-    blklen = ctx->xalgo->blklen;
+    memcpy(a, in_blk1, 32);
+    memcpy(b, in_blk2, 32);
 
-    nb = in_len / blklen;
+    b[0] ^= a[0]; b[1] ^= a[1];
+    b[2] ^= a[2]; b[3] ^= a[3];
 
-    for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen) {
-        ctx->xalgo->decrypt(&ctx->actx, in_blk, ptr->buf);
-
-        ctx->pxor(ptr->iv, ptr->buf, ptr->buf);
-
-        memcpy(ptr->iv, in_blk, blklen);
-        memcpy(out_blk, ptr->buf, blklen);
-    }
+    memcpy(out_blk, b, 32);
 }
 
-void akmos_cbc_zero(akmos_cipher_ctx *ctx)
+void akmos_pxor64(const uint8_t *in_blk1, const uint8_t *in_blk2, uint8_t *out_blk)
 {
-    akmos_cbc_t *ptr;
+    uint64_t a[8], b[8];
 
-    if(!ctx)
-        return;
+    memcpy(a, in_blk1, 64);
+    memcpy(b, in_blk2, 64);
 
-    ptr = &ctx->mctx.cbc;
+    b[0] ^= a[0]; b[1] ^= a[1];
+    b[2] ^= a[2]; b[3] ^= a[3];
+    b[4] ^= a[4]; b[5] ^= a[5];
+    b[6] ^= a[6]; b[7] ^= a[7];
 
-    akmos_memzero(ptr->buf, ctx->xalgo->blklen);
-    akmos_memzero(ptr->iv, ctx->xalgo->blklen);
+    memcpy(out_blk, b, 64);
+}
+
+void akmos_pxor128(const uint8_t *in_blk1, const uint8_t *in_blk2, uint8_t *out_blk)
+{
+    uint64_t a[16], b[16];
+
+    memcpy(a, in_blk1, 128);
+    memcpy(b, in_blk2, 128);
+
+    b[ 0] ^= a[ 0]; b[ 1] ^= a[ 1];
+    b[ 2] ^= a[ 2]; b[ 3] ^= a[ 3];
+    b[ 4] ^= a[ 4]; b[ 5] ^= a[ 5];
+    b[ 6] ^= a[ 6]; b[ 7] ^= a[ 7];
+    b[ 8] ^= a[ 8]; b[ 9] ^= a[ 9];
+    b[10] ^= a[10]; b[11] ^= a[11];
+    b[12] ^= a[12]; b[13] ^= a[13];
+    b[14] ^= a[14]; b[15] ^= a[15];
+
+    memcpy(out_blk, b, 128);
 }

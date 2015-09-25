@@ -26,67 +26,13 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
+#ifndef AKMOS_PXOR_H
+#define AKMOS_PXOR_H
 
-#include "../akmos.h"
-#include "../cipher.h"
+void akmos_pxor8  (const uint8_t *, const uint8_t *, uint8_t *);
+void akmos_pxor16 (const uint8_t *, const uint8_t *, uint8_t *);
+void akmos_pxor32 (const uint8_t *, const uint8_t *, uint8_t *);
+void akmos_pxor64 (const uint8_t *, const uint8_t *, uint8_t *);
+void akmos_pxor128(const uint8_t *, const uint8_t *, uint8_t *);
 
-void akmos_cfb_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
-{
-    akmos_cfb_t *ptr = &ctx->mctx.cfb;
-
-    if(!iv)
-        memset(ptr->iv, 0, ctx->xalgo->blklen);
-    else
-        memcpy(ptr->iv, iv, ctx->xalgo->blklen);
-}
-
-void akmos_cfb_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
-{
-    akmos_cfb_t *ptr;
-    size_t i, nb, blklen;
-
-    ptr = &ctx->mctx.cfb;
-    blklen = ctx->xalgo->blklen;
-
-    nb = in_len / blklen;
-
-    for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen) {
-        ctx->xalgo->encrypt(&ctx->actx, ptr->iv, ptr->iv);
-
-        ctx->pxor(ptr->iv, in_blk, out_blk);
-    }
-}
-
-void akmos_cfb_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
-{
-    akmos_cfb_t *ptr;
-    size_t i, nb, blklen;
-
-    ptr = &ctx->mctx.cfb;
-    blklen = ctx->xalgo->blklen;
-
-    nb = in_len / blklen;
-
-    for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen) {
-        ctx->xalgo->encrypt(&ctx->actx, ptr->iv, ptr->buf);
-        memcpy(ptr->iv, in_blk, blklen);
-
-        ctx->pxor(ptr->buf, in_blk, out_blk);
-    }
-}
-
-void akmos_cfb_zero(akmos_cipher_ctx *ctx)
-{
-    akmos_cfb_t *ptr;
-
-    if(!ctx)
-        return;
-
-    ptr = &ctx->mctx.cfb;
-
-    akmos_memzero(ptr->iv, ctx->xalgo->blklen);
-    akmos_memzero(ptr->buf, ctx->xalgo->blklen);
-}
+#endif

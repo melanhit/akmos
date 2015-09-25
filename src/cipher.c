@@ -32,6 +32,7 @@
 
 #include "akmos.h"
 #include "cipher.h"
+#include "pxor.h"
 
 static int cipher_init_mode(akmos_cipher_ctx *ctx, akmos_mode_id mode, akmos_force_id force)
 {
@@ -93,6 +94,32 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
     err = cipher_init_mode(ptr, mode, force);
     if(err)
         goto out;
+
+    switch(ptr->xalgo->blklen) {
+        case 8:
+            ptr->pxor = &akmos_pxor8;
+            break;
+
+        case 16:
+            ptr->pxor = &akmos_pxor16;
+            break;
+
+        case 32:
+            ptr->pxor = &akmos_pxor32;
+            break;
+
+        case 64:
+            ptr->pxor = &akmos_pxor64;
+            break;
+
+        case 128:
+            ptr->pxor = &akmos_pxor16;
+            break;
+
+        default:
+            err = AKMOS_ERR_BLKLEN;
+            goto out;
+    }
 
     return AKMOS_ERR_SUCCESS;
 

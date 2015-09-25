@@ -394,6 +394,10 @@ int akmos_perror(akmos_err_id e)
             printf("Invalid force (err = %d)\n", e);
             break;
 
+        case AKMOS_ERR_BLKLEN:
+            printf("Unsupported block length (err = %d)\n", e);
+            break;
+
         default:
             printf("Unknown error (err = %d)\n", e);
             break;

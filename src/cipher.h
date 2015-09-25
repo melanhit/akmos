@@ -86,8 +86,8 @@ struct akmos_cipher_s {
     /* mode */
     const akmos_cipher_xmode_t  *xmode;
     akmos_cipher_mode_ctx       mctx;
-    /* enc/dec */
     void (*crypt)               (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
+    void (*pxor)                (const uint8_t *, const uint8_t *, uint8_t *);
 };
 
 extern const akmos_cipher_xmode_t akmos_xmode_ecb;

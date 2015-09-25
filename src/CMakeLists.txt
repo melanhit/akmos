@@ -71,11 +71,13 @@ set(src_lib
 
 set(src_amd64
     algo/amd64/threefish_256.s
-    algo/amd64/threefish_512.s)
+    algo/amd64/threefish_512.s
+    amd64/pxor.s)
 
 set(src_orig
     algo/threefish_256.c
-    algo/threefish_512.c)
+    algo/threefish_512.c
+    pxor.c)
 
 set(src_cli
     cli/main.c

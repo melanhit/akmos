@@ -56,11 +56,13 @@ void akmos_ofb_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     for(i = 0; i < n; i++, in_blk += blklen, out_blk += blklen) {
         ctx->xalgo->encrypt(&ctx->actx, ptr->iv, ptr->iv);
 
-        for(j = 0; j < blklen; j++)
-            out_blk[j] = in_blk[j] ^ ptr->iv[j];
+        ctx->pxor(in_blk, ptr->iv, out_blk);
     }
 
     n = in_len - (n * blklen);
+    if(!n)
+        return;
+
     ctx->xalgo->encrypt(&ctx->actx, ptr->iv, ptr->iv);
 
     for(j = 0; j < n; j++)

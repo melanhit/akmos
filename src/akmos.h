@@ -36,7 +36,8 @@ typedef enum {
     AKMOS_ERR_MODEID,
     AKMOS_ERR_KEYLEN,
     AKMOS_ERR_ENOMEM,
-    AKMOS_ERR_FORCEID
+    AKMOS_ERR_FORCEID,
+    AKMOS_ERR_BLKLEN
 } akmos_err_id;
 
 typedef enum {
