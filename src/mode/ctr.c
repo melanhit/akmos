@@ -57,20 +57,39 @@ void akmos_ctr_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
 void akmos_ctr_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     akmos_ctr_t *ptr;
-    size_t i, j, n, blklen;
+    size_t i, n, blklen;
 
     ptr = &ctx->mctx.ctr;
+    if(ptr->rem_len) {
+        for(i = 0; i < ptr->rem_len; i++) {
+            if(i == in_len)
+                break;
+
+            out_blk[i] = ptr->rem_buf[i] ^ in_blk[i];
+        }
+
+        out_blk += i;
+        in_blk  += i;
+
+        in_len -= i;
+        ptr->rem_len -= i;
+
+        if(ptr->rem_len)
+            ptr->rem_buf += i;
+    }
 
     blklen = ctx->xalgo->blklen;
     n = in_len / blklen;
 
-    for(i = 0; i < n; i++, out_blk += blklen, in_blk += blklen, ptr->cnt++) {
+    for(i = 0; i < n; i++) {
         ctx->xalgo->encrypt(&ctx->actx, ptr->iv, ptr->tmp);
+        ptr->cnt++;
+        UNPACK64R(ptr->ctr, ptr->cnt);
 
         ctx->pxor(in_blk, ptr->tmp, out_blk);
 
-        ptr->cnt++;
-        UNPACK64R(ptr->ctr, ptr->cnt);
+        out_blk += ctx->xalgo->blklen;
+        in_blk  += ctx->xalgo->blklen;
     }
 
     n = in_len - (n * blklen);
@@ -78,12 +97,14 @@ void akmos_ctr_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
         return;
 
     ctx->xalgo->encrypt(&ctx->actx, ptr->iv, ptr->tmp);
-
-    for(j = 0; j < n; j++)
-        out_blk[j] = in_blk[j] ^ ptr->tmp[j];
-
     ptr->cnt++;
     UNPACK64R(ptr->ctr, ptr->cnt);
+
+    for(i = 0; i < in_len; i++)
+        out_blk[i] = ptr->tmp[i] ^ in_blk[i];
+
+    ptr->rem_len = blklen - i;
+    ptr->rem_buf = ptr->tmp + i;
 }
 
 void akmos_ctr_zero(akmos_cipher_ctx *ctx)

@@ -32,7 +32,9 @@
 typedef struct {
     uint8_t  iv[AKMOS_CIPHER_MAX_BLKLEN];
     uint8_t  tmp[AKMOS_CIPHER_MAX_BLKLEN];
-    uint8_t  *ctr;
+    uint8_t *ctr;
+    uint8_t *rem_buf;
+    size_t   rem_len;    
     uint64_t cnt;
 } akmos_ctr_t;
 
