@@ -150,6 +150,18 @@ void akmos_cipher_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
         ctx->xmode->setiv(ctx, iv);
 }
 
+void akmos_cipher_setcnt(akmos_cipher_ctx *ctx, uint64_t cnt)
+{
+    switch(ctx->xmode->id) {
+        case AKMOS_MODE_CTR:
+            ctx->mctx.ctr.cnt = cnt;
+            break;
+
+        default:
+            break;
+    }
+}
+
 void akmos_cipher_crypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     ctx->crypt(ctx, in_blk, in_len, out_blk);
@@ -182,6 +194,9 @@ int akmos_cipher_ex(akmos_force_id force, akmos_algo_id algo, akmos_mode_id mode
         goto out;
 
     akmos_cipher_setiv(ctx, iv);
+
+    if(mode == AKMOS_MODE_CTR)
+        akmos_cipher_setcnt(ctx, 0);
 
     akmos_cipher_crypt(ctx, in_blk, in_len, out_blk);
 

@@ -91,6 +91,7 @@ typedef struct akmos_cipher_s akmos_cipher_ctx;
 int  akmos_cipher_init   (akmos_cipher_ctx **, akmos_algo_id, akmos_mode_id, akmos_force_id);
 int  akmos_cipher_setkey (akmos_cipher_ctx *, const uint8_t *, size_t);
 void akmos_cipher_setiv  (akmos_cipher_ctx *, const uint8_t *);
+void akmos_cipher_setcnt (akmos_cipher_ctx *, uint64_t);
 void akmos_cipher_crypt  (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
 void akmos_cipher_free   (akmos_cipher_ctx *);
 int  akmos_cipher_ex     (akmos_force_id, akmos_algo_id, akmos_mode_id, const uint8_t *, size_t,
