@@ -55,53 +55,53 @@
 )
 #endif  /* SWAPU32 */
 
-/* unpack uint32_t into 4 uint8_t (direct) */
-#ifndef UNPACK32
-#define UNPACK32(ct, st)                            \
+/* unpack uint32_t into 4 uint8_t (little-endian) */
+#ifndef UNPACK32LE
+#define UNPACK32LE(ct, st)                          \
 {                                                   \
     (ct)[3] = (uint8_t)(st);                        \
     (ct)[2] = (uint8_t)((st) >> 8);                 \
     (ct)[1] = (uint8_t)((st) >> 16);                \
     (ct)[0] = (uint8_t)((st) >> 24);                \
 }
-#endif  /* UNPACK32 */
+#endif  /* UNPACK32LE */
 
-/* unpack uint32_t into 4 uint8_t (reverse) */
-#ifndef UNPACK32R
-#define UNPACK32R(ct, st)                           \
+/* unpack uint32_t into 4 uint8_t (big-endian) */
+#ifndef UNPACK32BE
+#define UNPACK32BE(ct, st)                          \
 {                                                   \
     (ct)[0] = (uint8_t)(st);                        \
     (ct)[1] = (uint8_t)((st) >> 8);                 \
     (ct)[2] = (uint8_t)((st) >> 16);                \
     (ct)[3] = (uint8_t)((st) >> 24);                \
 }
-#endif  /* UNPACK32R */
+#endif  /* UNPACK32BE */
 
-/* pack 4 uint8_t into uint32_t (direct) */
-#ifndef PACK32
-#define PACK32(pt)                                  \
+/* pack 4 uint8_t into uint32_t (little-endian) */
+#ifndef PACK32LE
+#define PACK32LE(pt)                                \
 (                                                   \
       ((uint32_t)(pt)[3]      )                     \
     ^ ((uint32_t)(pt)[2] <<  8)                     \
     ^ ((uint32_t)(pt)[1] << 16)                     \
     ^ ((uint32_t)(pt)[0] << 24)                     \
 )
-#endif  /* PACK32 */
+#endif  /* PACK32LE */
 
-/* pack 4 uint8_t into uint32_t (reverse) */
-#ifndef PACK32R
-#define PACK32R(pt)                                 \
+/* pack 4 uint8_t into uint32_t (big-endian) */
+#ifndef PACK32BE
+#define PACK32BE(pt)                                \
 (                                                   \
       ((uint32_t)(pt)[0]      )                     \
     ^ ((uint32_t)(pt)[1] <<  8)                     \
     ^ ((uint32_t)(pt)[2] << 16)                     \
     ^ ((uint32_t)(pt)[3] << 24)                     \
 )
-#endif  /* PACK32R */
+#endif  /* PACK32BE */
 
-/* unpack uint64_t into 8 uint8_t (direct) */
-#ifndef UNPACK64
-#define UNPACK64(ct, st)                            \
+/* unpack uint64_t into 8 uint8_t (little-endian) */
+#ifndef UNPACK64LE
+#define UNPACK64LE(ct, st)                          \
 {                                                   \
     (ct)[7] = (uint8_t)(st);                        \
     (ct)[6] = (uint8_t)((st) >> 8);                 \
@@ -112,11 +112,11 @@
     (ct)[1] = (uint8_t)((st) >> 48);                \
     (ct)[0] = (uint8_t)((st) >> 56);                \
 }
-#endif  /* UNPACK64 */
+#endif  /* UNPACK64LE */
 
-/* unpack uint64_t into 8 uint8_t (reverse) */
-#ifndef UNPACK64R
-#define UNPACK64R(ct, st)                           \
+/* unpack uint64_t into 8 uint8_t (big-endian) */
+#ifndef UNPACK64BE
+#define UNPACK64BE(ct, st)                          \
 {                                                   \
     (ct)[0] = (uint8_t)(st);                        \
     (ct)[1] = (uint8_t)((st) >> 8);                 \
@@ -127,11 +127,11 @@
     (ct)[6] = (uint8_t)((st) >> 48);                \
     (ct)[7] = (uint8_t)((st) >> 56);                \
 }
-#endif  /* UNPACK64R */
+#endif  /* UNPACK64BE */
 
-/* pack 8 uint8_t into uint64_t (direct) */
-#ifndef PACK64
-#define PACK64(pt)                                  \
+/* pack 8 uint8_t into uint64_t (little-endian) */
+#ifndef PACK64LE
+#define PACK64LE(pt)                                \
 (                                                   \
       ((uint64_t)(pt)[7]      )                     \
     ^ ((uint64_t)(pt)[6] <<  8)                     \
@@ -142,11 +142,11 @@
     ^ ((uint64_t)(pt)[1] << 48)                     \
     ^ ((uint64_t)(pt)[0] << 56)                     \
 )
-#endif  /* PACK64 */
+#endif  /* PACK64LE */
 
-/* pack 8 uint8_t into uint64_t (reverse) */
-#ifndef PACK64R
-#define PACK64R(pt)                                 \
+/* pack 8 uint8_t into uint64_t (big-endian) */
+#ifndef PACK64BE
+#define PACK64BE(pt)                                \
 (                                                   \
       ((uint64_t)(pt)[0]      )                     \
     ^ ((uint64_t)(pt)[1] <<  8)                     \
@@ -157,6 +157,6 @@
     ^ ((uint64_t)(pt)[6] << 48)                     \
     ^ ((uint64_t)(pt)[7] << 56)                     \
 )
-#endif  /* PACK64R */
+#endif  /* PACK64BE */
 
 #endif  /* AKMOS_MACRO_H */

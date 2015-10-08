@@ -166,7 +166,7 @@ static void sha3_transform(akmos_sha3_t *ctx, const uint8_t *blk, size_t nb)
 
     for(i = 0; i < nb; i++) {
         for(y = 0; y < ctx->r; y++) {
-            ctx->S[y] ^= PACK64R(blk);
+            ctx->S[y] ^= PACK64BE(blk);
             blk += sizeof(uint64_t);
         }
 
@@ -259,5 +259,5 @@ void akmos_sha3_done(akmos_sha3_t *ctx, uint8_t *digest)
     /* because 224 not multiple 64, use 32 */
     p = (uint32_t *)ctx->S;
     for(i = 0; i < ctx->diglen / sizeof(uint32_t); i++)
-        UNPACK32R(digest + (i * sizeof(uint32_t)), p[i]);
+        UNPACK32BE(digest + (i * sizeof(uint32_t)), p[i]);
 }

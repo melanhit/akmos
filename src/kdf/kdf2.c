@@ -69,7 +69,7 @@ int akmos_kdf_kdf2(uint8_t *key, size_t keylen,
     pkey = key;
     tlen = mdlen;
     for(i = 1; i <= l; i++) {
-        UNPACK32(cnt, i);
+        UNPACK32LE(cnt, i);
 
         err = akmos_mac_init(&ctx, algo, AKMOS_MODE_HMAC);
         if(err) {

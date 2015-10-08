@@ -169,10 +169,10 @@ void akmos_twofish_setkey(akmos_twofish_t *ctx, const uint8_t *in_key, size_t le
     ctx->k_len = len / 8;   /* 2, 3 or 4 */
 
     for (i = 0; i < ctx->k_len; ++i) {
-        a = PACK32R(in_key + i*8);
+        a = PACK32BE(in_key + i*8);
         me_key[i] = a;
 
-        b = PACK32R(in_key + ((i+i+1)*4));
+        b = PACK32BE(in_key + ((i+i+1)*4));
         mo_key[i] = b;
 
         s_key[ctx->k_len - i - 1] = mds_rem(a, b);
@@ -207,18 +207,18 @@ void akmos_twofish_encrypt(akmos_twofish_t *ctx, const uint8_t *in_blk, uint8_t 
     uint32_t *l_key = ctx->l_key;
     uint32_t *mk_tab = ctx->mk_tab;
 
-    blk[0] = PACK32R(in_blk     ); blk[0] ^= l_key[0];
-    blk[1] = PACK32R(in_blk +  4); blk[1] ^= l_key[1];
-    blk[2] = PACK32R(in_blk +  8); blk[2] ^= l_key[2];
-    blk[3] = PACK32R(in_blk + 12); blk[3] ^= l_key[3];
+    blk[0] = PACK32BE(in_blk     ); blk[0] ^= l_key[0];
+    blk[1] = PACK32BE(in_blk +  4); blk[1] ^= l_key[1];
+    blk[2] = PACK32BE(in_blk +  8); blk[2] ^= l_key[2];
+    blk[3] = PACK32BE(in_blk + 12); blk[3] ^= l_key[3];
 
     f_rnd(0); f_rnd(1); f_rnd(2); f_rnd(3);
     f_rnd(4); f_rnd(5); f_rnd(6); f_rnd(7);
 
-    UNPACK32R(out_blk     , blk[2] ^ l_key[4]);
-    UNPACK32R(out_blk +  4, blk[3] ^ l_key[5]);
-    UNPACK32R(out_blk +  8, blk[0] ^ l_key[6]);
-    UNPACK32R(out_blk + 12, blk[1] ^ l_key[7]);
+    UNPACK32BE(out_blk     , blk[2] ^ l_key[4]);
+    UNPACK32BE(out_blk +  4, blk[3] ^ l_key[5]);
+    UNPACK32BE(out_blk +  8, blk[0] ^ l_key[6]);
+    UNPACK32BE(out_blk + 12, blk[1] ^ l_key[7]);
 }
 
 /* decrypt a block of text  */
@@ -236,16 +236,16 @@ void akmos_twofish_decrypt(akmos_twofish_t *ctx, const uint8_t *in_blk, uint8_t 
     uint32_t *l_key = ctx->l_key;
     uint32_t *mk_tab = ctx->mk_tab;
 
-    blk[0] = PACK32R(in_blk     ); blk[0] ^= l_key[4];
-    blk[1] = PACK32R(in_blk +  4); blk[1] ^= l_key[5];
-    blk[2] = PACK32R(in_blk +  8); blk[2] ^= l_key[6];
-    blk[3] = PACK32R(in_blk + 12); blk[3] ^= l_key[7];
+    blk[0] = PACK32BE(in_blk     ); blk[0] ^= l_key[4];
+    blk[1] = PACK32BE(in_blk +  4); blk[1] ^= l_key[5];
+    blk[2] = PACK32BE(in_blk +  8); blk[2] ^= l_key[6];
+    blk[3] = PACK32BE(in_blk + 12); blk[3] ^= l_key[7];
 
     i_rnd(7); i_rnd(6); i_rnd(5); i_rnd(4);
     i_rnd(3); i_rnd(2); i_rnd(1); i_rnd(0);
 
-    UNPACK32R(out_blk     , blk[2] ^ l_key[0]);
-    UNPACK32R(out_blk +  4, blk[3] ^ l_key[1]);
-    UNPACK32R(out_blk +  8, blk[0] ^ l_key[2]);
-    UNPACK32R(out_blk + 12, blk[1] ^ l_key[3]);
+    UNPACK32BE(out_blk     , blk[2] ^ l_key[0]);
+    UNPACK32BE(out_blk +  4, blk[3] ^ l_key[1]);
+    UNPACK32BE(out_blk +  8, blk[0] ^ l_key[2]);
+    UNPACK32BE(out_blk + 12, blk[1] ^ l_key[3]);
 }

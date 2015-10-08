@@ -55,7 +55,7 @@ void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *key, size_t len)
     l_key = ctx->l_key;
 
     for(i = 0; i < (len / 4); i++)
-        in_key[i] = PACK32R(key + (i * 4));
+        in_key[i] = PACK32BE(key + (i * 4));
 
     l_key[0] = 0xb7e15163;
 
@@ -85,10 +85,10 @@ void akmos_rc6_encrypt(akmos_rc6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk
 
     l_key = ctx->l_key;
 
-    a = PACK32R(in_blk     );
-    b = PACK32R(in_blk +  4) + l_key[0];
-    c = PACK32R(in_blk +  8);
-    d = PACK32R(in_blk + 12) + l_key[1];
+    a = PACK32BE(in_blk     );
+    b = PACK32BE(in_blk +  4) + l_key[0];
+    c = PACK32BE(in_blk +  8);
+    d = PACK32BE(in_blk + 12) + l_key[1];
 
     f_rnd( 2,a,b,c,d); f_rnd( 4,b,c,d,a);
     f_rnd( 6,c,d,a,b); f_rnd( 8,d,a,b,c);
@@ -101,10 +101,10 @@ void akmos_rc6_encrypt(akmos_rc6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk
     f_rnd(34,a,b,c,d); f_rnd(36,b,c,d,a);
     f_rnd(38,c,d,a,b); f_rnd(40,d,a,b,c);
 
-    UNPACK32R(out_blk,      (a + l_key[42]));
-    UNPACK32R(out_blk +  4, b);
-    UNPACK32R(out_blk +  8, (c + l_key[43]));
-    UNPACK32R(out_blk + 12, d);
+    UNPACK32BE(out_blk,      (a + l_key[42]));
+    UNPACK32BE(out_blk +  4, b);
+    UNPACK32BE(out_blk +  8, (c + l_key[43]));
+    UNPACK32BE(out_blk + 12, d);
 }
 
 void akmos_rc6_decrypt(akmos_rc6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -114,10 +114,10 @@ void akmos_rc6_decrypt(akmos_rc6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk
 
     l_key = ctx->l_key;
 
-    a = PACK32R(in_blk     ) - l_key[42];
-    b = PACK32R(in_blk +  4);
-    c = PACK32R(in_blk +  8) - l_key[43];
-    d = PACK32R(in_blk + 12);
+    a = PACK32BE(in_blk     ) - l_key[42];
+    b = PACK32BE(in_blk +  4);
+    c = PACK32BE(in_blk +  8) - l_key[43];
+    d = PACK32BE(in_blk + 12);
 
     i_rnd(40,d,a,b,c); i_rnd(38,c,d,a,b);
     i_rnd(36,b,c,d,a); i_rnd(34,a,b,c,d);
@@ -130,8 +130,8 @@ void akmos_rc6_decrypt(akmos_rc6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk
     i_rnd( 8,d,a,b,c); i_rnd( 6,c,d,a,b);
     i_rnd( 4,b,c,d,a); i_rnd( 2,a,b,c,d);
 
-    UNPACK32R(out_blk,      a);
-    UNPACK32R(out_blk +  4, (b - l_key[0]));
-    UNPACK32R(out_blk +  8, c);
-    UNPACK32R(out_blk + 12, (d - l_key[1]));
+    UNPACK32BE(out_blk,      a);
+    UNPACK32BE(out_blk +  4, (b - l_key[0]));
+    UNPACK32BE(out_blk +  8, c);
+    UNPACK32BE(out_blk + 12, (d - l_key[1]));
 }

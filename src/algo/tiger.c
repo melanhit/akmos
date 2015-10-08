@@ -39,7 +39,7 @@
 #define tiger_round(a, b, c, x, mul)                    \
 {                                                       \
     c ^= x;                                             \
-    UNPACK64R(t, c);                                    \
+    UNPACK64BE(t, c);                                    \
     a -= SB0[t[0]] ^ SB1[t[2]] ^ SB2[t[4]] ^ SB3[t[6]]; \
     b += SB3[t[1]] ^ SB2[t[3]] ^ SB1[t[5]] ^ SB0[t[7]]; \
     b *= mul;                                           \
@@ -83,10 +83,10 @@ static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, uint32_t n
     for(i = 0; i < nb; i++) {
         sub = block + (i * 64);
 
-        w[0] = PACK64R(sub     ); w[1] = PACK64R(sub +  8);
-        w[2] = PACK64R(sub + 16); w[3] = PACK64R(sub + 24);
-        w[4] = PACK64R(sub + 32); w[5] = PACK64R(sub + 40);
-        w[6] = PACK64R(sub + 48); w[7] = PACK64R(sub + 56);
+        w[0] = PACK64BE(sub     ); w[1] = PACK64BE(sub +  8);
+        w[2] = PACK64BE(sub + 16); w[3] = PACK64BE(sub + 24);
+        w[4] = PACK64BE(sub + 32); w[5] = PACK64BE(sub + 40);
+        w[6] = PACK64BE(sub + 48); w[7] = PACK64BE(sub + 56);
 
         aa = a; bb = b; cc = c;
 
@@ -182,11 +182,11 @@ void akmos_tiger_done(akmos_tiger_t *ctx, uint8_t *digest)
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x01;
 
-    UNPACK64R(ctx->block + (pm_len - 8), len_bit);
+    UNPACK64BE(ctx->block + (pm_len - 8), len_bit);
 
     tiger_transform(ctx, ctx->block, nb);
 
-    UNPACK64(digest     , ctx->h[0]);
-    UNPACK64(digest +  8, ctx->h[1]);
-    UNPACK64(digest + 16, ctx->h[2]);
+    UNPACK64LE(digest     , ctx->h[0]);
+    UNPACK64LE(digest +  8, ctx->h[1]);
+    UNPACK64LE(digest + 16, ctx->h[2]);
 }

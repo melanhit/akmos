@@ -415,7 +415,7 @@ void akmos_serpent_setkey(akmos_serpent_t *ctx, const uint8_t *key, size_t len)
     lk = (bits + 31) / 32;
 
     for(i = 0; i < lk; i++)
-        ctx->l_key[i] = PACK32R(key + 4 * i);
+        ctx->l_key[i] = PACK32BE(key + 4 * i);
 
     if (bits < 256) {
         while (i < 8)
@@ -481,10 +481,10 @@ void akmos_serpent_encrypt(akmos_serpent_t *ctx, const uint8_t *in_blk, uint8_t 
     uint32_t t1, t2, t3, t4, t5, t6, t7, t8;
     uint32_t t9, t10, t11, t12, t13, t14, t15, t16;
 
-    a = PACK32R(in_blk     );
-    b = PACK32R(in_blk + 4 );
-    c = PACK32R(in_blk + 8 );
-    d = PACK32R(in_blk + 12);
+    a = PACK32BE(in_blk     );
+    b = PACK32BE(in_blk + 4 );
+    c = PACK32BE(in_blk + 8 );
+    d = PACK32BE(in_blk + 12);
 
     k_xor( 0,a,b,c,d); sb0(a,b,c,d,e,f,g,h); rot(e,f,g,h);
     k_xor( 1,e,f,g,h); sb1(e,f,g,h,a,b,c,d); rot(a,b,c,d);
@@ -519,10 +519,10 @@ void akmos_serpent_encrypt(akmos_serpent_t *ctx, const uint8_t *in_blk, uint8_t 
     k_xor(30,a,b,c,d); sb6(a,b,c,d,e,f,g,h); rot(e,f,g,h);
     k_xor(31,e,f,g,h); sb7(e,f,g,h,a,b,c,d); k_xor(32,a,b,c,d);
 
-    UNPACK32R(out_blk     , a);
-    UNPACK32R(out_blk +  4, b);
-    UNPACK32R(out_blk +  8, c);
-    UNPACK32R(out_blk + 12, d);
+    UNPACK32BE(out_blk     , a);
+    UNPACK32BE(out_blk +  4, b);
+    UNPACK32BE(out_blk +  8, c);
+    UNPACK32BE(out_blk + 12, d);
 }
 
 void akmos_serpent_decrypt(akmos_serpent_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -531,10 +531,10 @@ void akmos_serpent_decrypt(akmos_serpent_t *ctx, const uint8_t *in_blk, uint8_t 
     uint32_t t1, t2, t3, t4, t5, t6, t7, t8;
     uint32_t t9, t10, t11, t12, t13, t14, t15, t16;
 
-    a = PACK32R(in_blk     );
-    b = PACK32R(in_blk + 4 );
-    c = PACK32R(in_blk + 8 );
-    d = PACK32R(in_blk + 12);
+    a = PACK32BE(in_blk     );
+    b = PACK32BE(in_blk + 4 );
+    c = PACK32BE(in_blk + 8 );
+    d = PACK32BE(in_blk + 12);
 
     k_xor(32,a,b,c,d); ib7(a,b,c,d,e,f,g,h); k_xor(31,e,f,g,h);
     irot(e,f,g,h); ib6(e,f,g,h,a,b,c,d); k_xor(30,a,b,c,d);
@@ -569,8 +569,8 @@ void akmos_serpent_decrypt(akmos_serpent_t *ctx, const uint8_t *in_blk, uint8_t 
     irot(a,b,c,d); ib1(a,b,c,d,e,f,g,h); k_xor( 1,e,f,g,h);
     irot(e,f,g,h); ib0(e,f,g,h,a,b,c,d); k_xor( 0,a,b,c,d);
 
-    UNPACK32R(out_blk     , a);
-    UNPACK32R(out_blk +  4, b);
-    UNPACK32R(out_blk +  8, c);
-    UNPACK32R(out_blk + 12, d);
+    UNPACK32BE(out_blk     , a);
+    UNPACK32BE(out_blk +  4, b);
+    UNPACK32BE(out_blk +  8, c);
+    UNPACK32BE(out_blk + 12, d);
 }

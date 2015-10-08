@@ -111,7 +111,7 @@ static void camellia_setkey128(akmos_camellia_t *ctx, const uint8_t *key)
     uint64_t d1, d2, t;
     uint64_t ka[2], k[2];
 
-    k[0] = PACK64(key); k[1] = PACK64(key + 8);
+    k[0] = PACK64LE(key); k[1] = PACK64LE(key + 8);
 
     d1 = k[0]; d2 = k[1];
     KEY_KA_SCHED(d1, d2, k, ka);
@@ -153,11 +153,11 @@ static void camellia_setkey256(akmos_camellia_t *ctx, const uint8_t *key, size_t
     uint64_t d1, d2, t;
     uint64_t ka[2], kb[2], k[4];
 
-    k[0] = PACK64(key     );
-    k[1] = PACK64(key +  8);
-    k[2] = PACK64(key + 16);
+    k[0] = PACK64LE(key     );
+    k[1] = PACK64LE(key +  8);
+    k[2] = PACK64LE(key + 16);
     if(len == 32)
-        k[3] = PACK64(key + 24);
+        k[3] = PACK64LE(key + 24);
     else
         k[3] = ~k[2];
 
@@ -231,7 +231,7 @@ void akmos_camellia_encrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_
 {
     uint64_t pt[2], ct[2], t;
 
-    pt[0] = PACK64(in_blk); pt[1] = PACK64(in_blk + 8);
+    pt[0] = PACK64LE(in_blk); pt[1] = PACK64LE(in_blk + 8);
 
     ct[0] = pt[0] ^ ctx->kw[0];
     ct[1] = pt[1] ^ ctx->kw[1];
@@ -280,14 +280,14 @@ out:
     ct[1] ^= ctx->kw[2];
     ct[0] ^= ctx->kw[3];
 
-    UNPACK64(out_blk, ct[1]); UNPACK64(out_blk + 8, ct[0]);
+    UNPACK64LE(out_blk, ct[1]); UNPACK64LE(out_blk + 8, ct[0]);
 }
 
 void akmos_camellia_decrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
     uint64_t pt[2], ct[2], t;
 
-    ct[0] = PACK64(in_blk); ct[1] = PACK64(in_blk + 8);
+    ct[0] = PACK64LE(in_blk); ct[1] = PACK64LE(in_blk + 8);
 
     pt[0] = ct[0] ^ ctx->kw[2];
     pt[1] = ct[1] ^ ctx->kw[3];
@@ -334,5 +334,5 @@ void akmos_camellia_decrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_
     pt[1] ^= ctx->kw[0];
     pt[0] ^= ctx->kw[1];
 
-    UNPACK64(out_blk, pt[1]); UNPACK64(out_blk + 8, pt[0]);
+    UNPACK64LE(out_blk, pt[1]); UNPACK64LE(out_blk + 8, pt[0]);
 }

@@ -773,7 +773,7 @@ void akmos_ripemd_done(akmos_ripemd_t *ctx, uint8_t *digest)
     uint8_t size[8];
     uint32_t padlen;
 
-    UNPACK64R(size, ctx->count);
+    UNPACK64BE(size, ctx->count);
 
     padlen = 64 - ((ctx->count / 8) % 64);
     if(padlen < 1 + 8)
@@ -784,7 +784,7 @@ void akmos_ripemd_done(akmos_ripemd_t *ctx, uint8_t *digest)
 
     if(digest != NULL) {
         for(i = 0; i < (ctx->diglen / 4); i++)
-            UNPACK32R(digest + (i * 4), ctx->state[i]);
+            UNPACK32BE(digest + (i * 4), ctx->state[i]);
     }
 }
 

@@ -77,8 +77,8 @@ void akmos_seed_setkey(akmos_seed_t *ctx, const uint8_t *in_key, size_t len)
     uint32_t k0, k1, k2, k3, t;
     size_t i, y;
 
-    k0 = PACK32(in_key    ); k1 = PACK32(in_key +  4);
-    k2 = PACK32(in_key + 8); k3 = PACK32(in_key + 12);
+    k0 = PACK32LE(in_key    ); k1 = PACK32LE(in_key +  4);
+    k2 = PACK32LE(in_key + 8); k3 = PACK32LE(in_key + 12);
 
     for(i = 0, y = 0; i < 16; i++, y += 2) {
         ctx->key[y] = k0 + k2 - KC[i];
@@ -101,7 +101,7 @@ void akmos_seed_encrypt(akmos_seed_t *ctx, const uint8_t *in_blk, uint8_t *out_b
     uint32_t c, d;
     size_t i, y;
 
-    l = PACK64(in_blk); r = PACK64(in_blk + 8);
+    l = PACK64LE(in_blk); r = PACK64LE(in_blk + 8);
 
     for(i = 0, y = 0; i < 15; i++, y += 2) {
         F(r, ctx->key[y], ctx->key[y + 1], t, c, d);
@@ -112,7 +112,7 @@ void akmos_seed_encrypt(akmos_seed_t *ctx, const uint8_t *in_blk, uint8_t *out_b
     F(r, ctx->key[30], ctx->key[31], t, c, d);
     l ^= t;
 
-    UNPACK64(out_blk, l); UNPACK64(out_blk + 8, r);
+    UNPACK64LE(out_blk, l); UNPACK64LE(out_blk + 8, r);
 }
 
 void akmos_seed_decrypt(akmos_seed_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -121,7 +121,7 @@ void akmos_seed_decrypt(akmos_seed_t *ctx, const uint8_t *in_blk, uint8_t *out_b
     uint32_t c, d;
     size_t i, y;
 
-    l = PACK64(in_blk); r = PACK64(in_blk + 8);
+    l = PACK64LE(in_blk); r = PACK64LE(in_blk + 8);
 
 
     for(i = 0, y = 30; i < 15; i++, y -= 2) {
@@ -133,5 +133,5 @@ void akmos_seed_decrypt(akmos_seed_t *ctx, const uint8_t *in_blk, uint8_t *out_b
     l ^= t;
 
 
-    UNPACK64(out_blk, l); UNPACK64(out_blk + 8, r);
+    UNPACK64LE(out_blk, l); UNPACK64LE(out_blk + 8, r);
 }

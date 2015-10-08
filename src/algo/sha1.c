@@ -75,14 +75,14 @@ static void sha1_transform(akmos_sha1_t *ctx, const uint8_t *block, uint32_t nb)
 
         sub = block + (i << 6);
 
-        w[ 0] = PACK32(sub     ); w[ 1] = PACK32(sub +  4);
-        w[ 2] = PACK32(sub +  8); w[ 3] = PACK32(sub + 12);
-        w[ 4] = PACK32(sub + 16); w[ 5] = PACK32(sub + 20);
-        w[ 6] = PACK32(sub + 24); w[ 7] = PACK32(sub + 28);
-        w[ 8] = PACK32(sub + 32); w[ 9] = PACK32(sub + 36);
-        w[10] = PACK32(sub + 40); w[11] = PACK32(sub + 44);
-        w[12] = PACK32(sub + 48); w[13] = PACK32(sub + 52);
-        w[14] = PACK32(sub + 56); w[15] = PACK32(sub + 60);
+        w[ 0] = PACK32LE(sub     ); w[ 1] = PACK32LE(sub +  4);
+        w[ 2] = PACK32LE(sub +  8); w[ 3] = PACK32LE(sub + 12);
+        w[ 4] = PACK32LE(sub + 16); w[ 5] = PACK32LE(sub + 20);
+        w[ 6] = PACK32LE(sub + 24); w[ 7] = PACK32LE(sub + 28);
+        w[ 8] = PACK32LE(sub + 32); w[ 9] = PACK32LE(sub + 36);
+        w[10] = PACK32LE(sub + 40); w[11] = PACK32LE(sub + 44);
+        w[12] = PACK32LE(sub + 48); w[13] = PACK32LE(sub + 52);
+        w[14] = PACK32LE(sub + 56); w[15] = PACK32LE(sub + 60);
 
         R(A, B, C, D, E, F0, K0, w[ 0]);
         R(E, A, B, C, D, F0, K0, w[ 1]);
@@ -232,13 +232,13 @@ void akmos_sha1_done(akmos_sha1_t *ctx, uint8_t *digest)
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x80;
 
-    UNPACK64(ctx->block + (pm_len - 8), len_bit);
+    UNPACK64LE(ctx->block + (pm_len - 8), len_bit);
 
     sha1_transform(ctx, ctx->block, nb);
 
-    UNPACK32(digest     , ctx->h[0]);
-    UNPACK32(digest +  4, ctx->h[1]);
-    UNPACK32(digest +  8, ctx->h[2]);
-    UNPACK32(digest + 12, ctx->h[3]);
-    UNPACK32(digest + 16, ctx->h[4]);
+    UNPACK32LE(digest     , ctx->h[0]);
+    UNPACK32LE(digest +  4, ctx->h[1]);
+    UNPACK32LE(digest +  8, ctx->h[2]);
+    UNPACK32LE(digest + 12, ctx->h[3]);
+    UNPACK32LE(digest + 16, ctx->h[4]);
 }

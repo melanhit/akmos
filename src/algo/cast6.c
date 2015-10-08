@@ -90,7 +90,7 @@ void akmos_cast6_setkey(akmos_cast6_t *ctx, const uint8_t *key, size_t len)
     l_key = ctx->l_key;
 
     for(i = 0; i < (len / 4); i++)
-        in_key[i] = PACK32R(key + (i * 4));
+        in_key[i] = PACK32BE(key + (i * 4));
 
     for(i = 0; i < len / 4; ++i)
         lk[i] = SWAPU32(in_key[i]);
@@ -128,8 +128,8 @@ void akmos_cast6_encrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out
 
     l_key = ctx->l_key;
 
-    blk[0] = PACK32R(in_blk    ); blk[1] = PACK32R(in_blk +  4);
-    blk[2] = PACK32R(in_blk + 8); blk[3] = PACK32R(in_blk + 12);
+    blk[0] = PACK32BE(in_blk    ); blk[1] = PACK32BE(in_blk +  4);
+    blk[2] = PACK32BE(in_blk + 8); blk[3] = PACK32BE(in_blk + 12);
 
     blk[0] = SWAPU32(blk[0]); blk[1] = SWAPU32(blk[1]);
     blk[2] = SWAPU32(blk[2]); blk[3] = SWAPU32(blk[3]);
@@ -144,8 +144,8 @@ void akmos_cast6_encrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out
     blk[0] = SWAPU32(blk[0]); blk[1] = SWAPU32(blk[1]);
     blk[2] = SWAPU32(blk[2]); blk[3] = SWAPU32(blk[3]);
 
-    UNPACK32R(out_blk,     blk[0]); UNPACK32R(out_blk +  4, blk[1]);
-    UNPACK32R(out_blk + 8, blk[2]); UNPACK32R(out_blk + 12, blk[3]);
+    UNPACK32BE(out_blk,     blk[0]); UNPACK32BE(out_blk +  4, blk[1]);
+    UNPACK32BE(out_blk + 8, blk[2]); UNPACK32BE(out_blk + 12, blk[3]);
 }
 
 void akmos_cast6_decrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -154,8 +154,8 @@ void akmos_cast6_decrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out
 
     l_key = ctx->l_key;
 
-    blk[0] = PACK32R(in_blk    ); blk[1] = PACK32R(in_blk +  4);
-    blk[2] = PACK32R(in_blk + 8); blk[3] = PACK32R(in_blk + 12);
+    blk[0] = PACK32BE(in_blk    ); blk[1] = PACK32BE(in_blk +  4);
+    blk[2] = PACK32BE(in_blk + 8); blk[3] = PACK32BE(in_blk + 12);
 
     blk[0] = SWAPU32(blk[0]); blk[1] = SWAPU32(blk[1]);
     blk[2] = SWAPU32(blk[2]); blk[3] = SWAPU32(blk[3]);
@@ -170,6 +170,6 @@ void akmos_cast6_decrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out
     blk[0] = SWAPU32(blk[0]); blk[1] = SWAPU32(blk[1]);
     blk[2] = SWAPU32(blk[2]); blk[3] = SWAPU32(blk[3]);
 
-    UNPACK32R(out_blk,     blk[0]); UNPACK32R(out_blk +  4, blk[1]);
-    UNPACK32R(out_blk + 8, blk[2]); UNPACK32R(out_blk + 12, blk[3]);
+    UNPACK32BE(out_blk,     blk[0]); UNPACK32BE(out_blk +  4, blk[1]);
+    UNPACK32BE(out_blk + 8, blk[2]); UNPACK32BE(out_blk + 12, blk[3]);
 }

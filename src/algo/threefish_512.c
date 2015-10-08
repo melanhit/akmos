@@ -51,7 +51,7 @@ void akmos_threefish_512_setkey(akmos_threefish_512_t *ctx,
     int i, y;
 
     for(i = 0; i < WORDS_512; i++)
-        k[i] = PACK64R(key + (i * SZ_U64));
+        k[i] = PACK64BE(key + (i * SZ_U64));
 
     k[WORDS_512] = CONST_240;
 
@@ -76,7 +76,7 @@ void akmos_threefish_512_encrypt(akmos_threefish_512_t *ctx,
     int i, y;
 
     for(i = 0; i < WORDS_512; i++)
-        s[i] = PACK64R(in_blk + (i * SZ_U64));
+        s[i] = PACK64BE(in_blk + (i * SZ_U64));
 
     for(i = 0, S = ctx->S; i < ROUNDS_512 / 8; i++, S += WORDS_512) {
         for(y = 0; y < WORDS_512; y++)
@@ -97,7 +97,7 @@ void akmos_threefish_512_encrypt(akmos_threefish_512_t *ctx,
     }
 
     for(i = 0; i < WORDS_512; i++)
-        UNPACK64R(out_blk + (i * SZ_U64), s[i] + S[i]);
+        UNPACK64BE(out_blk + (i * SZ_U64), s[i] + S[i]);
 }
 
 void akmos_threefish_512_decrypt(akmos_threefish_512_t *ctx,
@@ -108,7 +108,7 @@ void akmos_threefish_512_decrypt(akmos_threefish_512_t *ctx,
     int i, y;
 
     for(i = 0; i < WORDS_512; i++)
-        s[i] = PACK64R(in_blk + (i * SZ_U64));
+        s[i] = PACK64BE(in_blk + (i * SZ_U64));
 
     S = ctx->S + (WORDS_512 * (SKEYS_512 - 1));
     for(i = 0; i < WORDS_512; i++)
@@ -133,5 +133,5 @@ void akmos_threefish_512_decrypt(akmos_threefish_512_t *ctx,
     }
 
     for(i = 0; i < WORDS_512; i++)
-        UNPACK64R(out_blk + (i * SZ_U64), s[i]);
+        UNPACK64BE(out_blk + (i * SZ_U64), s[i]);
 }

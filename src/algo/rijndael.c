@@ -108,7 +108,7 @@ void akmos_rijndael_setkey(akmos_rijndael_t *ctx, const uint8_t *key, size_t len
     int i, j;
 
     for(i = 0; i < len / sizeof(uint32_t); i++)
-        ctx->ke[i] = PACK32(key + (i * sizeof(uint32_t)));
+        ctx->ke[i] = PACK32LE(key + (i * sizeof(uint32_t)));
 
     switch(len) {
         case 16:
@@ -163,8 +163,8 @@ void akmos_rijndael_encrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_
 {
     uint32_t s[4], w[4], *k, i;
 
-    w[0] = PACK32(in_blk    ); w[1] = PACK32(in_blk +  4);
-    w[2] = PACK32(in_blk + 8); w[3] = PACK32(in_blk + 12);
+    w[0] = PACK32LE(in_blk    ); w[1] = PACK32LE(in_blk +  4);
+    w[2] = PACK32LE(in_blk + 8); w[3] = PACK32LE(in_blk + 12);
 
     k = ctx->ke;
 
@@ -198,16 +198,16 @@ void akmos_rijndael_encrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_
 
     AddRoundKey(k, w, s);
 
-    UNPACK32(out_blk    , s[0]); UNPACK32(out_blk +  4, s[1]);
-    UNPACK32(out_blk + 8, s[2]); UNPACK32(out_blk + 12, s[3]);
+    UNPACK32LE(out_blk    , s[0]); UNPACK32LE(out_blk +  4, s[1]);
+    UNPACK32LE(out_blk + 8, s[2]); UNPACK32LE(out_blk + 12, s[3]);
 }
 
 void akmos_rijndael_decrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
     uint32_t s[4], w[4], *k, i;
 
-    w[0] = PACK32(in_blk    ); w[1] = PACK32(in_blk +  4);
-    w[2] = PACK32(in_blk + 8); w[3] = PACK32(in_blk + 12);
+    w[0] = PACK32LE(in_blk    ); w[1] = PACK32LE(in_blk +  4);
+    w[2] = PACK32LE(in_blk + 8); w[3] = PACK32LE(in_blk + 12);
 
     k = ctx->kd;
 
@@ -242,6 +242,6 @@ void akmos_rijndael_decrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_
 
     AddRoundKey(k, w, s);
 
-    UNPACK32(out_blk    , s[0]); UNPACK32(out_blk +  4, s[1]);
-    UNPACK32(out_blk + 8, s[2]); UNPACK32(out_blk + 12, s[3]);
+    UNPACK32LE(out_blk    , s[0]); UNPACK32LE(out_blk +  4, s[1]);
+    UNPACK32LE(out_blk + 8, s[2]); UNPACK32LE(out_blk + 12, s[3]);
 }

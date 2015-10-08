@@ -181,14 +181,14 @@ static void sha256_transform(akmos_sha2_256_t *ctx, const uint8_t *m, size_t nb)
     for(i = 0; i < nb; i++) {
         sub = m + (i << 6);
 
-        w[ 0] = PACK32(sub     ); w[ 1] = PACK32(sub +  4);
-        w[ 2] = PACK32(sub +  8); w[ 3] = PACK32(sub + 12);
-        w[ 4] = PACK32(sub + 16); w[ 5] = PACK32(sub + 20);
-        w[ 6] = PACK32(sub + 24); w[ 7] = PACK32(sub + 28);
-        w[ 8] = PACK32(sub + 32); w[ 9] = PACK32(sub + 36);
-        w[10] = PACK32(sub + 40); w[11] = PACK32(sub + 44);
-        w[12] = PACK32(sub + 48); w[13] = PACK32(sub + 52);
-        w[14] = PACK32(sub + 56); w[15] = PACK32(sub + 60);
+        w[ 0] = PACK32LE(sub     ); w[ 1] = PACK32LE(sub +  4);
+        w[ 2] = PACK32LE(sub +  8); w[ 3] = PACK32LE(sub + 12);
+        w[ 4] = PACK32LE(sub + 16); w[ 5] = PACK32LE(sub + 20);
+        w[ 6] = PACK32LE(sub + 24); w[ 7] = PACK32LE(sub + 28);
+        w[ 8] = PACK32LE(sub + 32); w[ 9] = PACK32LE(sub + 36);
+        w[10] = PACK32LE(sub + 40); w[11] = PACK32LE(sub + 44);
+        w[12] = PACK32LE(sub + 48); w[13] = PACK32LE(sub + 52);
+        w[14] = PACK32LE(sub + 56); w[15] = PACK32LE(sub + 60);
 
         SHA256_SCR(16); SHA256_SCR(17); SHA256_SCR(18); SHA256_SCR(19);
         SHA256_SCR(20); SHA256_SCR(21); SHA256_SCR(22); SHA256_SCR(23);
@@ -257,14 +257,14 @@ static void sha512_transform(akmos_sha2_512_t *ctx, const uint8_t *m, size_t nb)
     for(i = 0; i <  nb; i++) {
         sub = m + (i << 7);
 
-        w[ 0] = PACK64(sub      ); w[ 1] = PACK64(sub +  8);
-        w[ 2] = PACK64(sub +  16); w[ 3] = PACK64(sub +  24);
-        w[ 4] = PACK64(sub +  32); w[ 5] = PACK64(sub +  40);
-        w[ 6] = PACK64(sub +  48); w[ 7] = PACK64(sub +  56);
-        w[ 8] = PACK64(sub +  64); w[ 9] = PACK64(sub +  72);
-        w[10] = PACK64(sub +  80); w[11] = PACK64(sub +  88);
-        w[12] = PACK64(sub +  96); w[13] = PACK64(sub + 104);
-        w[14] = PACK64(sub + 112); w[15] = PACK64(sub + 120);
+        w[ 0] = PACK64LE(sub      ); w[ 1] = PACK64LE(sub +  8);
+        w[ 2] = PACK64LE(sub +  16); w[ 3] = PACK64LE(sub +  24);
+        w[ 4] = PACK64LE(sub +  32); w[ 5] = PACK64LE(sub +  40);
+        w[ 6] = PACK64LE(sub +  48); w[ 7] = PACK64LE(sub +  56);
+        w[ 8] = PACK64LE(sub +  64); w[ 9] = PACK64LE(sub +  72);
+        w[10] = PACK64LE(sub +  80); w[11] = PACK64LE(sub +  88);
+        w[12] = PACK64LE(sub +  96); w[13] = PACK64LE(sub + 104);
+        w[14] = PACK64LE(sub + 112); w[15] = PACK64LE(sub + 120);
 
         SHA512_SCR(16); SHA512_SCR(17); SHA512_SCR(18); SHA512_SCR(19);
         SHA512_SCR(20); SHA512_SCR(21); SHA512_SCR(22); SHA512_SCR(23);
@@ -382,13 +382,13 @@ void akmos_sha2_256_done(akmos_sha2_256_t *ctx, uint8_t *digest)
 
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x80;
-    UNPACK64(ctx->block + pm_len - 8, len_b);
+    UNPACK64LE(ctx->block + pm_len - 8, len_b);
 
     if(nb > 0)
         sha256_transform(ctx, ctx->block, nb);
 
     for(i = 0; i < ctx->diglen / (sizeof(uint32_t)); i++)
-        UNPACK32(digest + (i * sizeof(uint32_t)), ctx->h[i]);
+        UNPACK32LE(digest + (i * sizeof(uint32_t)), ctx->h[i]);
 }
 
 void akmos_sha2_384_init(akmos_sha2_512_t *ctx)
@@ -464,11 +464,11 @@ void akmos_sha2_512_done(akmos_sha2_512_t *ctx, uint8_t *digest)
 
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x80;
-    UNPACK64(ctx->block + pm_len - 8, len_b);
+    UNPACK64LE(ctx->block + pm_len - 8, len_b);
 
     if(nb > 0)
         sha512_transform(ctx, ctx->block, nb);
 
     for(i = 0; i < ctx->diglen / (sizeof(uint64_t)); i++)
-        UNPACK64(digest + (i * sizeof(uint64_t)), ctx->h[i]);
+        UNPACK64LE(digest + (i * sizeof(uint64_t)), ctx->h[i]);
 }

@@ -55,10 +55,10 @@ static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, ui
     for(i = 0; i < nb; i++) {
         sub = block + (i * 64);
 
-        w[0] = PACK64(sub     ); w[1] = PACK64(sub +  8);
-        w[2] = PACK64(sub + 16); w[3] = PACK64(sub + 24);
-        w[4] = PACK64(sub + 32); w[5] = PACK64(sub + 40);
-        w[6] = PACK64(sub + 48); w[7] = PACK64(sub + 56);
+        w[0] = PACK64LE(sub     ); w[1] = PACK64LE(sub +  8);
+        w[2] = PACK64LE(sub + 16); w[3] = PACK64LE(sub + 24);
+        w[4] = PACK64LE(sub + 32); w[5] = PACK64LE(sub + 40);
+        w[6] = PACK64LE(sub + 48); w[7] = PACK64LE(sub + 56);
 
         k[0] = h[0]; k[1] = h[1];
         k[2] = h[2]; k[3] = h[3];
@@ -219,16 +219,16 @@ void akmos_whirlpool_done(akmos_whirlpool_t *ctx, uint8_t *digest)
     ctx->block[ctx->len] = 0x80;
 
     /* decrease original bitcount from 256 to 64 (for speed) */
-    UNPACK64(ctx->block + (pm_len - 8), len_bit);
+    UNPACK64LE(ctx->block + (pm_len - 8), len_bit);
 
     whirlpool_transform(ctx, ctx->block, nb);
 
-    UNPACK64(digest     , ctx->h[0]);
-    UNPACK64(digest +  8, ctx->h[1]);
-    UNPACK64(digest + 16, ctx->h[2]);
-    UNPACK64(digest + 24, ctx->h[3]);
-    UNPACK64(digest + 32, ctx->h[4]);
-    UNPACK64(digest + 40, ctx->h[5]);
-    UNPACK64(digest + 48, ctx->h[6]);
-    UNPACK64(digest + 56, ctx->h[7]);
+    UNPACK64LE(digest     , ctx->h[0]);
+    UNPACK64LE(digest +  8, ctx->h[1]);
+    UNPACK64LE(digest + 16, ctx->h[2]);
+    UNPACK64LE(digest + 24, ctx->h[3]);
+    UNPACK64LE(digest + 32, ctx->h[4]);
+    UNPACK64LE(digest + 40, ctx->h[5]);
+    UNPACK64LE(digest + 48, ctx->h[6]);
+    UNPACK64LE(digest + 56, ctx->h[7]);
 }

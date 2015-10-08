@@ -54,7 +54,7 @@ void akmos_blowfish_setkey(akmos_blowfish_t *ctx, const uint8_t *in_key, size_t 
         if((i % j) == 0) {
             key = in_key;
         }
-        ctx->p[i] = PACK32(key) ^ P[i];
+        ctx->p[i] = PACK32LE(key) ^ P[i];
     }
 
     /* copy sbox */
@@ -64,14 +64,14 @@ void akmos_blowfish_setkey(akmos_blowfish_t *ctx, const uint8_t *in_key, size_t 
 
     for(i = 0; i < 18; i += 2) {
         akmos_blowfish_encrypt(ctx, buf, buf);
-        ctx->p[i] = PACK32(buf);
-        ctx->p[i+1] = PACK32(buf + 4);
+        ctx->p[i] = PACK32LE(buf);
+        ctx->p[i+1] = PACK32LE(buf + 4);
     }
 
     for(i = 0; i < 4*256; i += 2) {
         akmos_blowfish_encrypt(ctx, buf, buf);
-        ctx->s[i] = PACK32(buf);
-        ctx->s[i+1] = PACK32(buf + 4);
+        ctx->s[i] = PACK32LE(buf);
+        ctx->s[i+1] = PACK32LE(buf + 4);
     }
 }
 
@@ -80,7 +80,7 @@ void akmos_blowfish_encrypt(akmos_blowfish_t *ctx, const uint8_t *in_blk, uint8_
     uint32_t l, r;
     size_t i;
 
-    l = PACK32(in_blk); r = PACK32(in_blk + 4);
+    l = PACK32LE(in_blk); r = PACK32LE(in_blk + 4);
 
     for(i = 0; i < 16; i += 2) {
         l ^= ctx->p[i];
@@ -93,7 +93,7 @@ void akmos_blowfish_encrypt(akmos_blowfish_t *ctx, const uint8_t *in_blk, uint8_
     l ^= ctx->p[16];
     r ^= ctx->p[17];
 
-    UNPACK32(out_blk, r); UNPACK32(out_blk + 4, l);
+    UNPACK32LE(out_blk, r); UNPACK32LE(out_blk + 4, l);
 }
 
 void akmos_blowfish_decrypt(akmos_blowfish_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -101,7 +101,7 @@ void akmos_blowfish_decrypt(akmos_blowfish_t *ctx, const uint8_t *in_blk, uint8_
     uint32_t l, r;
     ssize_t i;
 
-    r = PACK32(in_blk); l = PACK32(in_blk + 4);
+    r = PACK32LE(in_blk); l = PACK32LE(in_blk + 4);
 
     l ^= ctx->p[16];
     r ^= ctx->p[17];
@@ -114,5 +114,5 @@ void akmos_blowfish_decrypt(akmos_blowfish_t *ctx, const uint8_t *in_blk, uint8_
         l ^= ctx->p[i-1];
     }
 
-    UNPACK32(out_blk, l); UNPACK32(out_blk + 4, r);
+    UNPACK32LE(out_blk, l); UNPACK32LE(out_blk + 4, r);
 }
