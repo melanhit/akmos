@@ -40,7 +40,7 @@ void akmos_ecb_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     nb = in_len / blklen;
 
     for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen)
-        ctx->xalgo->encrypt(&ctx->actx, in_blk, out_blk);
+        ctx->xalgo->encrypt(ctx->actx, in_blk, out_blk);
 }
 
 void akmos_ecb_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
@@ -51,5 +51,5 @@ void akmos_ecb_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     nb = in_len / blklen;
 
     for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen)
-        ctx->xalgo->decrypt(&ctx->actx, in_blk, out_blk);
+        ctx->xalgo->decrypt(ctx->actx, in_blk, out_blk);
 }

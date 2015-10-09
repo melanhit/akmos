@@ -85,6 +85,14 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
 
     memset(ptr, 0, sizeof(akmos_cipher_ctx));
 
+    ptr->actx = malloc(sizeof(akmos_cipher_algo_ctx));
+    if(!ptr->actx) {
+        free(ptr);
+        return AKMOS_ERR_ENOMEM;
+    }
+
+    memset(ptr->actx, 0, sizeof(akmos_cipher_algo_ctx));
+
     ptr->xalgo = akmos_xalgo_cipher(algo);
     if(!ptr->xalgo) {
         err = AKMOS_ERR_ALGOID;
@@ -139,7 +147,7 @@ int akmos_cipher_setkey(akmos_cipher_ctx *ctx, const uint8_t *key, size_t len)
     if((len % ctx->xalgo->keystep) != 0)
         return AKMOS_ERR_KEYLEN;
 
-    ctx->xalgo->setkey(&ctx->actx, key, len);
+    ctx->xalgo->setkey(ctx->actx, key, len);
 
     return AKMOS_ERR_SUCCESS;
 }
@@ -174,6 +182,11 @@ void akmos_cipher_free(akmos_cipher_ctx *ctx)
 
     if(ctx->xmode->zero)
         ctx->xmode->zero(ctx);
+
+    if(ctx->actx) {
+        akmos_memzero(ctx->actx, sizeof(akmos_cipher_algo_ctx));
+        free(ctx->actx);
+    }
 
     akmos_memzero(ctx, sizeof(akmos_cipher_ctx));
     free(ctx);

@@ -56,7 +56,7 @@ void akmos_cbc_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen) {
         ctx->pxor(ptr->iv, in_blk, ptr->iv);
 
-        ctx->xalgo->encrypt(&ctx->actx, ptr->iv, out_blk);
+        ctx->xalgo->encrypt(ctx->actx, ptr->iv, out_blk);
 
         memcpy(ptr->iv, out_blk, blklen);
     }
@@ -73,7 +73,7 @@ void akmos_cbc_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     nb = in_len / blklen;
 
     for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen) {
-        ctx->xalgo->decrypt(&ctx->actx, in_blk, ptr->buf);
+        ctx->xalgo->decrypt(ctx->actx, in_blk, ptr->buf);
 
         ctx->pxor(ptr->iv, ptr->buf, ptr->buf);
 

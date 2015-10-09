@@ -29,7 +29,7 @@
 #ifndef AKMOS_CIPHER_H
 #define AKMOS_CIPHER_H
 
-#define AKMOS_CIPHER_MAX_BLKLEN     (1024/8)    /* threefish */
+#define AKMOS_CIPHER_MAX_BLKLEN     128 /* threefish-1024 */
 
 #include "algo/anubis.h"
 #include "algo/cast6.h"
@@ -82,7 +82,7 @@ typedef struct {
 struct akmos_cipher_s {
     /* algo */
     const akmos_cipher_xalgo_t  *xalgo;
-    akmos_cipher_algo_ctx       actx;
+    akmos_cipher_algo_ctx       *actx;
     /* mode */
     const akmos_cipher_xmode_t  *xmode;
     akmos_cipher_mode_ctx       mctx;
