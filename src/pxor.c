@@ -35,12 +35,12 @@ void akmos_pxor8(const uint8_t *in_blk1, const uint8_t *in_blk2, uint8_t *out_bl
 {
     uint64_t a, b;
 
-    memcpy(a, in_blk1, 8);
-    memcpy(b, in_blk2, 8);
+    memcpy(&a, in_blk1, 8);
+    memcpy(&b, in_blk2, 8);
 
     b ^= a;
 
-    memcpy(out_blk, b, 8);
+    memcpy(out_blk, &b, 8);
 }
 
 void akmos_pxor16(const uint8_t *in_blk1, const uint8_t *in_blk2, uint8_t *out_blk)
