@@ -50,4 +50,19 @@ struct akmos_digest_s {
     akmos_digest_algo_ctx       actx;
 };
 
+extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_160;
+extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_256;
+extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_320;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha1;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha2_224;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha2_256;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha2_384;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha2_512;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha3_224;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha3_256;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha3_384;
+extern const akmos_digest_xalgo_t akmos_xalgo_sha3_512;
+extern const akmos_digest_xalgo_t akmos_xalgo_tiger;
+extern const akmos_digest_xalgo_t akmos_xalgo_whirlpool;
+
 #endif  /* AKMOS_DIGEST_H */

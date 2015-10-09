@@ -159,32 +159,4 @@ typedef struct akmos_digest_xalgo_s {
 const akmos_cipher_xalgo_t *akmos_xalgo_cipher(akmos_algo_id);
 const akmos_digest_xalgo_t *akmos_xalgo_digest(akmos_algo_id);
 
-extern const akmos_cipher_xalgo_t akmos_xalgo_anubis;
-extern const akmos_cipher_xalgo_t akmos_xalgo_blowfish;
-extern const akmos_cipher_xalgo_t akmos_xalgo_camellia;
-extern const akmos_cipher_xalgo_t akmos_xalgo_cast6;
-extern const akmos_cipher_xalgo_t akmos_xalgo_rc6;
-extern const akmos_cipher_xalgo_t akmos_xalgo_rijndael;
-extern const akmos_cipher_xalgo_t akmos_xalgo_serpent;
-extern const akmos_cipher_xalgo_t akmos_xalgo_seed;
-extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_256;
-extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_512;
-extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_1024;
-extern const akmos_cipher_xalgo_t akmos_xalgo_twofish;
-
-extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_160;
-extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_256;
-extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_320;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha1;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_224;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_256;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_384;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_512;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_224;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_256;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_384;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_512;
-extern const akmos_digest_xalgo_t akmos_xalgo_tiger;
-extern const akmos_digest_xalgo_t akmos_xalgo_whirlpool;
-
 #endif  /* AKMOS_H */
