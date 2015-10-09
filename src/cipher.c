@@ -121,7 +121,7 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
             break;
 
         case 128:
-            ptr->pxor = &akmos_pxor16;
+            ptr->pxor = &akmos_pxor128;
             break;
 
         default:
