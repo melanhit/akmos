@@ -36,9 +36,6 @@
 
 static int cipher_init_mode(akmos_cipher_ctx *ctx, akmos_mode_id mode, akmos_force_id force)
 {
-    if(force != AKMOS_FORCE_ENCRYPT && force != AKMOS_FORCE_DECRYPT)
-        return AKMOS_ERR_FORCEID;
-
     switch(mode) {
         case AKMOS_MODE_ECB:
             ctx->xmode  = &akmos_xmode_ecb;
@@ -64,10 +61,102 @@ static int cipher_init_mode(akmos_cipher_ctx *ctx, akmos_mode_id mode, akmos_for
             return AKMOS_ERR_MODEID;
     }
 
-    if(force == AKMOS_FORCE_ENCRYPT)
-        ctx->crypt = ctx->xmode->encrypt;
-    else
-        ctx->crypt = ctx->xmode->decrypt;
+    switch(force) {
+        case AKMOS_FORCE_ENCRYPT:
+        case AKMOS_FORCE_EDE_ENCRYPT:
+            ctx->crypt = ctx->xmode->encrypt;
+            break;
+
+        case AKMOS_FORCE_DECRYPT:
+        case AKMOS_FORCE_EDE_DECRYPT:
+            ctx->crypt = ctx->xmode->decrypt;
+            break;
+
+        default:
+            return AKMOS_ERR_FORCEID;
+    }
+
+    return AKMOS_ERR_SUCCESS;
+}
+
+static void cipher_setkey(akmos_cipher_ctx *ctx, const uint8_t *key, size_t len)
+{
+    ctx->xalgo->setkey(ctx->actx0, key, len);
+}
+
+static void cipher_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+{
+    ctx->xalgo->encrypt(ctx->actx0, in_blk, out_blk);
+}
+
+static void cipher_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+{
+    ctx->xalgo->decrypt(ctx->actx0, in_blk, out_blk);
+}
+
+static void cipher_ede_setkey(akmos_cipher_ctx *ctx, const uint8_t *key, size_t len)
+{
+    ctx->xalgo->setkey(ctx->actx0, key, len);
+    ctx->xalgo->setkey(ctx->actx1, key + len, len);
+    ctx->xalgo->setkey(ctx->actx2, key + len * 2, len);
+}
+
+static void cipher_ede_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+{
+    uint8_t *t;
+
+    t = out_blk;
+
+    ctx->xalgo->encrypt(ctx->actx0, in_blk, out_blk);
+    ctx->xalgo->decrypt(ctx->actx1, t, out_blk);
+    ctx->xalgo->encrypt(ctx->actx2, t, out_blk);
+}
+
+static void cipher_ede_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+{
+    uint8_t *t;
+
+    t = out_blk;
+
+    ctx->xalgo->decrypt(ctx->actx2, in_blk, out_blk);
+    ctx->xalgo->encrypt(ctx->actx1, t, out_blk);
+    ctx->xalgo->decrypt(ctx->actx0, t, out_blk);
+}
+
+static int cipher_init_actx(akmos_cipher_ctx *ctx)
+{
+    ctx->setkey  = &cipher_setkey;
+    ctx->encrypt = &cipher_encrypt;
+    ctx->decrypt = &cipher_decrypt;
+
+    ctx->actx0 = malloc(sizeof(akmos_cipher_algo_ctx));
+    if(!ctx->actx0)
+        return AKMOS_ERR_ENOMEM;
+
+    memset(ctx->actx0, 0, sizeof(akmos_cipher_algo_ctx));
+
+    return AKMOS_ERR_SUCCESS;
+}
+
+static int cipher_init_ede(akmos_cipher_ctx *ctx)
+{
+    void *p;
+
+    ctx->setkey  = &cipher_ede_setkey;
+    ctx->encrypt = &cipher_ede_encrypt;
+    ctx->decrypt = &cipher_ede_decrypt;
+
+    p = malloc(sizeof(akmos_cipher_algo_ctx) * 3);
+    if(!p)
+        return AKMOS_ERR_ENOMEM;
+
+    ctx->actx0 = p;
+    ctx->actx1 = p + sizeof(akmos_cipher_algo_ctx);
+    ctx->actx2 = p + (sizeof(akmos_cipher_algo_ctx) * 2);
+    if(!ctx->actx0 || !ctx->actx1 || !ctx->actx2)
+        return AKMOS_ERR_ENOMEM;
+
+    memset(p, 0, sizeof(akmos_cipher_algo_ctx) * 3);
 
     return AKMOS_ERR_SUCCESS;
 }
@@ -85,14 +174,6 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
 
     memset(ptr, 0, sizeof(akmos_cipher_ctx));
 
-    ptr->actx = malloc(sizeof(akmos_cipher_algo_ctx));
-    if(!ptr->actx) {
-        free(ptr);
-        return AKMOS_ERR_ENOMEM;
-    }
-
-    memset(ptr->actx, 0, sizeof(akmos_cipher_algo_ctx));
-
     ptr->xalgo = akmos_xalgo_cipher(algo);
     if(!ptr->xalgo) {
         err = AKMOS_ERR_ALGOID;
@@ -100,6 +181,25 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
     }
 
     err = cipher_init_mode(ptr, mode, force);
+    if(err)
+        goto out;
+
+    switch(force) {
+        case AKMOS_FORCE_ENCRYPT:
+        case AKMOS_FORCE_DECRYPT:
+            err = cipher_init_actx(ptr);
+            break;
+
+        case AKMOS_FORCE_EDE_ENCRYPT:
+        case AKMOS_FORCE_EDE_DECRYPT:
+            err = cipher_init_ede(ptr);
+            break;
+
+        default:
+            err = AKMOS_ERR_FORCEID;
+            break;
+    }
+
     if(err)
         goto out;
 
@@ -147,7 +247,7 @@ int akmos_cipher_setkey(akmos_cipher_ctx *ctx, const uint8_t *key, size_t len)
     if((len % ctx->xalgo->keystep) != 0)
         return AKMOS_ERR_KEYLEN;
 
-    ctx->xalgo->setkey(ctx->actx, key, len);
+    ctx->setkey(ctx, key, len);
 
     return AKMOS_ERR_SUCCESS;
 }
@@ -183,9 +283,15 @@ void akmos_cipher_free(akmos_cipher_ctx *ctx)
     if(ctx->xmode->zero)
         ctx->xmode->zero(ctx);
 
-    if(ctx->actx) {
-        akmos_memzero(ctx->actx, sizeof(akmos_cipher_algo_ctx));
-        free(ctx->actx);
+    if(ctx->actx2)
+        akmos_memzero(ctx->actx2, sizeof(akmos_cipher_algo_ctx));
+
+    if(ctx->actx1)
+        akmos_memzero(ctx->actx1, sizeof(akmos_cipher_algo_ctx));
+
+    if(ctx->actx0) {
+        akmos_memzero(ctx->actx0, sizeof(akmos_cipher_algo_ctx));
+        free(ctx->actx0);
     }
 
     akmos_memzero(ctx, sizeof(akmos_cipher_ctx));

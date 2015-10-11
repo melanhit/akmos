@@ -82,7 +82,9 @@ typedef enum {
 
 typedef enum {
     AKMOS_FORCE_ENCRYPT,
-    AKMOS_FORCE_DECRYPT
+    AKMOS_FORCE_DECRYPT,
+    AKMOS_FORCE_EDE_ENCRYPT,
+    AKMOS_FORCE_EDE_DECRYPT
 } akmos_force_id;
 
 /* Cipher */

@@ -80,6 +80,7 @@ struct opt_cipher_s {
         char keylen;
         char iter;
         char over;
+        char ede;
     } set;
 };
 
@@ -112,6 +113,39 @@ static int prompt_over(char *s, int flag)
         return 0;
 }
 
+static int parse_algo(struct opt_cipher_s *opt, char *algo_str)
+{
+    char *s1, *s2, *sv;
+
+    if(!algo_str) {
+        printf("Missing cipher algorithm\n");
+        return EXIT_FAILURE;
+    }
+
+    s1 = strtok_r(algo_str, ":", &sv);
+    s2 = strtok_r(NULL, ":", &sv);
+
+    if(!s2) {
+        if(strcasecmp(s1, algo_str) != 0) {
+            akmos_perror(AKMOS_ERR_ALGOID);
+            return EXIT_FAILURE;
+        }
+        opt->set.ede = 0;
+    } else {
+        if(strcasecmp(s2, "ede")) {
+            printf("Unknown cipher profile \'%s\'\n", s2);
+            return EXIT_FAILURE;
+        }
+        opt->set.ede = 1;
+    }
+
+    opt->algo = akmos_str2algo(s1);
+    if(opt->algo == -1)
+        return akmos_perror(AKMOS_ERR_ALGOID);
+
+    return EXIT_SUCCESS;
+}
+
 static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
 {
     char *algo_str, *mode_str, *keylen_str;
@@ -119,7 +153,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
 
     algo_str = mode_str = keylen_str = NULL;
 
-    while((c = getopt(argc, argv, "a:m:l:pk:e:i:hy")) != -1) {
+    while((c = getopt(argc, argv, "a:m:l:pk:i:hy")) != -1) {
         switch(c) {
             case 'a':
                 algo_str = optarg;
@@ -179,11 +213,9 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     if(!opt->set.algo) {
         opt->algo = DEFAULT_EALGO;
     } else {
-        if(algo_str) {
-            opt->algo = akmos_str2algo(algo_str);
-            if(opt->algo == -1)
-                return akmos_perror(AKMOS_ERR_ALGOID);
-        }
+        err = parse_algo(opt, algo_str);
+        if(err)
+            return err;
     }
 
     /* set mode */
@@ -265,14 +297,16 @@ static int lb_padbuf(akmos_cipher_ctx *ctx, uint8_t *buf, size_t *rlen, size_t b
 
     len = *rlen;
 
-    if(enc == AKMOS_FORCE_ENCRYPT) {
+    if(enc == AKMOS_FORCE_ENCRYPT || enc == AKMOS_FORCE_EDE_ENCRYPT) {
         tmplen = (len / blklen) * blklen;
         akmos_padadd(buf + tmplen, len - tmplen, buf + tmplen, blklen);
 
         akmos_cipher_crypt(ctx, buf + tmplen, blklen, buf + tmplen);
 
         *rlen = tmplen + blklen;
-    } else {
+    }
+
+    if(enc == AKMOS_FORCE_DECRYPT || enc == AKMOS_FORCE_EDE_DECRYPT) {
         if((len % blklen) != 0 || len < blklen) {
             printf("Input not multiple %zd\n", blklen);
             return EXIT_FAILURE;
@@ -285,7 +319,7 @@ static int lb_padbuf(akmos_cipher_ctx *ctx, uint8_t *buf, size_t *rlen, size_t b
     return EXIT_SUCCESS;
 }
 
-int akmos_cli_cipher(int argc, char **argv, const int enc)
+int akmos_cli_cipher(int argc, char **argv, int enc)
 {
     akmos_cipher_ctx *ctx;
     struct opt_cipher_s opt;
@@ -307,17 +341,30 @@ int akmos_cli_cipher(int argc, char **argv, const int enc)
     if(err)
         return err;
 
+    /* EDE */
+    if(opt.set.ede) {
+        if(enc == AKMOS_FORCE_ENCRYPT)
+            enc = AKMOS_FORCE_EDE_ENCRYPT;
+
+        if(enc == AKMOS_FORCE_DECRYPT)
+            enc = AKMOS_FORCE_EDE_DECRYPT;
+    }
+
     /* Setup master keys */
     keylen = opt.keylen * 2;
+    if(opt.set.ede)
+        keylen *= 3;
+
     AMALLOC(keybuf, keylen, err);
     if(err)
         return err;
     memset(keybuf, 0, keylen);
 
-    keypass = keybuf + opt.keylen;
+    keylen /= 2;
+    keypass = keybuf + keylen;
     tbuf = keypass;
     if(opt.set.pass) {
-        err = akmos_kdf_pbkdf2(tbuf, opt.keylen, NULL, 0, opt.pass, opt.iter, DEFAULT_DALGO);
+        err = akmos_kdf_pbkdf2(tbuf, keylen, NULL, 0, opt.pass, opt.iter, DEFAULT_DALGO);
         if(err) {
             akmos_perror(err);
             goto out;
@@ -326,11 +373,11 @@ int akmos_cli_cipher(int argc, char **argv, const int enc)
 
     if(opt.set.key) {
         /* keypass is used as salt */
-        err = secur_mk_keyfile(opt.key, keybuf, opt.keylen, keypass, opt.keylen);
+        err = secur_mk_keyfile(opt.key, keybuf, keylen, keypass, keylen);
         if(err)
             goto out;
     } else {
-        memcpy(keybuf, keypass, opt.keylen);
+        memcpy(keybuf, keypass, keylen);
     }
 
     /* Open source and destination */
@@ -371,21 +418,23 @@ int akmos_cli_cipher(int argc, char **argv, const int enc)
     }
 
     /* Create and cook header */
-    tmplen = opt.blklen + opt.keylen;
+    tmplen = opt.blklen + keylen;
     hlen = tmplen + (tmplen % opt.blklen);
 
     AMALLOC(hbuf, (hlen*2) + opt.blklen, err);
     if(err)
         goto out;
 
-    if(enc == AKMOS_FORCE_DECRYPT) {
+    if(enc == AKMOS_FORCE_DECRYPT || enc == AKMOS_FORCE_EDE_DECRYPT) {
         tbuf = hbuf;
         if(read(fd_in, hbuf, hlen) != hlen) {
             err = EXIT_FAILURE;
             printf("%s: %s\n", opt.input, strerror(errno));
             goto out;
         }
-    } else {
+    }
+
+    if(enc == AKMOS_FORCE_ENCRYPT || enc == AKMOS_FORCE_EDE_ENCRYPT) {
         tbuf = hbuf + hlen;
         err = secur_rand_buf(hbuf, hlen);
         if(err)
@@ -398,7 +447,7 @@ int akmos_cli_cipher(int argc, char **argv, const int enc)
         goto out;
     }
 
-    if(enc == AKMOS_FORCE_ENCRYPT) {
+    if(enc == AKMOS_FORCE_ENCRYPT || enc == AKMOS_FORCE_EDE_ENCRYPT) {
         if(write(fd_out, tbuf, hlen) != hlen) {
             err = EXIT_FAILURE;
             printf("%s: %s\n", opt.output, strerror(errno));
@@ -412,7 +461,7 @@ int akmos_cli_cipher(int argc, char **argv, const int enc)
     /* noise */
     tmplen = ((uint32_t)header.iv[0] ^ (uint32_t)header.iv[1]) % opt.blklen;
 
-    if(enc == AKMOS_FORCE_ENCRYPT) {
+    if(enc == AKMOS_FORCE_ENCRYPT || enc == AKMOS_FORCE_EDE_ENCRYPT) {
         err = secur_rand_buf(hbuf + (hlen * 2), tmplen);
         if(err)
             goto out;
@@ -422,7 +471,9 @@ int akmos_cli_cipher(int argc, char **argv, const int enc)
             printf("%s: %s\n", opt.output, strerror(errno));
             goto out;
         }
-    } else {
+    }
+
+    if(enc == AKMOS_FORCE_DECRYPT || enc == AKMOS_FORCE_EDE_DECRYPT) {
         if(read(fd_in, hbuf + (hlen*2), tmplen) != tmplen) {
             err = EXIT_FAILURE;
             printf("%s: %s\n", opt.input, strerror(errno));
