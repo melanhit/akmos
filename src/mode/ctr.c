@@ -100,7 +100,7 @@ void akmos_ctr_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     ptr->cnt++;
     UNPACK64BE(ptr->ctr, ptr->cnt);
 
-    for(i = 0; i < in_len; i++)
+    for(i = 0; i < n; i++)
         out_blk[i] = ptr->tmp[i] ^ in_blk[i];
 
     ptr->rem_len = blklen - i;
