@@ -123,7 +123,7 @@ int akmos_str2mode(const char *name)
 
 const char *akmos_algo2str(akmos_algo_id algo)
 {
-    switch(algo) {
+    switch(algo & AKMOS_ALGO_FLAG_MASK) {
         case AKMOS_ALGO_ANUBIS:
             return akmos_xalgo_anubis.name;
 
@@ -241,7 +241,7 @@ const char *akmos_mode2str(akmos_mode_id mode)
 
 size_t akmos_diglen(akmos_algo_id algo)
 {
-    switch(algo) {
+    switch(algo & AKMOS_ALGO_FLAG_MASK) {
         case AKMOS_ALGO_SHA1:
             return AKMOS_SHA1_DIGLEN;
 
@@ -291,7 +291,7 @@ size_t akmos_diglen(akmos_algo_id algo)
 
 size_t akmos_blklen(akmos_algo_id algo)
 {
-    switch(algo) {
+    switch(algo & AKMOS_ALGO_FLAG_MASK) {
         case AKMOS_ALGO_ANUBIS:
             return AKMOS_ANUBIS_BLKLEN;
 
@@ -446,7 +446,7 @@ const akmos_cipher_xalgo_t *akmos_xalgo_cipher(akmos_algo_id algo)
 {
     const akmos_cipher_xalgo_t *xalgo;
 
-    switch(algo) {
+    switch(algo & AKMOS_ALGO_FLAG_MASK) {
         case AKMOS_ALGO_ANUBIS:
             xalgo = &akmos_xalgo_anubis;
             break;
@@ -506,7 +506,7 @@ const akmos_digest_xalgo_t *akmos_xalgo_digest(akmos_algo_id algo)
 {
     const akmos_digest_xalgo_t *xalgo;
 
-    switch(algo) {
+    switch(algo & AKMOS_ALGO_FLAG_MASK) {
         case AKMOS_ALGO_RIPEMD_160:
             xalgo = &akmos_xalgo_ripemd_160;
             break;
@@ -562,5 +562,6 @@ const akmos_digest_xalgo_t *akmos_xalgo_digest(akmos_algo_id algo)
         default:
             return NULL;
     }
+
     return xalgo;
 }

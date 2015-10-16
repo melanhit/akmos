@@ -63,12 +63,10 @@ static int cipher_init_mode(akmos_cipher_ctx *ctx, akmos_mode_id mode, akmos_for
 
     switch(force) {
         case AKMOS_FORCE_ENCRYPT:
-        case AKMOS_FORCE_EDE_ENCRYPT:
             ctx->crypt = ctx->xmode->encrypt;
             break;
 
         case AKMOS_FORCE_DECRYPT:
-        case AKMOS_FORCE_EDE_DECRYPT:
             ctx->crypt = ctx->xmode->decrypt;
             break;
 
@@ -184,21 +182,10 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
     if(err)
         goto out;
 
-    switch(force) {
-        case AKMOS_FORCE_ENCRYPT:
-        case AKMOS_FORCE_DECRYPT:
-            err = cipher_init_actx(ptr);
-            break;
-
-        case AKMOS_FORCE_EDE_ENCRYPT:
-        case AKMOS_FORCE_EDE_DECRYPT:
-            err = cipher_init_ede(ptr);
-            break;
-
-        default:
-            err = AKMOS_ERR_FORCEID;
-            break;
-    }
+    if((algo & AKMOS_ALGO_FLAG_EDE) == AKMOS_ALGO_FLAG_EDE)
+        err = cipher_init_ede(ptr);
+    else
+        err = cipher_init_actx(ptr);
 
     if(err)
         goto out;
@@ -306,7 +293,7 @@ int akmos_cipher_ex(akmos_force_id force, akmos_algo_id algo, akmos_mode_id mode
 
     err = akmos_cipher_init(&ctx, algo, mode, force);
     if(err)
-        goto out;
+        return err;
 
     err = akmos_cipher_setkey(ctx, key, keylen);
     if(err)

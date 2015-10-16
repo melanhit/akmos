@@ -29,6 +29,9 @@
 #ifndef AKMOS_H
 #define AKMOS_H
 
+#define AKMOS_ALGO_FLAG_EDE     0x80000000
+#define AKMOS_ALGO_FLAG_MASK    0x0000ffff
+
 typedef enum {
     AKMOS_ERR_SUCCESS,
     AKMOS_ERR_FAILED,
@@ -82,10 +85,9 @@ typedef enum {
 
 typedef enum {
     AKMOS_FORCE_ENCRYPT,
-    AKMOS_FORCE_DECRYPT,
-    AKMOS_FORCE_EDE_ENCRYPT,
-    AKMOS_FORCE_EDE_DECRYPT
+    AKMOS_FORCE_DECRYPT
 } akmos_force_id;
+
 
 /* Cipher */
 typedef struct akmos_cipher_s akmos_cipher_ctx;
