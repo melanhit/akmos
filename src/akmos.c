@@ -241,7 +241,7 @@ const char *akmos_mode2str(akmos_mode_id mode)
 
 size_t akmos_diglen(akmos_algo_id algo)
 {
-    switch(algo & AKMOS_ALGO_FLAG_MASK) {
+    switch(algo) {
         case AKMOS_ALGO_SHA1:
             return AKMOS_SHA1_DIGLEN;
 
@@ -506,7 +506,7 @@ const akmos_digest_xalgo_t *akmos_xalgo_digest(akmos_algo_id algo)
 {
     const akmos_digest_xalgo_t *xalgo;
 
-    switch(algo & AKMOS_ALGO_FLAG_MASK) {
+    switch(algo) {
         case AKMOS_ALGO_RIPEMD_160:
             xalgo = &akmos_xalgo_ripemd_160;
             break;
