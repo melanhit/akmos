@@ -112,9 +112,6 @@ int akmos_cmac_setkey(akmos_cmac_t *ctx, const uint8_t *key, size_t len)
     size_t l;
     int err;
 
-    k0 = NULL;
-    err = AKMOS_ERR_SUCCESS;
-
     l = akmos_blklen(ctx->algo);
     k0 = malloc(l);
     if(!k0)

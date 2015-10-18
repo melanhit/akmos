@@ -36,16 +36,16 @@
 #include "rc6.h"
 
 #define f_rnd(i,a,b,c,d)                    \
-        u = ROTL(d * (d + d + 1), 5);       \
-        t = ROTL(b * (b + b + 1), 5);       \
-        a = ROTL(a ^ t, u) + l_key[i];      \
-        c = ROTL(c ^ u, t) + l_key[i + 1]
+        u = ROTL32(d * (d + d + 1), 5);     \
+        t = ROTL32(b * (b + b + 1), 5);     \
+        a = ROTL32(a ^ t, u) + l_key[i];    \
+        c = ROTL32(c ^ u, t) + l_key[i + 1]
 
 #define i_rnd(i,a,b,c,d)                    \
-        u = ROTL(d * (d + d + 1), 5);       \
-        t = ROTL(b * (b + b + 1), 5);       \
-        c = ROTR(c - l_key[i + 1], t) ^ u;  \
-        a = ROTR(a - l_key[i], u) ^ t
+        u = ROTL32(d * (d + d + 1), 5);     \
+        t = ROTL32(b * (b + b + 1), 5);     \
+        c = ROTR32(c - l_key[i + 1], t) ^ u;\
+        a = ROTR32(a - l_key[i], u) ^ t
 
 void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *key, size_t len)
 {
@@ -70,8 +70,8 @@ void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *key, size_t len)
     a = b = i = j = 0;
 
     for(k = 0; k < 132; ++k) {
-        a = ROTL(l_key[i] + a + b, 3); b += a;
-        b = ROTL(l[j] + b, b);
+        a = ROTL32(l_key[i] + a + b, 3); b += a;
+        b = ROTL32(l[j] + b, b);
         l_key[i] = a; l[j] = b;
         i = (i == 43 ? 0 : i + 1);
         j = (j == t ? 0 : j + 1);

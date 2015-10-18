@@ -183,9 +183,9 @@ void akmos_twofish_setkey(akmos_twofish_t *ctx, const uint8_t *in_key, size_t le
         b = a + 0x01010101;
 
         a = h_fun(ctx, a, me_key);
-        b = ROTL(h_fun(ctx, b, mo_key), 8);
+        b = ROTL32(h_fun(ctx, b, mo_key), 8);
         l_key[i] = a + b;
-        l_key[i + 1] = ROTL(a + 2 * b, 9);
+        l_key[i + 1] = ROTL32(a + 2 * b, 9);
     }
 
     gen_mk_tab(ctx, s_key);
@@ -194,11 +194,11 @@ void akmos_twofish_setkey(akmos_twofish_t *ctx, const uint8_t *in_key, size_t le
 /* encrypt a block of text  */
 #define f_rnd(i)                                                    \
     t1 = g1_fun(blk[1]); t0 = g0_fun(blk[0]);                       \
-    blk[2] = ROTR(blk[2] ^ (t0 + t1 + l_key[4 * (i) + 8]), 1);      \
-    blk[3] = ROTL(blk[3], 1) ^ (t0 + 2 * t1 + l_key[4 * (i) + 9]);  \
+    blk[2] = ROTR32(blk[2] ^ (t0 + t1 + l_key[4 * (i) + 8]), 1);    \
+    blk[3] = ROTL32(blk[3], 1) ^ (t0 + 2 * t1 + l_key[4 * (i) + 9]);\
     t1 = g1_fun(blk[3]); t0 = g0_fun(blk[2]);                       \
-    blk[0] = ROTR(blk[0] ^ (t0 + t1 + l_key[4 * (i) + 10]), 1);     \
-    blk[1] = ROTL(blk[1], 1) ^ (t0 + 2 * t1 + l_key[4 * (i) + 11])
+    blk[0] = ROTR32(blk[0] ^ (t0 + t1 + l_key[4 * (i) + 10]), 1);   \
+    blk[1] = ROTL32(blk[1], 1) ^ (t0 + 2 * t1 + l_key[4 * (i) + 11])
 
 void akmos_twofish_encrypt(akmos_twofish_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
@@ -222,13 +222,13 @@ void akmos_twofish_encrypt(akmos_twofish_t *ctx, const uint8_t *in_blk, uint8_t 
 }
 
 /* decrypt a block of text  */
-#define i_rnd(i)                                                    \
-    t1 = g1_fun(blk[1]); t0 = g0_fun(blk[0]);                       \
-    blk[2] = ROTL(blk[2], 1) ^ (t0 + t1 + l_key[4 * (i) + 10]);     \
-    blk[3] = ROTR(blk[3] ^ (t0 + 2 * t1 + l_key[4 * (i) + 11]), 1); \
-    t1 = g1_fun(blk[3]); t0 = g0_fun(blk[2]);                       \
-    blk[0] = ROTL(blk[0], 1) ^ (t0 + t1 + l_key[4 * (i) +  8]);     \
-    blk[1] = ROTR(blk[1] ^ (t0 + 2 * t1 + l_key[4 * (i) +  9]), 1)
+#define i_rnd(i)                                                        \
+    t1 = g1_fun(blk[1]); t0 = g0_fun(blk[0]);                           \
+    blk[2] = ROTL32(blk[2], 1) ^ (t0 + t1 + l_key[4 * (i) + 10]);       \
+    blk[3] = ROTR32(blk[3] ^ (t0 + 2 * t1 + l_key[4 * (i) + 11]), 1);   \
+    t1 = g1_fun(blk[3]); t0 = g0_fun(blk[2]);                           \
+    blk[0] = ROTL32(blk[0], 1) ^ (t0 + t1 + l_key[4 * (i) +  8]);       \
+    blk[1] = ROTR32(blk[1] ^ (t0 + 2 * t1 + l_key[4 * (i) +  9]), 1)
 
 void akmos_twofish_decrypt(akmos_twofish_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {

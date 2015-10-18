@@ -121,14 +121,17 @@
                             <listitem>
                                 <para>
                                     Key length (in bits) to use with the given crypto algorithm.
-                                    By default is <constant>128</constant>
+                                    By default is <constant>128</constant> bits
                                 </para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
                             <term><arg choice="plain">-i iter</arg></term>
                             <listitem>
-                                <para>Number of iterations to use with PKCS#5v2 when processing passphrase component</para>
+                                <para>
+                                    Number of iterations to use with PKCS#5v2 when processing passphrase component.
+                                    By defualt is <constant>4096</constant>.
+                                </para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
@@ -181,7 +184,7 @@
                     </simplelist>
                 </para>
             </refsect2>
-            
+
             <refsect2>
                 <title>Key length</title>
                 <variablelist spacing='compact'>

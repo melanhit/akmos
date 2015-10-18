@@ -30,14 +30,22 @@
 #define AKMOS_MACRO_H
 
 /* rotate int into left (n - num bits) */
-#ifndef ROTL
-#define ROTL(x, n)  (((x) << (n)) | ((x) >> ((sizeof(x) << 3) - (n))))
-#endif  /* ROTL */
+#ifndef ROTL32
+#define ROTL32(x, n)  (((x) << (n)) | ((x) >> (32 - (n))))
+#endif  /* ROTL32 */
+
+#ifndef ROTL64
+#define ROTL64(x, n)  (((x) << (n)) | ((x) >> (64 - (n))))
+#endif  /* ROTL64 */
 
 /* rotate int into right (n - num bits) */
-#ifndef ROTR
-#define ROTR(x, n)  (((x) >> (n)) | ((x) << ((sizeof(x) << 3) - (n))))
-#endif  /* ROTR */
+#ifndef ROTR32
+#define ROTR32(x, n)  (((x) >> (n)) | ((x) << (32 - (n))))
+#endif  /* ROTR32 */
+
+#ifndef ROTR64
+#define ROTR64(x, n)  (((x) >> (n)) | ((x) << (64 - (n))))
+#endif  /* ROTR64 */
 
 /* extract byte */
 #ifndef EXTBYTE

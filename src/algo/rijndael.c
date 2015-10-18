@@ -96,7 +96,7 @@ static void rijndael_setkey256(uint32_t *k)
         if((i % RIJNDAEL_K256) == 0)
             t = KeySubByte(t) ^ R[i / RIJNDAEL_K256];
         else if((i % RIJNDAEL_K256) == 4)
-            t = KeySubByte(ROTR(t, 8));
+            t = KeySubByte(ROTR32(t, 8));
 
         k[i] = k[i - RIJNDAEL_K256] ^ t;
     }

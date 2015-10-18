@@ -51,7 +51,7 @@
 
 #define DEFAULT_MODE    AKMOS_MODE_HMAC
 #define DEFAULT_KEYLEN  128
-#define DEFAULT_ITER    65536
+#define DEFAULT_ITER    4096
 
 #define MAX_PASSLEN     128
 
@@ -217,7 +217,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
         }
     } else {
         if(keylen_str) {
-            err = sscanf(keylen_str, "%zd", &opt->keylen);
+            err = sscanf(keylen_str, "%4zu", &opt->keylen);
             if(err == EOF || !err)
                 return akmos_perror(AKMOS_ERR_KEYLEN);
 
@@ -302,7 +302,6 @@ static int mac_proc(struct opt_mac_s *opt, char *path, uint8_t *buf, uint8_t *ke
     int fd_in, err;
 
     ctx = NULL;
-    fd_in = -1;
     err = EXIT_SUCCESS;
 
     fd_in = open(path, O_RDONLY|O_NONBLOCK);
@@ -355,7 +354,6 @@ int akmos_cli_mac(int argc, char **argv)
     int i, err;
 
     keybuf = buf = macbuf = NULL;
-    err = EXIT_SUCCESS;
 
     memset(&opt, 0, sizeof(struct opt_mac_s));
     err = parse_arg(&opt, argc, argv);

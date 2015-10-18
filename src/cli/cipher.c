@@ -55,7 +55,7 @@
 #define DEFAULT_EMODE   AKMOS_MODE_CBC
 #define DEFAULT_DALGO   AKMOS_ALGO_SHA2_512
 #define DEFAULT_KEYLEN  128
-#define DEFAULT_ITER    65536
+#define DEFAULT_ITER    4096
 
 #define MAX_KEYLEN      128
 #define MAX_PASSLEN     128
@@ -91,7 +91,7 @@ struct header_cipher_s {
 
 static int prompt_over(char *s, int flag)
 {
-    char ans;
+    int ans;
 
     /* use flag for skip newline of printf, unclean but work :) */
     if(flag) {
@@ -180,7 +180,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
                 break;
 
             case 'i':
-                err = sscanf(optarg, "%u", &opt->iter);
+                err = sscanf(optarg, "%5u", &opt->iter);
                 if(err == EOF || !err) {
                     printf("Invalid number iterations\n");
                     return EXIT_FAILURE;
@@ -253,13 +253,13 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
        }
     } else {
         if(keylen_str) {
-            err = sscanf(keylen_str, "%zd", &opt->keylen);
+            err = sscanf(keylen_str, "%4zu", &opt->keylen);
             if(err == EOF || !err)
                 return akmos_perror(AKMOS_ERR_KEYLEN);
         }
     }
 
-    if(opt->keylen > (MAX_KEYLEN*8) || opt->keylen <= 0 || (opt->keylen % 8) != 0) {
+    if(opt->keylen > (MAX_KEYLEN*8) || opt->keylen == 0 || (opt->keylen % 8) != 0) {
         printf("Invalid key length (err = %d)\n", AKMOS_ERR_KEYLEN);
         return EXIT_FAILURE;
     }
@@ -280,7 +280,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     }
 
     if(opt->set.iter && opt->set.pass) {
-        if(opt->iter > UINT32_MAX) {
+        if(opt->iter > UINT16_MAX) {
             printf("Maximum number of iterations - %u\n", UINT32_MAX);
             return EXIT_FAILURE;
         }
@@ -311,7 +311,7 @@ static int lb_padbuf(akmos_cipher_ctx *ctx, uint8_t *buf, size_t *rlen, size_t b
 
     if(enc == AKMOS_FORCE_DECRYPT) {
         if((len % blklen) != 0 || len < blklen) {
-            printf("Input not multiple %zd\n", blklen);
+            printf("Input not multiple %zu\n", blklen);
             return EXIT_FAILURE;
         }
 
@@ -337,7 +337,6 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
     ctx = NULL;
     keybuf = hbuf = buf = NULL;
     fd_in = fd_out = -1;
-    err = EXIT_SUCCESS;
 
     memset(&opt, 0, sizeof(struct opt_cipher_s));
     err = parse_arg(&opt, argc, argv);

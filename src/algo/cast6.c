@@ -37,7 +37,7 @@
 #include "cast6_sb32.h"
 
 #define f1(y, x, kr, km)        \
-    t  = ROTL(km + x, kr);      \
+    t  = ROTL32(km + x, kr);    \
     u  = S0[EXTBYTE(t,3)];      \
     u ^= S1[EXTBYTE(t,2)];      \
     u -= S2[EXTBYTE(t,1)];      \
@@ -45,7 +45,7 @@
     y ^= u
 
 #define f2(y, x, kr, km)        \
-    t  = ROTL(km ^ x, kr);      \
+    t  = ROTL32(km ^ x, kr);    \
     u  = S0[EXTBYTE(t,3)];      \
     u -= S1[EXTBYTE(t,2)];      \
     u += S2[EXTBYTE(t,1)];      \
@@ -53,7 +53,7 @@
     y ^= u
 
 #define f3(y, x, kr, km)        \
-    t  = ROTL(km - x, kr);      \
+    t  = ROTL32(km - x, kr);    \
     u  = S0[EXTBYTE(t,3)];      \
     u += S1[EXTBYTE(t,2)];      \
     u ^= S2[EXTBYTE(t,1)];      \

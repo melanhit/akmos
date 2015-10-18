@@ -84,7 +84,7 @@ static uint64_t fl(uint64_t in, uint64_t k)
     k1 = k >> 32;
     k2 = k & 0xffffffff;
 
-    x2 ^= ROTL((x1 & k1), 1);
+    x2 ^= ROTL32((x1 & k1), 1);
     x1 ^= (x2 | k2);
 
     return (((uint64_t)x1 << 32) | x2);
@@ -101,7 +101,7 @@ static uint64_t flinv(uint64_t in, uint64_t k)
     k2 = k & 0xffffffff;
 
     x1 ^= (x2 | k2);
-    x2 ^= ROTL((x1 & k1), 1);
+    x2 ^= ROTL32((x1 & k1), 1);
 
     return (((uint64_t)x1 << 32) | x2);
 }

@@ -378,29 +378,29 @@
 /* the linear transformation and its inverse */
 
 #define rot(a,b,c,d)                \
-{   a = ROTL(a, 13);                \
-    c = ROTL(c, 3);                 \
+{   a = ROTL32(a, 13);              \
+    c = ROTL32(c, 3);               \
     d ^= c ^ (a << 3);              \
     b ^= a ^ c;                     \
-    d = ROTL(d, 7);                 \
-    b = ROTL(b, 1);                 \
+    d = ROTL32(d, 7);               \
+    b = ROTL32(b, 1);               \
     a ^= b ^ d;                     \
     c ^= d ^ (b << 7);              \
-    a = ROTL(a, 5);                 \
-    c = ROTL(c, 22);                \
+    a = ROTL32(a, 5);               \
+    c = ROTL32(c, 22);              \
 }
 
 #define irot(a,b,c,d)               \
-{   c = ROTR(c, 22);                \
-    a = ROTR(a, 5);                 \
+{   c = ROTR32(c, 22);              \
+    a = ROTR32(a, 5);               \
     c ^= d ^ (b << 7);              \
     a ^= b ^ d;                     \
-    d = ROTR(d, 7);                 \
-    b = ROTR(b, 1);                 \
+    d = ROTR32(d, 7);               \
+    b = ROTR32(b, 1);               \
     d ^= c ^ (a << 3);              \
     b ^= a ^ c;                     \
-    c = ROTR(c, 3);                 \
-    a = ROTR(a, 13);                \
+    c = ROTR32(c, 3);               \
+    a = ROTR32(a, 13);              \
 }
 
 void akmos_serpent_setkey(akmos_serpent_t *ctx, const uint8_t *key, size_t len)
@@ -431,11 +431,11 @@ void akmos_serpent_setkey(akmos_serpent_t *ctx, const uint8_t *key, size_t len)
     t2 = ctx->l_key[3] ^ ctx->l_key[5] ^ ctx->l_key[7] ^ 0x9e3779b9;
 
     for (i = 0; i < 132; i += 2) {
-        ctx->l_key[i + 8] = ROTL(i ^ ctx->l_key[i] ^ t2, 11);
+        ctx->l_key[i + 8] = ROTL32(i ^ ctx->l_key[i] ^ t2, 11);
 
         t1 ^= ctx->l_key[i + 2] ^ ctx->l_key[i + 8];
 
-        ctx->l_key[i + 9] = ROTR((i + 1) ^ ctx->l_key[i + 1] ^ t1, 21);
+        ctx->l_key[i + 9] = ROTR32((i + 1) ^ ctx->l_key[i + 1] ^ t1, 21);
 
         t2 ^= ctx->l_key[i + 3] ^ ctx->l_key[i + 9];
     }

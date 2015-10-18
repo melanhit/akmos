@@ -41,14 +41,14 @@
 #define F3(x, y, z)  (x ^ y ^ z)
 
 #define E(x, i) (x[i & 15] =                        \
-        ROTL(                                       \
+        ROTL32(                                     \
             x[i & 15] ^                             \
             x[(i - 14) & 15]  ^                     \
             x[(i - 8) & 15]  ^                      \
             x[(i - 3) & 15], 1))
 
 #define R(a, b, c, d, e, f, k, data)                \
-        (e += ROTL(a, 5) + f(b, c, d) + k + data, b = ROTL(b, 30))
+        (e += ROTL32(a, 5) + f(b, c, d) + k + data, b = ROTL32(b, 30))
 
 #define K0  0x5a827999
 #define K1  0x6ed9eba1

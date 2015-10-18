@@ -138,23 +138,18 @@ static int cipher_init_actx(akmos_cipher_ctx *ctx)
 
 static int cipher_init_ede(akmos_cipher_ctx *ctx)
 {
-    void *p;
-
     ctx->setkey  = &cipher_ede_setkey;
     ctx->encrypt = &cipher_ede_encrypt;
     ctx->decrypt = &cipher_ede_decrypt;
 
-    p = malloc(sizeof(akmos_cipher_algo_ctx) * 3);
-    if(!p)
+    ctx->actx0 = malloc(sizeof(akmos_cipher_algo_ctx) * 3);
+    if(!ctx->actx0)
         return AKMOS_ERR_ENOMEM;
 
-    ctx->actx0 = p;
-    ctx->actx1 = p + sizeof(akmos_cipher_algo_ctx);
-    ctx->actx2 = p + (sizeof(akmos_cipher_algo_ctx) * 2);
-    if(!ctx->actx0 || !ctx->actx1 || !ctx->actx2)
-        return AKMOS_ERR_ENOMEM;
+    ctx->actx1 = ctx->actx0 + 1;
+    ctx->actx2 = ctx->actx1 + 1;
 
-    memset(p, 0, sizeof(akmos_cipher_algo_ctx) * 3);
+    memset(ctx->actx0, 0, sizeof(akmos_cipher_algo_ctx) * 3);
 
     return AKMOS_ERR_SUCCESS;
 }

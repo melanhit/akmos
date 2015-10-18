@@ -66,13 +66,13 @@
 
 #define R0(a, b, c, d, Fj, Kj, sj, rj)                  \
 {                                                       \
-        a = ROTL(a + Fj(b,c,d) + X(rj) + Kj, sj);       \
+        a = ROTL32(a + Fj(b,c,d) + X(rj) + Kj, sj);     \
 }
 
 #define R1(a, b, c, d, e, Fj, Kj, sj, rj)               \
 {                                                       \
-        a = ROTL(a + Fj(b,c,d) + X(rj) + Kj, sj) + e;   \
-        c = ROTL(c, 10);                                \
+        a = ROTL32(a + Fj(b,c,d) + X(rj) + Kj, sj) + e; \
+        c = ROTL32(c, 10);                              \
 }
 
 #define X(i)    x[i]
