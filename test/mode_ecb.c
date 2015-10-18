@@ -40,7 +40,6 @@
 
 static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t blklen, int *res)
 {
-    akmos_cipher_ctx *ctx;
     uint8_t buf[1024], *key, *ct;
     int err;
     size_t i, j;
@@ -61,21 +60,12 @@ static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t
     memcpy(key, ectx->key, keylen);
 
     for(i = 0; i < TEST_CNT; i++) {
-        err = akmos_cipher_init(&ctx, algo, AKMOS_MODE_ECB, AKMOS_FORCE_ENCRYPT);
-        if(err)
-            goto out;
-
         for(j = 0; j < keylen; j++)
             key[j] ^= ct[j % blklen];
 
-        err = akmos_cipher_setkey(ctx, key, keylen);
+        err = akmos_cipher_ex(AKMOS_FORCE_ENCRYPT, algo, AKMOS_MODE_ECB, key, keylen, NULL, ct, blklen, ct);
         if(err)
             goto out;
-
-        for(j = 0; j < TEST_CNT; j++)
-            akmos_cipher_crypt(ctx, ct, blklen, ct);
-
-        akmos_cipher_free(ctx);
     }
 
     if(memcmp(ct, ectx->ct1, blklen) != 0) {
@@ -85,21 +75,12 @@ static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t
 
     /* test decryption */
     for(i = 0; i < TEST_CNT; i++) {
-        err = akmos_cipher_init(&ctx, algo, AKMOS_MODE_ECB, AKMOS_FORCE_DECRYPT);
+        err = akmos_cipher_ex(AKMOS_FORCE_DECRYPT, algo, AKMOS_MODE_ECB, key, keylen, NULL, ct, blklen, ct);
         if(err)
             goto out;
-
-        err = akmos_cipher_setkey(ctx, key, keylen);
-        if(err)
-            goto out;
-
-        for(j = 0; j < TEST_CNT; j++)
-            akmos_cipher_crypt(ctx, ct, blklen, ct);
 
         for(j = 0; j < keylen; j++)
             key[j] ^= ct[j % blklen];
-
-        akmos_cipher_free(ctx);
     }
 
     if(memcmp(key, ectx->key, keylen) != 0) {
@@ -117,10 +98,8 @@ static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t
     }
 
 out:
-    if(err) {
-        akmos_cipher_free(ctx);
+    if(err)
         return akmos_perror(err);
-    }
 
     return EXIT_SUCCESS;
 }
