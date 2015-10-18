@@ -2,12 +2,12 @@
 .\"     Title: akmos
 .\"    Author: Andrew Romanenko <melanhit@gmail.com>
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: August, 2015
+.\"      Date: October, 2015
 .\"    Manual: AKMOS CLI REFERENCE
-.\"    Source: akmos 0.3
+.\"    Source: akmos 0.4
 .\"  Language: English
 .\"
-.TH "AKMOS" "1" "August, 2015" "akmos 0.3" "AKMOS CLI REFERENCE"
+.TH "AKMOS" "1" "October, 2015" "akmos 0.4" "AKMOS CLI REFERENCE"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -62,14 +62,17 @@ print short help
 .SH "SYMMETRIC CIPHERING"
 .SS ""
 .HP \w'\fBakmos\ enc|dec\fR\ 'u
-\fBakmos enc|dec\fR [\-a\ \fIalgo\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-i\ \fIiter\fR] [\-y] [\-h] {input} {output}
+\fBakmos enc|dec\fR [\-a\ \fIalgo[:ede]\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-i\ \fIiter\fR] [\-y] [\-h] {input} {output}
 .SS "Options"
 .PP
 .PP
-\-a\ algo
+\-a\ algo[:ede]
 .RS 4
 Crypto algorithm to use\&. By default is
 \fBTwofish\fR
+.sp
+\fB:ede\fR
+flag put cipher into Encrypt\-Decrypt\-Encrypt mode (like 3DES)
 .RE
 .PP
 \-m\ mode
