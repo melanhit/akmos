@@ -39,6 +39,7 @@
 #define AKMOS_CLI_CIPHER_D  3
 #define AKMOS_CLI_MAC       4
 #define AKMOS_CLI_HELP      5
+#define AKMOS_CLI_UNKNOWN   6
 
 int akmos_cli_help() {
     printf("Usage: akmos <command> <options>\n"
@@ -61,18 +62,16 @@ int main(int argc, char **argv)
 
     if(strcmp(argv[1], "dgst") == 0)
         opt = AKMOS_CLI_DIGEST;
-
-    if(strcmp(argv[1], "enc") == 0)
+    else if(strcmp(argv[1], "enc") == 0)
         opt = AKMOS_CLI_CIPHER_E;
-
-    if(strcmp(argv[1], "dec") == 0)
+    else if(strcmp(argv[1], "dec") == 0)
         opt = AKMOS_CLI_CIPHER_D;
-
-    if(strcmp(argv[1], "mac") == 0)
+    else if(strcmp(argv[1], "mac") == 0)
         opt = AKMOS_CLI_MAC;
-
-    if(strcmp(argv[1], "help") == 0)
+    else if(strcmp(argv[1], "help") == 0)
         opt = AKMOS_CLI_HELP;
+    else
+        opt = AKMOS_CLI_UNKNOWN;
 
     switch(opt) {
         case AKMOS_CLI_DIGEST:
@@ -90,7 +89,7 @@ int main(int argc, char **argv)
         case AKMOS_CLI_HELP:
             return akmos_cli_help();
 
-        default:
+        case AKMOS_CLI_UNKNOWN:
             printf("Unknown action '%s'\n", argv[1]);
             return EXIT_FAILURE;
     }

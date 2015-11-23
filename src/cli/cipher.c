@@ -356,8 +356,9 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
 
     keylen /= 2;
     keypass = keybuf + keylen;
-    tbuf = keypass;
+
     if(opt.set.pass) {
+        tbuf = keypass;
         err = akmos_kdf_pbkdf2(tbuf, keylen, NULL, 0, opt.pass, opt.iter, DEFAULT_DALGO);
         if(err) {
             akmos_perror(err);
@@ -371,6 +372,7 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
         if(err)
             goto out;
     } else {
+        /* keypass is used as master key */
         memcpy(keybuf, keypass, keylen);
     }
 
