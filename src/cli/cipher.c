@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -330,11 +330,12 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
     uint8_t *buf, *tbuf, *hbuf, *hdp, *rbuf, *wbuf;
     size_t keylen, rlen, wlen, hlen, tmplen;
     mode_t mask;
-    int fd_in, fd_out, err;
+    FILE *fd_in, *fd_out;
+    int err;
 
     ctx = NULL;
     keybuf = hbuf = buf = NULL;
-    fd_in = fd_out = -1;
+    fd_in = fd_out = NULL;
 
     memset(&opt, 0, sizeof(struct opt_cipher_s));
     err = parse_arg(&opt, argc, argv);
@@ -374,8 +375,8 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
     }
 
     /* Open source and destination */
-    fd_in = open(opt.input, O_RDONLY);
-    if(fd_in == -1) {
+    fd_in = fopen(opt.input, "r");
+    if(!fd_in) {
         err = EXIT_FAILURE;
         printf("%s: %s\n", opt.input, strerror(errno));
         goto out;
@@ -403,8 +404,8 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
         }
     }
 
-    fd_out = open(opt.output, O_CREAT|O_WRONLY|O_TRUNC, 0666);
-    if(fd_out == -1) {
+    fd_out = fopen(opt.output, "w");
+    if(!fd_out) {
         err = EXIT_FAILURE;
         printf("%s: %s\n", opt.output, strerror(errno));
         goto out;
@@ -418,7 +419,7 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
         goto out;
 
     if(enc == AKMOS_FORCE_DECRYPT) {
-        if(read(fd_in, hdp, hlen) != hlen) {
+        if(fread(hdp, 1, hlen, fd_in) != hlen) {
             err = EXIT_FAILURE;
             printf("%s: %s\n", opt.input, strerror(errno));
             goto out;
@@ -439,7 +440,7 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
 
     /* store header in file or struct */
     if(enc == AKMOS_FORCE_ENCRYPT) {
-        if(write(fd_out, hbuf, hlen) != hlen) {
+        if(fwrite(hbuf, 1, hlen, fd_out) != hlen) {
             err = EXIT_FAILURE;
             printf("%s: %s\n", opt.output, strerror(errno));
             goto out;
@@ -474,9 +475,9 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
     rbuf = buf;
     wbuf = buf + BUFSIZ;
 
-    rlen = read(fd_in, rbuf, BUFSIZ);
+    rlen = fread(rbuf, 1, BUFSIZ, fd_in);
     while(1) {
-        wlen = read(fd_in, wbuf, BUFSIZ);
+        wlen = fread(wbuf, 1, BUFSIZ, fd_in);
         if(rlen == -1 || wlen == -1) {
             err = EXIT_FAILURE;
             printf("%s: %s\n", opt.input, strerror(errno));
@@ -488,7 +489,7 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
         if(!wlen)
             break;
 
-        if(write(fd_out, rbuf, rlen) != rlen) {
+        if(fwrite(rbuf, 1, rlen, fd_out) != rlen) {
             err = EXIT_FAILURE;
             printf("%s: %s\n", opt.output, strerror(errno));
             goto out;
@@ -512,18 +513,18 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
             break;
     }
 
-    if(write(fd_out, rbuf, rlen) != rlen) {
+    if(fwrite(rbuf, 1, rlen, fd_out) != rlen) {
         err = EXIT_FAILURE;
         printf("%s: %s\n", opt.output, strerror(errno));
         goto out;
     }
 
 out:
-    if(fd_in > 0)
-        close(fd_in);
+    if(fd_in)
+        fclose(fd_in);
 
-    if(fd_out > 0)
-        close(fd_out);
+    if(fd_out)
+        fclose(fd_out);
 
     if(keybuf) {
         akmos_memzero(keybuf, keylen);

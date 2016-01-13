@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -121,9 +121,12 @@ int akmos_cli_digest(int argc, char **argv)
 {
     akmos_digest_ctx *ctx;
     struct opt_digest_s opt;
-    int fd, i, err;
+    int i, err;
     ssize_t len, mdlen;
     uint8_t buf[BUFSIZ], *md;
+    FILE *fd;
+
+    fd = NULL;
 
     memset(&opt, 0, sizeof(opt));
     err = parse_arg(&opt, argc, argv);
@@ -138,11 +141,11 @@ int akmos_cli_digest(int argc, char **argv)
 
     for(i = 0; i < opt.count; i++) {
         if(strcmp(opt.input[i], "-") == 0)
-            fd = STDIN_FILENO;
+            fd = stdin;
         else
-            fd = open(opt.input[i], O_RDONLY);
+            fd = fopen(opt.input[i], "r");
 
-        if(fd == -1) {
+        if(!fd) {
             printf("%s: %s\n", opt.input[i], strerror(errno));
             free(md);
             return EXIT_FAILURE;
@@ -154,7 +157,7 @@ int akmos_cli_digest(int argc, char **argv)
             return akmos_perror(err);
         }
 
-        while((len = read(fd, buf, BUFSIZ)) != 0) {
+        while((len = fread(buf, 1, BUFSIZ, fd)) != 0) {
             if(len == -1) {
                 printf("%s: %s\n", opt.input[i], strerror(errno));
                 free(md);
@@ -166,7 +169,8 @@ int akmos_cli_digest(int argc, char **argv)
 
         akmos_digest_done(ctx, md);
 
-        close(fd);
+        if(fd)
+            fclose(fd);
 
         if(!opt.set.bin)
             digest_print_hex(opt.input[i], akmos_algo2str(opt.algo), md, mdlen);
