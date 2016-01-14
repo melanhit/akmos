@@ -172,6 +172,10 @@ static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, ui
 
 void akmos_whirlpool_init(akmos_whirlpool_t *ctx)
 {
+    ctx->h[0] = ctx->h[1] = ctx->h[2] = ctx->h[3] = 0;
+    ctx->h[4] = ctx->h[5] = ctx->h[6] = ctx->h[7] = 0;
+
+    ctx->len=0;
 }
 
 void akmos_whirlpool_update(akmos_whirlpool_t *ctx, const uint8_t *input, size_t len)

@@ -43,6 +43,7 @@ typedef union {
     akmos_sha2_512_t    sha2_512;
     akmos_sha3_t        sha3;
     akmos_tiger_t       tiger;
+    akmos_whirlpool_t   whirlpool;
 } akmos_digest_algo_ctx;
 
 struct akmos_digest_s {
