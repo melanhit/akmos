@@ -72,11 +72,13 @@ set(src_lib
 set(src_amd64
     algo/amd64/threefish_256.s
     algo/amd64/threefish_512.s
+    algo/amd64/sha3_transform.s
     amd64/pxor.s)
 
 set(src_orig
     algo/threefish_256.c
     algo/threefish_512.c
+    algo/sha3_transform.c
     pxor.c)
 
 set(src_cli
@@ -99,6 +101,7 @@ if(AKMOS_ENABLE_ASM AND AMD64)
     if(CMAKE_ASM-ATT_COMPILER_WORKS)
         list(SORT src_amd64)
         add_library(akmos_obj_asm OBJECT ${src_amd64})
+        add_definitions(-DAKMOS_ASM)
     endif()
 else()
     set(src_lib ${src_lib} ${src_orig})
@@ -111,7 +114,7 @@ add_library(akmos_obj OBJECT ${src_lib})
 
 add_definitions(-D_BSD_SOURCE -D_POSIX_C_SOURCE=199309L -D_XOPEN_SOURCE=500)
 add_definitions(-DAKMOS_BUFSZ=8192)
-set(CFLAGS "-fPIC -DPIC -ansi -Wall -Werror -Wmissing-prototypes")
+set(CFLAGS "-fPIC -DPIC -ansi -Wall -Werror -Wmissing-prototypes ${ASM_CFLAGS}")
 separate_arguments(CFLAGS UNIX_COMMAND ${CFLAGS})
 target_compile_options(akmos_obj PRIVATE ${CFLAGS})
 
