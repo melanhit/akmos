@@ -50,7 +50,7 @@ typedef struct {
     size_t   blklen;
     size_t   diglen;
     size_t   len;
-} akmos_sha3_t;
+} __attribute__((aligned(16))) akmos_sha3_t;
 
 void akmos_sha3_224_init (akmos_sha3_t *);
 void akmos_sha3_256_init (akmos_sha3_t *);
