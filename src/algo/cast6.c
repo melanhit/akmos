@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) 1999 Dr Brian Gladman (gladman@seven77.demon.co.uk)
  *   All rights reserved.
  *
@@ -36,64 +36,53 @@
 #include "cast6.h"
 #include "cast6_sb32.h"
 
-#define f1(y, x, kr, km)        \
-    t  = ROTL32(km + x, kr);    \
-    u  = S0[EXTBYTE(t,3)];      \
-    u ^= S1[EXTBYTE(t,2)];      \
-    u -= S2[EXTBYTE(t,1)];      \
-    u += S3[EXTBYTE(t,0)];      \
-    y ^= u
+#define U0(t)  (S0[EXTBYTE(t,3)])
+#define U1(t)  (S1[EXTBYTE(t,2)])
+#define U2(t)  (S2[EXTBYTE(t,1)])
+#define U3(t)  (S3[EXTBYTE(t,0)])
 
-#define f2(y, x, kr, km)        \
-    t  = ROTL32(km ^ x, kr);    \
-    u  = S0[EXTBYTE(t,3)];      \
-    u -= S1[EXTBYTE(t,2)];      \
-    u += S2[EXTBYTE(t,1)];      \
-    u ^= S3[EXTBYTE(t,0)];      \
-    y ^= u
+#define f1(y, x, kr, km)                    \
+    t  = ROTL32(km + x, kr);                \
+    y ^= ((U0(t) ^ U1(t)) - U2(t) + U3(t))
 
-#define f3(y, x, kr, km)        \
-    t  = ROTL32(km - x, kr);    \
-    u  = S0[EXTBYTE(t,3)];      \
-    u += S1[EXTBYTE(t,2)];      \
-    u ^= S2[EXTBYTE(t,1)];      \
-    u -= S3[EXTBYTE(t,0)];      \
-    y ^= u
+#define f2(y, x, kr, km)                    \
+    t  = ROTL32(km ^ x, kr);                \
+    y ^= ((U0(t) - U1(t) + U2(t)) ^ U3(t))
 
-#define f_rnd(x, n)                             \
-    f1(x[2], x[3], l_key[n],     l_key[n + 4]); \
-    f2(x[1], x[2], l_key[n + 1], l_key[n + 5]); \
-    f3(x[0], x[1], l_key[n + 2], l_key[n + 6]); \
-    f1(x[3], x[0], l_key[n + 3], l_key[n + 7])
+#define f3(y, x, kr, km)                    \
+    t  = ROTL32(km - x, kr);                \
+    y ^= (((U0(t) + U1(t)) ^ U2(t)) - U3(t))\
 
-#define i_rnd(x, n)                             \
-    f1(x[3], x[0], l_key[n + 3], l_key[n + 7]); \
-    f3(x[0], x[1], l_key[n + 2], l_key[n + 6]); \
-    f2(x[1], x[2], l_key[n + 1], l_key[n + 5]); \
-    f1(x[2], x[3], l_key[n],     l_key[n + 4])
+#define f_rnd(a, b, c, d, n)                \
+    f1(c, d, l_key[n],     l_key[n + 4]);   \
+    f2(b, c, l_key[n + 1], l_key[n + 5]);   \
+    f3(a, b, l_key[n + 2], l_key[n + 6]);   \
+    f1(d, a, l_key[n + 3], l_key[n + 7])
 
-#define k_rnd(k, tr, tm)                        \
-    f1(k[6], k[7], tr[0], tm[0]);               \
-    f2(k[5], k[6], tr[1], tm[1]);               \
-    f3(k[4], k[5], tr[2], tm[2]);               \
-    f1(k[3], k[4], tr[3], tm[3]);               \
-    f2(k[2], k[3], tr[4], tm[4]);               \
-    f3(k[1], k[2], tr[5], tm[5]);               \
-    f1(k[0], k[1], tr[6], tm[6]);               \
+#define i_rnd(a, b, c, d, n)                \
+    f1(d, a, l_key[n + 3], l_key[n + 7]);   \
+    f3(a, b, l_key[n + 2], l_key[n + 6]);   \
+    f2(b, c, l_key[n + 1], l_key[n + 5]);   \
+    f1(c, d, l_key[n],     l_key[n + 4])
+
+#define k_rnd(k, tr, tm)                    \
+    f1(k[6], k[7], tr[0], tm[0]);           \
+    f2(k[5], k[6], tr[1], tm[1]);           \
+    f3(k[4], k[5], tr[2], tm[2]);           \
+    f1(k[3], k[4], tr[3], tm[3]);           \
+    f2(k[2], k[3], tr[4], tm[4]);           \
+    f3(k[1], k[2], tr[5], tm[5]);           \
+    f1(k[0], k[1], tr[6], tm[6]);           \
     f2(k[7], k[0], tr[7], tm[7])
 
 void akmos_cast6_setkey(akmos_cast6_t *ctx, const uint8_t *key, size_t len)
 {
-    uint32_t *l_key, i, j, t, u, cm, cr, lk[8], tm[8], tr[8];
-    uint32_t in_key[8];
+    uint32_t *l_key, i, j, t, cm, cr, lk[8], tm[8], tr[8];
 
     l_key = ctx->l_key;
 
-    for(i = 0; i < (len / 4); i++)
-        in_key[i] = PACK32BE(key + (i * 4));
-
-    for(i = 0; i < len / 4; ++i)
-        lk[i] = SWAPU32(in_key[i]);
+    for(i = 0; i < (len / 4); key += 4, i++)
+        lk[i] = PACK32LE(key);
 
     for(; i < 8; ++i)
         lk[i] = 0;
@@ -124,52 +113,42 @@ void akmos_cast6_setkey(akmos_cast6_t *ctx, const uint8_t *key, size_t len)
 
 void akmos_cast6_encrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    uint32_t *l_key, t, u, blk[4];
+    uint32_t *l_key, t;
+    uint32_t a, b, c, d;
 
     l_key = ctx->l_key;
 
-    blk[0] = PACK32BE(in_blk    ); blk[1] = PACK32BE(in_blk +  4);
-    blk[2] = PACK32BE(in_blk + 8); blk[3] = PACK32BE(in_blk + 12);
+    a = PACK32LE(in_blk    ); b = PACK32LE(in_blk +  4);
+    c = PACK32LE(in_blk + 8); d = PACK32LE(in_blk + 12);
 
-    blk[0] = SWAPU32(blk[0]); blk[1] = SWAPU32(blk[1]);
-    blk[2] = SWAPU32(blk[2]); blk[3] = SWAPU32(blk[3]);
+    f_rnd(a, b, c, d,  0); f_rnd(a, b, c, d,  8);
+    f_rnd(a, b, c, d, 16); f_rnd(a, b, c, d, 24);
+    f_rnd(a, b, c, d, 32); f_rnd(a, b, c, d, 40);
+    i_rnd(a, b, c, d, 48); i_rnd(a, b, c, d, 56);
+    i_rnd(a, b, c, d, 64); i_rnd(a, b, c, d, 72);
+    i_rnd(a, b, c, d, 80); i_rnd(a, b, c, d, 88);
 
-    f_rnd(blk,  0); f_rnd(blk,  8);
-    f_rnd(blk, 16); f_rnd(blk, 24);
-    f_rnd(blk, 32); f_rnd(blk, 40);
-    i_rnd(blk, 48); i_rnd(blk, 56);
-    i_rnd(blk, 64); i_rnd(blk, 72);
-    i_rnd(blk, 80); i_rnd(blk, 88);
-
-    blk[0] = SWAPU32(blk[0]); blk[1] = SWAPU32(blk[1]);
-    blk[2] = SWAPU32(blk[2]); blk[3] = SWAPU32(blk[3]);
-
-    UNPACK32BE(out_blk,     blk[0]); UNPACK32BE(out_blk +  4, blk[1]);
-    UNPACK32BE(out_blk + 8, blk[2]); UNPACK32BE(out_blk + 12, blk[3]);
+    UNPACK32LE(out_blk,     a); UNPACK32LE(out_blk +  4, b);
+    UNPACK32LE(out_blk + 8, c); UNPACK32LE(out_blk + 12, d);
 }
 
 void akmos_cast6_decrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    uint32_t *l_key, t, u, blk[4];
+    uint32_t *l_key, t;
+    uint32_t a, b, c, d;
 
     l_key = ctx->l_key;
 
-    blk[0] = PACK32BE(in_blk    ); blk[1] = PACK32BE(in_blk +  4);
-    blk[2] = PACK32BE(in_blk + 8); blk[3] = PACK32BE(in_blk + 12);
+    a = PACK32LE(in_blk    ); b = PACK32LE(in_blk +  4);
+    c = PACK32LE(in_blk + 8); d = PACK32LE(in_blk + 12);
 
-    blk[0] = SWAPU32(blk[0]); blk[1] = SWAPU32(blk[1]);
-    blk[2] = SWAPU32(blk[2]); blk[3] = SWAPU32(blk[3]);
+    f_rnd(a, b, c, d, 88); f_rnd(a, b, c, d, 80);
+    f_rnd(a, b, c, d, 72); f_rnd(a, b, c, d, 64);
+    f_rnd(a, b, c, d, 56); f_rnd(a, b, c, d, 48);
+    i_rnd(a, b, c, d, 40); i_rnd(a, b, c, d, 32);
+    i_rnd(a, b, c, d, 24); i_rnd(a, b, c, d, 16);
+    i_rnd(a, b, c, d,  8); i_rnd(a, b, c, d,  0);
 
-    f_rnd(blk, 88); f_rnd(blk, 80);
-    f_rnd(blk, 72); f_rnd(blk, 64);
-    f_rnd(blk, 56); f_rnd(blk, 48);
-    i_rnd(blk, 40); i_rnd(blk, 32);
-    i_rnd(blk, 24); i_rnd(blk, 16);
-    i_rnd(blk,  8); i_rnd(blk,  0);
-
-    blk[0] = SWAPU32(blk[0]); blk[1] = SWAPU32(blk[1]);
-    blk[2] = SWAPU32(blk[2]); blk[3] = SWAPU32(blk[3]);
-
-    UNPACK32BE(out_blk,     blk[0]); UNPACK32BE(out_blk +  4, blk[1]);
-    UNPACK32BE(out_blk + 8, blk[2]); UNPACK32BE(out_blk + 12, blk[3]);
+    UNPACK32LE(out_blk,     a); UNPACK32LE(out_blk +  4, b);
+    UNPACK32LE(out_blk + 8, c); UNPACK32LE(out_blk + 12, d);
 }
