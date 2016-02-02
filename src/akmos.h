@@ -83,8 +83,7 @@ typedef enum {
     AKMOS_MODE_CTR,
     AKMOS_MODE_CFB,
     AKMOS_MODE_CBCMAC,
-    AKMOS_MODE_CMAC,
-    AKMOS_MODE_STREAM
+    AKMOS_MODE_CMAC
 } akmos_mode_id;
 
 typedef enum {
