@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -123,7 +123,7 @@ int akmos_str2mode(const char *name)
 
 const char *akmos_algo2str(akmos_algo_id algo)
 {
-    switch(algo & AKMOS_ALGO_FLAG_MASK) {
+    switch(algo & AKMOS_ALGO_MASK) {
         case AKMOS_ALGO_ANUBIS:
             return akmos_xalgo_anubis.name;
 
@@ -291,7 +291,7 @@ size_t akmos_diglen(akmos_algo_id algo)
 
 size_t akmos_blklen(akmos_algo_id algo)
 {
-    switch(algo & AKMOS_ALGO_FLAG_MASK) {
+    switch(algo & AKMOS_ALGO_MASK) {
         case AKMOS_ALGO_ANUBIS:
             return AKMOS_ANUBIS_BLKLEN;
 
@@ -446,7 +446,7 @@ const akmos_cipher_xalgo_t *akmos_xalgo_cipher(akmos_algo_id algo)
 {
     const akmos_cipher_xalgo_t *xalgo;
 
-    switch(algo & AKMOS_ALGO_FLAG_MASK) {
+    switch(algo & AKMOS_ALGO_MASK) {
         case AKMOS_ALGO_ANUBIS:
             xalgo = &akmos_xalgo_anubis;
             break;

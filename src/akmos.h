@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -29,8 +29,8 @@
 #ifndef AKMOS_H
 #define AKMOS_H
 
-#define AKMOS_ALGO_FLAG_EDE     0x80000000
-#define AKMOS_ALGO_FLAG_MASK    0x0000ffff
+#define AKMOS_ALGO_FLAG_EDE      0x80000000
+#define AKMOS_ALGO_MASK          0x00ffffff
 
 typedef enum {
     AKMOS_ERR_SUCCESS,
@@ -44,32 +44,35 @@ typedef enum {
 } akmos_err_id;
 
 typedef enum {
-    AKMOS_ALGO_TWOFISH,
-    AKMOS_ALGO_SHA1,
-    AKMOS_ALGO_SERPENT,
-    AKMOS_ALGO_RC6,
-    AKMOS_ALGO_CAST6,
-    AKMOS_ALGO_ANUBIS,
-    AKMOS_ALGO_SHA2_224,
-    AKMOS_ALGO_SHA2_256,
-    AKMOS_ALGO_SHA2_384,
-    AKMOS_ALGO_SHA2_512,
-    AKMOS_ALGO_RIPEMD_160,
-    AKMOS_ALGO_RIPEMD_256,
-    AKMOS_ALGO_RIPEMD_320,
-    AKMOS_ALGO_SHA3_224,
-    AKMOS_ALGO_SHA3_256,
-    AKMOS_ALGO_SHA3_384,
-    AKMOS_ALGO_SHA3_512,
-    AKMOS_ALGO_THREEFISH_256,
-    AKMOS_ALGO_THREEFISH_512,
-    AKMOS_ALGO_THREEFISH_1024,
-    AKMOS_ALGO_CAMELLIA,
-    AKMOS_ALGO_RIJNDAEL,
-    AKMOS_ALGO_TIGER,
-    AKMOS_ALGO_WHIRLPOOL,
-    AKMOS_ALGO_BLOWFISH,
-    AKMOS_ALGO_SEED
+    /* block cipher algo */
+    AKMOS_ALGO_ANUBIS           = 0x00000001,
+    AKMOS_ALGO_BLOWFISH         = 0x00000002,
+    AKMOS_ALGO_CAMELLIA         = 0x00000003,
+    AKMOS_ALGO_CAST6            = 0x00000004,
+    AKMOS_ALGO_RC6              = 0x00000005,
+    AKMOS_ALGO_RIJNDAEL         = 0x00000006,
+    AKMOS_ALGO_SEED             = 0x00000007,
+    AKMOS_ALGO_SERPENT          = 0x00000008,
+    AKMOS_ALGO_THREEFISH_256    = 0x00000009,
+    AKMOS_ALGO_THREEFISH_512    = 0x0000000a,
+    AKMOS_ALGO_THREEFISH_1024   = 0x0000000b,
+    AKMOS_ALGO_TWOFISH          = 0x0000000c,
+
+    /* digest algo */
+    AKMOS_ALGO_RIPEMD_160       = 0x00010000,
+    AKMOS_ALGO_RIPEMD_256       = 0x00020000,
+    AKMOS_ALGO_RIPEMD_320       = 0x00030000,
+    AKMOS_ALGO_SHA1             = 0x00040000,
+    AKMOS_ALGO_SHA2_224         = 0x00050000,
+    AKMOS_ALGO_SHA2_256         = 0x00060000,
+    AKMOS_ALGO_SHA2_384         = 0x00070000,
+    AKMOS_ALGO_SHA2_512         = 0x00080000,
+    AKMOS_ALGO_SHA3_224         = 0x00090000,
+    AKMOS_ALGO_SHA3_256         = 0x000a0000,
+    AKMOS_ALGO_SHA3_384         = 0x000b0000,
+    AKMOS_ALGO_SHA3_512         = 0x000c0000,
+    AKMOS_ALGO_TIGER            = 0x000d0000,
+    AKMOS_ALGO_WHIRLPOOL        = 0x000e0000
 } akmos_algo_id;
 
 typedef enum {
@@ -80,7 +83,8 @@ typedef enum {
     AKMOS_MODE_CTR,
     AKMOS_MODE_CFB,
     AKMOS_MODE_CBCMAC,
-    AKMOS_MODE_CMAC
+    AKMOS_MODE_CMAC,
+    AKMOS_MODE_STREAM
 } akmos_mode_id;
 
 typedef enum {
@@ -131,6 +135,7 @@ void  akmos_memzero(volatile void *, size_t);
 
 size_t akmos_diglen(akmos_algo_id);
 size_t akmos_blklen(akmos_algo_id);
+size_t akmos_ivlen (akmos_algo_id);
 
 void   akmos_padadd(const uint8_t *, size_t, uint8_t *, size_t);
 size_t akmos_padrem(uint8_t *, size_t);
