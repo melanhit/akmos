@@ -92,7 +92,6 @@ typedef enum {
     AKMOS_FORCE_DECRYPT
 } akmos_force_id;
 
-
 /* Cipher */
 typedef struct akmos_cipher_s akmos_cipher_ctx;
 
@@ -135,7 +134,6 @@ void  akmos_memzero(volatile void *, size_t);
 
 size_t akmos_diglen(akmos_algo_id);
 size_t akmos_blklen(akmos_algo_id);
-size_t akmos_ivlen (akmos_algo_id);
 
 void   akmos_padadd(const uint8_t *, size_t, uint8_t *, size_t);
 size_t akmos_padrem(uint8_t *, size_t);
