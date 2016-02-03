@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) Paulo S.L.M. Barreto, Vincent Rijmen
  *   All rights reserved.
  *
@@ -31,7 +31,7 @@
 #include <stdint.h>
 
 #include "../akmos.h"
-#include "../macro.h"
+#include "../bits.h"
 
 #include "anubis.h"
 #include "anubis_sb32.h"

@@ -31,7 +31,7 @@
 #include <string.h>
 
 #include "../akmos.h"
-#include "../macro.h"
+#include "../bits.h"
 
 #include "sha3.h"
 

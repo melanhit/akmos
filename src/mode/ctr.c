@@ -31,7 +31,7 @@
 #include <string.h>
 
 #include "../akmos.h"
-#include "../macro.h"
+#include "../bits.h"
 #include "../cipher.h"
 
 void akmos_ctr_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)

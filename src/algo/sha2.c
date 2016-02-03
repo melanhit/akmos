@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (C) 2005, 2007, Olivier Gay <olivier.gay@a3.epfl.ch>
  *   All rights reserved.
  *
@@ -32,7 +32,7 @@
 #include <string.h>
 
 #include "../akmos.h"
-#include "../macro.h"
+#include "../bits.h"
 
 #include "sha2.h"
 

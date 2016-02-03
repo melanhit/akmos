@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) 1998, Dr B. R Gladman (gladman@seven77.demon.co.uk)
  *   Copyright (c) 1998, Sam Simpson (s.simpson@mia.co.uk)
  *   All rights reserved.
@@ -32,7 +32,7 @@
 #include <stdint.h>
 
 #include "../akmos.h"
-#include "../macro.h"
+#include "../bits.h"
 
 #include "serpent.h"
 

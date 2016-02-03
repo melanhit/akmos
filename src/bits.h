@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,8 +26,8 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_MACRO_H
-#define AKMOS_MACRO_H
+#ifndef AKMOS_BITS_H
+#define AKMOS_BITS_H
 
 /* rotate int into left (n - num bits) */
 #ifndef ROTL32
@@ -167,4 +167,4 @@
 )
 #endif  /* PACK64BE */
 
-#endif  /* AKMOS_MACRO_H */
+#endif  /* AKMOS_BITS_H */

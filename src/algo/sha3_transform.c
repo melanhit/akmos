@@ -29,7 +29,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "../macro.h"
+#include "../bits.h"
 
 #include "sha3.h"
 

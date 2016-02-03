@@ -31,7 +31,7 @@
 #include <stdint.h>
 
 #include "../akmos.h"
-#include "../macro.h"
+#include "../bits.h"
 
 #include "cast6.h"
 #include "cast6_sb32.h"
