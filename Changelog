@@ -1,3 +1,10 @@
+Changes to akmos-0.4 (6 February 2016)
+    * API change (use bitmasking for algo/mode attributes)
+    * add assembler version (amd64) of the 'sha3' digest algo
+    * support EDE cipher mode (like 3DES). non standard
+    * CLI - use buffered IO, use fixed header in the ciphering
+    * small fixes
+
 Changes to akmos-0.3.2 (10 September 2015)
     * add Blowfish and SEED ciphers algo
     * optimizations of the 'threefish-512' and 'camellia' ciphers algo
