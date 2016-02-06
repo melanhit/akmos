@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -78,10 +78,10 @@ int main(int argc, char **argv)
             return akmos_cli_digest(--argc, ++argv);
 
         case AKMOS_CLI_CIPHER_E:
-            return akmos_cli_cipher(--argc, ++argv, AKMOS_FORCE_ENCRYPT);
+            return akmos_cli_cipher(--argc, ++argv, AKMOS_MODE_ENCRYPT);
 
         case AKMOS_CLI_CIPHER_D:
-            return akmos_cli_cipher(--argc, ++argv, AKMOS_FORCE_DECRYPT);
+            return akmos_cli_cipher(--argc, ++argv, AKMOS_MODE_DECRYPT);
 
         case AKMOS_CLI_MAC:
             return akmos_cli_mac(--argc, ++argv);

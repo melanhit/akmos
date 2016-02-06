@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,23 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_CLI_H
-#define AKMOS_CLI_H
+#ifndef AKMOS_MASK_H
+#define AKMOS_MASK_H
 
-#define AMALLOC(buf, len, err)          \
-{                                       \
-    buf = malloc(len);                  \
-    if(!buf) {                          \
-        printf("%s\n", strerror(errno));\
-        err = errno;                    \
-    }                                   \
-}
+typedef enum akmos_algo_mask_e {
+    AKMOS_ALGO_MASK         = 0x0fffffff,
+    AKMOS_ALGO_CIPHER_MASK  = 0x00000fff,
+    AKMOS_ALGO_DIGEST_MASK  = 0x000ff000,
+    AKMOS_ALGO_BLOCK_MASK   = 0x000000ff,
+    AKMOS_ALGO_FLAG_MASK    = 0xf0000000
+} akmos_algo_mask_t;
 
-#define CIPHER_MAX_KEYLEN   128
-#define CIPHER_MAX_BLKLEN   128
+typedef enum akmos_mode_mask_e {
+    AKMOS_MODE_MASK         = 0x0fffffff,
+    AKMOS_MODE_CIPHER_MASK  = 0x000000ff,
+    AKMOS_MODE_MAC_MASK     = 0x00000f00,
+    AKMOS_MODE_BLOCK_MASK   = 0x0000000f,
+    AKMOS_MODE_FLAG_MASK    = 0xf0000000
+} akmos_mode_mask_t;
 
-#define CIPHER_VERSION      0x01
-
-typedef struct __attribute__((__packed__)) akmos_cipher_header_s {
-    uint8_t iv [CIPHER_MAX_BLKLEN * 3];
-    uint8_t key[CIPHER_MAX_KEYLEN * 3];
-    uint8_t version;
-    uint8_t pad[255];
-} akmos_cipher_header_t; /* 1024 bytes */
-
-int akmos_cli_help(void);
-int akmos_cli_digest(int, char **);
-int akmos_cli_cipher(int, char **, akmos_mode_id);
-int akmos_cli_mac(int, char **);
-
-#endif  /* AKMOS_CLI_H */
+#endif  /* AKMOS_MASK_H */

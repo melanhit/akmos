@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -34,9 +34,11 @@
 #include "cipher.h"
 #include "pxor.h"
 
-static int cipher_init_mode(akmos_cipher_ctx *ctx, akmos_mode_id mode, akmos_force_id force)
+#include "mask.h"
+
+static int cipher_init_mode(akmos_cipher_ctx *ctx, akmos_mode_id mode)
 {
-    switch(mode) {
+    switch(mode & AKMOS_MODE_CIPHER_MASK) {
         case AKMOS_MODE_ECB:
             ctx->xmode  = &akmos_xmode_ecb;
             break;
@@ -61,17 +63,17 @@ static int cipher_init_mode(akmos_cipher_ctx *ctx, akmos_mode_id mode, akmos_for
             return AKMOS_ERR_MODEID;
     }
 
-    switch(force) {
-        case AKMOS_FORCE_ENCRYPT:
+    switch(mode & AKMOS_MODE_FLAG_MASK) {
+        case AKMOS_MODE_ENCRYPT:
             ctx->crypt = ctx->xmode->encrypt;
             break;
 
-        case AKMOS_FORCE_DECRYPT:
+        case AKMOS_MODE_DECRYPT:
             ctx->crypt = ctx->xmode->decrypt;
             break;
 
         default:
-            return AKMOS_ERR_FORCEID;
+            return AKMOS_ERR_MODEID;
     }
 
     return AKMOS_ERR_SUCCESS;
@@ -154,7 +156,7 @@ static int cipher_init_ede(akmos_cipher_ctx *ctx)
     return AKMOS_ERR_SUCCESS;
 }
 
-int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id mode, akmos_force_id force)
+int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id mode)
 {
     akmos_cipher_ctx *ptr;
     int err;
@@ -173,14 +175,19 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
         goto out;
     }
 
-    err = cipher_init_mode(ptr, mode, force);
+    err = cipher_init_mode(ptr, mode);
     if(err)
         goto out;
 
-    if((algo & AKMOS_ALGO_FLAG_EDE) == AKMOS_ALGO_FLAG_EDE)
-        err = cipher_init_ede(ptr);
-    else
-        err = cipher_init_actx(ptr);
+    switch(algo & AKMOS_ALGO_FLAG_MASK) {
+        case AKMOS_ALGO_FLAG_EDE:
+            err = cipher_init_ede(ptr);
+            break;
+
+        default:
+            err = cipher_init_actx(ptr);
+            break;
+    }
 
     if(err)
         goto out;
@@ -280,13 +287,13 @@ void akmos_cipher_free(akmos_cipher_ctx *ctx)
     free(ctx);
 }
 
-int akmos_cipher_ex(akmos_force_id force, akmos_algo_id algo, akmos_mode_id mode, const uint8_t *key, size_t keylen,
+int akmos_cipher_ex(akmos_algo_id algo, akmos_mode_id mode, const uint8_t *key, size_t keylen,
                     const uint8_t *iv, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     akmos_cipher_ctx *ctx;
     int err;
 
-    err = akmos_cipher_init(&ctx, algo, mode, force);
+    err = akmos_cipher_init(&ctx, algo, mode);
     if(err)
         return err;
 

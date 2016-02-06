@@ -37,6 +37,8 @@
 #include "digest.h"
 #include "mac.h"
 
+#include "mask.h"
+
 int akmos_str2algo(const char *name)
 {
     if(name == NULL)
@@ -209,7 +211,7 @@ const char *akmos_algo2str(akmos_algo_id algo)
 
 const char *akmos_mode2str(akmos_mode_id mode)
 {
-    switch(mode) {
+    switch(mode & AKMOS_MODE_MASK) {
         case AKMOS_MODE_ECB:
             return akmos_xmode_ecb.name;
 
@@ -241,52 +243,13 @@ const char *akmos_mode2str(akmos_mode_id mode)
 
 size_t akmos_diglen(akmos_algo_id algo)
 {
-    switch(algo) {
-        case AKMOS_ALGO_SHA1:
-            return AKMOS_SHA1_DIGLEN;
+    const akmos_digest_xalgo_t *digest;
 
-        case AKMOS_ALGO_SHA2_224:
-            return AKMOS_SHA2_224_DIGLEN;
-
-        case AKMOS_ALGO_SHA2_256:
-            return AKMOS_SHA2_256_DIGLEN;
-
-        case AKMOS_ALGO_SHA2_384:
-            return AKMOS_SHA2_384_DIGLEN;
-
-        case AKMOS_ALGO_SHA2_512:
-            return AKMOS_SHA2_512_DIGLEN;
-
-        case AKMOS_ALGO_SHA3_224:
-            return AKMOS_SHA3_224_DIGLEN;
-
-        case AKMOS_ALGO_SHA3_256:
-            return AKMOS_SHA3_256_DIGLEN;
-
-        case AKMOS_ALGO_SHA3_384:
-            return AKMOS_SHA3_384_DIGLEN;
-
-        case AKMOS_ALGO_SHA3_512:
-            return AKMOS_SHA3_512_DIGLEN;
-
-        case AKMOS_ALGO_RIPEMD_160:
-            return AKMOS_RIPEMD_160_DIGLEN;
-
-        case AKMOS_ALGO_RIPEMD_256:
-            return AKMOS_RIPEMD_256_DIGLEN;
-
-        case AKMOS_ALGO_RIPEMD_320:
-            return AKMOS_RIPEMD_320_DIGLEN;
-
-        case AKMOS_ALGO_TIGER:
-            return AKMOS_TIGER_DIGLEN;
-
-        case AKMOS_ALGO_WHIRLPOOL:
-            return AKMOS_WHIRLPOOL_DIGLEN;
-
-        default:
-            return 0;
-    }
+    digest = akmos_xalgo_digest(algo & AKMOS_ALGO_DIGEST_MASK);
+    if(digest)
+        return digest->diglen;
+    else
+        return 0;
 }
 
 size_t akmos_blklen(akmos_algo_id algo)
@@ -390,10 +353,6 @@ int akmos_perror(akmos_err_id e)
             printf("Invalid key length (err = %d)\n", e);
             break;
 
-        case AKMOS_ERR_FORCEID:
-            printf("Invalid force (err = %d)\n", e);
-            break;
-
         case AKMOS_ERR_BLKLEN:
             printf("Unsupported block length (err = %d)\n", e);
             break;
@@ -446,7 +405,7 @@ const akmos_cipher_xalgo_t *akmos_xalgo_cipher(akmos_algo_id algo)
 {
     const akmos_cipher_xalgo_t *xalgo;
 
-    switch(algo & AKMOS_ALGO_MASK) {
+    switch(algo & AKMOS_ALGO_CIPHER_MASK) {
         case AKMOS_ALGO_ANUBIS:
             xalgo = &akmos_xalgo_anubis;
             break;
@@ -506,7 +465,7 @@ const akmos_digest_xalgo_t *akmos_xalgo_digest(akmos_algo_id algo)
 {
     const akmos_digest_xalgo_t *xalgo;
 
-    switch(algo) {
+    switch(algo & AKMOS_ALGO_DIGEST_MASK) {
         case AKMOS_ALGO_RIPEMD_160:
             xalgo = &akmos_xalgo_ripemd_160;
             break;

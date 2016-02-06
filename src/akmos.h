@@ -29,9 +29,6 @@
 #ifndef AKMOS_H
 #define AKMOS_H
 
-#define AKMOS_ALGO_FLAG_EDE      0x80000000
-#define AKMOS_ALGO_MASK          0x00ffffff
-
 typedef enum {
     AKMOS_ERR_SUCCESS,
     AKMOS_ERR_FAILED,
@@ -39,7 +36,6 @@ typedef enum {
     AKMOS_ERR_MODEID,
     AKMOS_ERR_KEYLEN,
     AKMOS_ERR_ENOMEM,
-    AKMOS_ERR_FORCEID,
     AKMOS_ERR_BLKLEN
 } akmos_err_id;
 
@@ -59,48 +55,53 @@ typedef enum {
     AKMOS_ALGO_TWOFISH          = 0x0000000c,
 
     /* digest algo */
-    AKMOS_ALGO_RIPEMD_160       = 0x00010000,
-    AKMOS_ALGO_RIPEMD_256       = 0x00020000,
-    AKMOS_ALGO_RIPEMD_320       = 0x00030000,
-    AKMOS_ALGO_SHA1             = 0x00040000,
-    AKMOS_ALGO_SHA2_224         = 0x00050000,
-    AKMOS_ALGO_SHA2_256         = 0x00060000,
-    AKMOS_ALGO_SHA2_384         = 0x00070000,
-    AKMOS_ALGO_SHA2_512         = 0x00080000,
-    AKMOS_ALGO_SHA3_224         = 0x00090000,
-    AKMOS_ALGO_SHA3_256         = 0x000a0000,
-    AKMOS_ALGO_SHA3_384         = 0x000b0000,
-    AKMOS_ALGO_SHA3_512         = 0x000c0000,
-    AKMOS_ALGO_TIGER            = 0x000d0000,
-    AKMOS_ALGO_WHIRLPOOL        = 0x000e0000
+    AKMOS_ALGO_RIPEMD_160       = 0x00001000,
+    AKMOS_ALGO_RIPEMD_256       = 0x00002000,
+    AKMOS_ALGO_RIPEMD_320       = 0x00003000,
+    AKMOS_ALGO_SHA1             = 0x00004000,
+    AKMOS_ALGO_SHA2_224         = 0x00005000,
+    AKMOS_ALGO_SHA2_256         = 0x00006000,
+    AKMOS_ALGO_SHA2_384         = 0x00007000,
+    AKMOS_ALGO_SHA2_512         = 0x00008000,
+    AKMOS_ALGO_SHA3_224         = 0x00009000,
+    AKMOS_ALGO_SHA3_256         = 0x0000a000,
+    AKMOS_ALGO_SHA3_384         = 0x0000b000,
+    AKMOS_ALGO_SHA3_512         = 0x0000c000,
+    AKMOS_ALGO_TIGER            = 0x0000d000,
+    AKMOS_ALGO_WHIRLPOOL        = 0x0000e000,
+
+    /* cipher algo flag */
+    AKMOS_ALGO_FLAG_EDE         = 0x10000000
 } akmos_algo_id;
 
 typedef enum {
-    AKMOS_MODE_ECB,
-    AKMOS_MODE_CBC,
-    AKMOS_MODE_HMAC,
-    AKMOS_MODE_OFB,
-    AKMOS_MODE_CTR,
-    AKMOS_MODE_CFB,
-    AKMOS_MODE_CBCMAC,
-    AKMOS_MODE_CMAC
-} akmos_mode_id;
+    /* block cipher mode */
+    AKMOS_MODE_ECB              = 0x00000001,
+    AKMOS_MODE_CBC              = 0x00000002,
+    AKMOS_MODE_OFB              = 0x00000003,
+    AKMOS_MODE_CTR              = 0x00000004,
+    AKMOS_MODE_CFB              = 0x00000005,
 
-typedef enum {
-    AKMOS_FORCE_ENCRYPT,
-    AKMOS_FORCE_DECRYPT
-} akmos_force_id;
+    /* MAC mode */
+    AKMOS_MODE_HMAC             = 0x00000100,
+    AKMOS_MODE_CBCMAC           = 0x00000200,
+    AKMOS_MODE_CMAC             = 0x00000300,
+
+    /* cipher mode flag */
+    AKMOS_MODE_ENCRYPT          = 0x10000000,
+    AKMOS_MODE_DECRYPT          = 0x20000000,
+} akmos_mode_id;
 
 /* Cipher */
 typedef struct akmos_cipher_s akmos_cipher_ctx;
 
-int  akmos_cipher_init   (akmos_cipher_ctx **, akmos_algo_id, akmos_mode_id, akmos_force_id);
+int  akmos_cipher_init   (akmos_cipher_ctx **, akmos_algo_id, akmos_mode_id);
 int  akmos_cipher_setkey (akmos_cipher_ctx *, const uint8_t *, size_t);
 void akmos_cipher_setiv  (akmos_cipher_ctx *, const uint8_t *);
 void akmos_cipher_setcnt (akmos_cipher_ctx *, uint64_t);
 void akmos_cipher_crypt  (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
 void akmos_cipher_free   (akmos_cipher_ctx *);
-int  akmos_cipher_ex     (akmos_force_id, akmos_algo_id, akmos_mode_id, const uint8_t *, size_t,
+int  akmos_cipher_ex     (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t,
                           const uint8_t *, const uint8_t *, size_t, uint8_t *);
 
 /* Hashing */

@@ -300,7 +300,7 @@ static int lb_padbuf(akmos_cipher_ctx *ctx, uint8_t *buf, size_t *rlen, size_t b
 
     len = *rlen;
 
-    if(enc == AKMOS_FORCE_ENCRYPT) {
+    if(enc == AKMOS_MODE_ENCRYPT) {
         tmplen = (len / blklen) * blklen;
         akmos_padadd(buf + tmplen, len - tmplen, buf + tmplen, blklen);
 
@@ -309,7 +309,7 @@ static int lb_padbuf(akmos_cipher_ctx *ctx, uint8_t *buf, size_t *rlen, size_t b
         *rlen = tmplen + blklen;
     }
 
-    if(enc == AKMOS_FORCE_DECRYPT) {
+    if(enc == AKMOS_MODE_DECRYPT) {
         if((len % blklen) != 0 || len < blklen)
             return EXIT_FAILURE;
 
@@ -320,7 +320,7 @@ static int lb_padbuf(akmos_cipher_ctx *ctx, uint8_t *buf, size_t *rlen, size_t b
     return EXIT_SUCCESS;
 }
 
-int akmos_cli_cipher(int argc, char **argv, int enc)
+int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 {
     akmos_cipher_ctx *ctx;
     struct opt_cipher_s opt;
@@ -418,7 +418,7 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
     if(err)
         goto out;
 
-    if(enc == AKMOS_FORCE_DECRYPT) {
+    if(enc == AKMOS_MODE_DECRYPT) {
         if(fread(hdp, 1, hlen, fd_in) != hlen) {
             err = EXIT_FAILURE;
             printf("%s: %s\n", opt.input, strerror(errno));
@@ -432,14 +432,14 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
         hd.version = CIPHER_VERSION;
     }
 
-    err = akmos_cipher_ex(enc, opt.algo, opt.mode, keybuf, opt.keylen, NULL, hdp, hlen, hbuf);
+    err = akmos_cipher_ex(opt.algo, opt.mode|enc, keybuf, opt.keylen, NULL, hdp, hlen, hbuf);
     if(err) {
         akmos_perror(err);
         goto out;
     }
 
     /* store header in file or struct */
-    if(enc == AKMOS_FORCE_ENCRYPT) {
+    if(enc == AKMOS_MODE_ENCRYPT) {
         if(fwrite(hbuf, 1, hlen, fd_out) != hlen) {
             err = EXIT_FAILURE;
             printf("%s: %s\n", opt.output, strerror(errno));
@@ -450,7 +450,7 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
     }
 
     /* Create and init cipher contexts */
-    err = akmos_cipher_init(&ctx, opt.algo, opt.mode, enc);
+    err = akmos_cipher_init(&ctx, opt.algo, opt.mode|enc);
     if(err) {
         akmos_perror(err);
         goto out;
