@@ -49,7 +49,7 @@ int akmos_kdf_kdf2(uint8_t *key, size_t keylen,
     md = NULL;
     err = AKMOS_ERR_SUCCESS;
 
-    mdlen = akmos_diglen(algo);
+    mdlen = akmos_digest_outlen(algo);
     if(!mdlen)
         return AKMOS_ERR_ALGOID;
 

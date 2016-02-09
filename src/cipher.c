@@ -169,7 +169,7 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
 
     memset(ptr, 0, sizeof(akmos_cipher_ctx));
 
-    ptr->xalgo = akmos_xalgo_cipher(algo);
+    ptr->xalgo = akmos_cipher_xalgo(algo);
     if(!ptr->xalgo) {
         err = AKMOS_ERR_ALGOID;
         goto out;
@@ -192,7 +192,7 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
     if(err)
         goto out;
 
-    switch(ptr->xalgo->blklen) {
+    switch(ptr->xalgo->desc.blklen) {
         case 8:
             ptr->pxor = &akmos_pxor8;
             break;
@@ -230,10 +230,10 @@ out:
 
 int akmos_cipher_setkey(akmos_cipher_ctx *ctx, const uint8_t *key, size_t len)
 {
-    if(len < ctx->xalgo->keymin || len > ctx->xalgo->keymax)
+    if(len < ctx->xalgo->desc.keymin || len > ctx->xalgo->desc.keymax)
         return AKMOS_ERR_KEYLEN;
 
-    if((len % ctx->xalgo->keystep) != 0)
+    if((len % ctx->xalgo->desc.keystep) != 0)
         return AKMOS_ERR_KEYLEN;
 
     ctx->setkey(ctx, key, len);

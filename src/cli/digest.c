@@ -67,8 +67,8 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
     while((c = getopt(argc, argv, "a:bh")) != -1) {
         switch(c) {
             case 'a':
-                opt->algo = akmos_str2algo(optarg);
-                if(opt->algo == -1)
+                opt->algo = akmos_digest_id(optarg);
+                if(!opt->algo)
                     return akmos_perror(AKMOS_ERR_ALGOID);
 
                 opt->set.algo = c;
@@ -120,9 +120,10 @@ static void digest_print_raw(uint8_t *md, size_t len)
 int akmos_cli_digest(int argc, char **argv)
 {
     akmos_digest_ctx *ctx;
+    const akmos_digest_xdesc_t *desc;
     struct opt_digest_s opt;
     int i, err;
-    ssize_t len, mdlen;
+    ssize_t len;
     uint8_t buf[BUFSIZ], *md;
     FILE *fd;
 
@@ -133,9 +134,11 @@ int akmos_cli_digest(int argc, char **argv)
     if(err)
         return err;
 
-    mdlen = akmos_diglen(opt.algo);
+    desc = akmos_digest_desc(opt.algo);
+    if(!desc)
+        return akmos_perror(AKMOS_ERR_ALGOID);
 
-    AMALLOC(md, mdlen, err);
+    AMALLOC(md, desc->outlen, err);
     if(err)
         return err;
 
@@ -173,9 +176,9 @@ int akmos_cli_digest(int argc, char **argv)
             fclose(fd);
 
         if(!opt.set.bin)
-            digest_print_hex(opt.input[i], akmos_algo2str(opt.algo), md, mdlen);
+            digest_print_hex(opt.input[i], desc->name, md, desc->outlen);
         else
-            digest_print_raw(md, mdlen);
+            digest_print_raw(md, desc->outlen);
     }
 
     if(md)

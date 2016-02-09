@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -38,9 +38,9 @@ void akmos_cbc_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
     akmos_cbc_t *ptr = &ctx->mctx.cbc;
 
     if(!iv)
-        memset(ptr->iv, 0, ctx->xalgo->blklen);
+        memset(ptr->iv, 0, ctx->xalgo->desc.blklen);
     else
-        memcpy(ptr->iv, iv, ctx->xalgo->blklen);
+        memcpy(ptr->iv, iv, ctx->xalgo->desc.blklen);
 }
 
 void akmos_cbc_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
@@ -49,7 +49,7 @@ void akmos_cbc_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     size_t i, nb, blklen;
 
     ptr = &ctx->mctx.cbc;
-    blklen = ctx->xalgo->blklen;
+    blklen = ctx->xalgo->desc.blklen;
 
     nb = in_len / blklen;
 
@@ -68,7 +68,7 @@ void akmos_cbc_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     size_t i, nb, blklen;
 
     ptr = &ctx->mctx.cbc;
-    blklen = ctx->xalgo->blklen;
+    blklen = ctx->xalgo->desc.blklen;
 
     nb = in_len / blklen;
 
@@ -91,6 +91,6 @@ void akmos_cbc_zero(akmos_cipher_ctx *ctx)
 
     ptr = &ctx->mctx.cbc;
 
-    akmos_memzero(ptr->buf, ctx->xalgo->blklen);
-    akmos_memzero(ptr->iv, ctx->xalgo->blklen);
+    akmos_memzero(ptr->buf, ctx->xalgo->desc.blklen);
+    akmos_memzero(ptr->iv, ctx->xalgo->desc.blklen);
 }

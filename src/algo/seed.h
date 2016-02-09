@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,9 @@
 #define AKMOS_ALGO_SEED_H
 
 #define AKMOS_SEED_BLKLEN   16
+#define AKMOS_SEED_KEYMIN   16
+#define AKMOS_SEED_KEYMAX   AKMOS_SEED_KEYMIN
+#define AKMOS_SEED_KEYSTEP  AKMOS_SEED_KEYMIN
 
 typedef struct {
     uint32_t key[32];

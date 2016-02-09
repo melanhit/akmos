@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -29,9 +29,20 @@
 #ifndef AKMOS_ALGO_THREEFISH_H
 #define AKMOS_ALGO_THREEFISH_H
 
-#define AKMOS_THREEFISH_256_BLKLEN  32
-#define AKMOS_THREEFISH_512_BLKLEN  64
-#define AKMOS_THREEFISH_1024_BLKLEN 128
+#define AKMOS_THREEFISH_256_BLKLEN      32
+#define AKMOS_THREEFISH_256_KEYMIN      32
+#define AKMOS_THREEFISH_256_KEYMAX      32
+#define AKMOS_THREEFISH_256_KEYSTEP     32
+
+#define AKMOS_THREEFISH_512_BLKLEN      64
+#define AKMOS_THREEFISH_512_KEYMIN      64
+#define AKMOS_THREEFISH_512_KEYMAX      64
+#define AKMOS_THREEFISH_512_KEYSTEP     64
+
+#define AKMOS_THREEFISH_1024_BLKLEN     128
+#define AKMOS_THREEFISH_1024_KEYMIN     128
+#define AKMOS_THREEFISH_1024_KEYMAX     128
+#define AKMOS_THREEFISH_1024_KEYSTEP    128
 
 typedef struct {
     uint64_t S[4*19];

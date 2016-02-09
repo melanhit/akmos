@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -156,9 +156,9 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
         }
     } else {
         if(algo_str) {
-            opt->algo = akmos_str2algo(algo_str);
-            if(opt->algo == -1)
-                return akmos_perror(AKMOS_ERR_ALGOID);
+            if(!(opt->algo = akmos_digest_id(algo_str)))
+                if(!(opt->algo = akmos_cipher_id(algo_str)))
+                    return akmos_perror(AKMOS_ERR_ALGOID);
         }
     }
 
@@ -209,7 +209,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
             case AKMOS_ALGO_SHA3_256:
             case AKMOS_ALGO_SHA3_384:
             case AKMOS_ALGO_SHA3_512:
-                opt->keylen = akmos_blklen(opt->algo);
+                opt->keylen = akmos_digest_blklen(opt->algo);
                 break;
 
             default:
@@ -233,12 +233,12 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
 
     switch(opt->mode) {
         case AKMOS_MODE_HMAC:
-            opt->maclen = akmos_diglen(opt->algo);
+            opt->maclen = akmos_digest_outlen(opt->algo);
             break;
 
         case AKMOS_MODE_CBCMAC:
         case AKMOS_MODE_CMAC:
-            opt->maclen = akmos_blklen(opt->algo);
+            opt->maclen = akmos_cipher_blklen(opt->algo);
             break;
 
         default:
@@ -254,7 +254,6 @@ static void mac_print_hex(struct opt_mac_s *opt, char *path, uint8_t *mac)
     char str[32];
     size_t i;
 
-    algostr = akmos_algo2str(opt->algo);
     modestr = akmos_mode2str(opt->mode);
 
     for(i = 0; i < opt->maclen; i++)
@@ -262,10 +261,12 @@ static void mac_print_hex(struct opt_mac_s *opt, char *path, uint8_t *mac)
 
     switch(opt->mode) {
         case AKMOS_MODE_HMAC:
+            algostr = akmos_digest_name(opt->algo);
             printf(" = %s/%s(%s)\n", modestr, algostr, path);
             break;
 
         case AKMOS_MODE_CBCMAC:
+            algostr = akmos_cipher_name(opt->algo);
             opt->keylen /= 2;
         case AKMOS_MODE_CMAC:
             sprintf(str, "%zd", opt->keylen*8);

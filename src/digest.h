@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -46,24 +46,20 @@ typedef union {
     akmos_whirlpool_t   whirlpool;
 } akmos_digest_algo_ctx;
 
+typedef struct akmos_digest_xalgo_s {
+    akmos_digest_xdesc_t desc;
+    void (*init)   (void *);
+    void (*update) (void *, const uint8_t *, size_t);
+    void (*done)   (void *, uint8_t *);
+} akmos_digest_xalgo_t;
+
 struct akmos_digest_s {
     const akmos_digest_xalgo_t  *xalgo;
     akmos_digest_algo_ctx       actx;
 };
 
-extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_160;
-extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_256;
-extern const akmos_digest_xalgo_t akmos_xalgo_ripemd_320;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha1;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_224;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_256;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_384;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha2_512;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_224;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_256;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_384;
-extern const akmos_digest_xalgo_t akmos_xalgo_sha3_512;
-extern const akmos_digest_xalgo_t akmos_xalgo_tiger;
-extern const akmos_digest_xalgo_t akmos_xalgo_whirlpool;
+const akmos_digest_xalgo_t *akmos_digest_xalgo(akmos_algo_id);
+
+extern const akmos_digest_xalgo_t akmos_digest_xlist[];
 
 #endif  /* AKMOS_DIGEST_H */

@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,10 @@
 #ifndef AKMOS_ALGO_RIJNDAEL_H
 #define AKMOS_ALGO_RIJNDAEL_H
 
-#define AKMOS_RIJNDAEL_BLKLEN 16
+#define AKMOS_RIJNDAEL_BLKLEN   16
+#define AKMOS_RIJNDAEL_KEYMIN   16
+#define AKMOS_RIJNDAEL_KEYMAX   32
+#define AKMOS_RIJNDAEL_KEYSTEP  8
 
 typedef struct {
     uint32_t ke[4*(14+1)];

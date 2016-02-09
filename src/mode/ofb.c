@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -38,9 +38,9 @@ void akmos_ofb_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
     akmos_ofb_t *ptr = &ctx->mctx.ofb;
 
     if(!iv)
-        memset(ptr->iv, 0, ctx->xalgo->blklen);
+        memset(ptr->iv, 0, ctx->xalgo->desc.blklen);
     else
-        memcpy(ptr->iv, iv, ctx->xalgo->blklen);
+        memcpy(ptr->iv, iv, ctx->xalgo->desc.blklen);
 }
 
 void akmos_ofb_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
@@ -49,9 +49,9 @@ void akmos_ofb_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     size_t i, j, n, blklen;
 
     ptr = &ctx->mctx.ofb;
-    blklen = ctx->xalgo->blklen;
+    blklen = ctx->xalgo->desc.blklen;
 
-    n = (in_len / ctx->xalgo->blklen);
+    n = (in_len / ctx->xalgo->desc.blklen);
 
     for(i = 0; i < n; i++, in_blk += blklen, out_blk += blklen) {
         ctx->encrypt(ctx, ptr->iv, ptr->iv);
@@ -78,5 +78,5 @@ void akmos_ofb_zero(akmos_cipher_ctx *ctx)
 
     ptr = &ctx->mctx.ofb;
 
-    akmos_memzero(ptr->iv, ctx->xalgo->blklen);
+    akmos_memzero(ptr->iv, ctx->xalgo->desc.blklen);
 }

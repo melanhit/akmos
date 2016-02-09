@@ -138,7 +138,7 @@ static int ecb_test(akmos_algo_id algo, size_t keylen, char *argv0, int *res)
     }
 
     keylen /= 8;
-    blklen = akmos_blklen(algo);
+    blklen = akmos_cipher_blklen(algo);
     if(!blklen) {
         akmos_perror(AKMOS_ERR_ALGOID);
         return EXIT_FAILURE;
@@ -166,14 +166,14 @@ int test_mode_ecb(akmos_algo_id algo, char *argv0)
     char pname[128];
     int err, res;
     size_t i, keylen;
-    const akmos_cipher_xalgo_t *xalgo;
+    const akmos_cipher_xdesc_t *desc;
 
-    xalgo = akmos_xalgo_cipher(algo);
-    if(!xalgo)
+    desc = akmos_cipher_desc(algo);
+    if(!desc)
         return akmos_perror(AKMOS_ERR_ALGOID);
 
     res = TEST_PASS;
-    for(i = xalgo->keymin; i <= xalgo->keymax; i += xalgo->keystep) {
+    for(i = desc->keymin; i <= desc->keymax; i += desc->keystep) {
         err = ecb_test(algo, i*8, argv0, &res);
         if(err)
             return err;
@@ -182,7 +182,7 @@ int test_mode_ecb(akmos_algo_id algo, char *argv0)
             break;
     }
 
-    sprintf(pname, "%s-%s", akmos_mode2str(AKMOS_MODE_ECB), akmos_algo2str(algo));
+    sprintf(pname, "%s-%s", akmos_mode2str(AKMOS_MODE_ECB), desc->name);
     test_print(pname, res);
     test_total(res);
 

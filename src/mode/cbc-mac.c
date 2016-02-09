@@ -50,7 +50,7 @@ int akmos_cbcmac_init(akmos_cbcmac_t *ctx, akmos_algo_id algo)
     memset(ctx, 0, sizeof(akmos_cbcmac_t));
 
     ctx->algo = algo;
-    ctx->blklen = akmos_blklen(algo);
+    ctx->blklen = akmos_cipher_blklen(algo);
     if(!ctx->blklen)
         return AKMOS_ERR_ALGOID;
 

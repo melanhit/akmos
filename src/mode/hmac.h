@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@ typedef struct {
     int algo;
     uint8_t *i_key;
     uint8_t *o_key;
-    size_t diglen;
+    size_t outlen;
     size_t blklen;
     akmos_digest_ctx *dctx;
 } akmos_hmac_t;

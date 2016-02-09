@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -29,9 +29,13 @@
 #ifndef AKMOS_ALGO_ANUBIS_H
 #define AKMOS_ALGO_ANUBIS_H
 
-#define AKMOS_ANUBIS_BLKLEN 16
-#define AKMOS_ANUBIS_MAX_N  10
-#define AKMOS_ANUBIS_MAX_R  (AKMOS_ANUBIS_MAX_N + 8)
+#define AKMOS_ANUBIS_BLKLEN     16
+#define AKMOS_ANUBIS_KEYMIN     16
+#define AKMOS_ANUBIS_KEYMAX     40
+#define AKMOS_ANUBIS_KEYSTEP    8
+
+#define AKMOS_ANUBIS_MAX_N      10
+#define AKMOS_ANUBIS_MAX_R      (AKMOS_ANUBIS_MAX_N + 8)
 
 typedef struct {
     int R;

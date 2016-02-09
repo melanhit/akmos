@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2013, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2013-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@ void akmos_ecb_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
 {
     size_t i, nb, blklen;
 
-    blklen = ctx->xalgo->blklen;
+    blklen = ctx->xalgo->desc.blklen;
     nb = in_len / blklen;
 
     for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen)
@@ -47,7 +47,7 @@ void akmos_ecb_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
 {
     size_t i, nb, blklen;
 
-    blklen = ctx->xalgo->blklen;
+    blklen = ctx->xalgo->desc.blklen;
     nb = in_len / blklen;
 
     for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen)

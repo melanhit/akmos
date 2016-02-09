@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,7 @@ int akmos_digest_init(akmos_digest_ctx **ctx, akmos_algo_id algo)
 
     memset(ptr, 0, sizeof(akmos_digest_ctx));
 
-    ptr->xalgo = akmos_xalgo_digest(algo);
+    ptr->xalgo = akmos_digest_xalgo(algo);
     if(!ptr->xalgo) {
         free(ptr);
         return AKMOS_ERR_ALGOID;

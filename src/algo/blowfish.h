@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,10 @@
 #ifndef AKMOS_ALGO_BLOWFISH_H
 #define AKMOS_ALGO_BLOWFISH_H
 
-#define AKMOS_BLOWFISH_BLKLEN    8
+#define AKMOS_BLOWFISH_BLKLEN   8
+#define AKMOS_BLOWFISH_KEYMIN   8
+#define AKMOS_BLOWFISH_KEYMAX   56
+#define AKMOS_BLOWFISH_KEYSTEP  4
 
 typedef struct {
     uint32_t p[18];

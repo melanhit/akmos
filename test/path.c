@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,7 @@ int test_path_cipher(akmos_algo_id algo, akmos_mode_id mode, size_t keylen, char
     const char *alg_name, *mode_name, *dir_name;
     int i;
 
-    alg_name = akmos_algo2str(algo);
+    alg_name = akmos_cipher_name(algo);
     if(!alg_name) {
         akmos_perror(AKMOS_ERR_ALGOID);
         return EXIT_FAILURE;

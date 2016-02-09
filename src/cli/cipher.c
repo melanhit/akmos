@@ -139,8 +139,8 @@ static int parse_algo(struct opt_cipher_s *opt, char *algo_str)
         opt->set.ede = 1;
     }
 
-    opt->algo = akmos_str2algo(s1);
-    if(opt->algo == -1)
+    opt->algo = akmos_cipher_id(s1);
+    if(!opt->algo)
         return akmos_perror(AKMOS_ERR_ALGOID);
 
     return EXIT_SUCCESS;
@@ -265,7 +265,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     }
     opt->keylen /= 8;
 
-    if((opt->blklen = akmos_blklen(opt->algo)) == 0) {
+    if((opt->blklen = akmos_cipher_blklen(opt->algo)) == 0) {
         printf("Invalid algo\n");
         return EXIT_FAILURE;
     }

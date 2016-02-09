@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -70,6 +70,13 @@ typedef union {
     akmos_ofb_t ofb;
 } akmos_cipher_mode_ctx;
 
+typedef struct akmos_cipher_xalgo_s {
+    akmos_cipher_xdesc_t desc;
+    void (*setkey)  (void *, const uint8_t *, size_t);
+    void (*encrypt) (void *, const uint8_t *, uint8_t *);
+    void (*decrypt) (void *, const uint8_t *, uint8_t *);
+} akmos_cipher_xalgo_t;
+
 typedef struct {
     akmos_mode_id   id;
     char            *name;
@@ -99,18 +106,9 @@ struct akmos_cipher_s {
     void (*pxor)                (const uint8_t *, const uint8_t *, uint8_t *);
 };
 
-extern const akmos_cipher_xalgo_t akmos_xalgo_anubis;
-extern const akmos_cipher_xalgo_t akmos_xalgo_blowfish;
-extern const akmos_cipher_xalgo_t akmos_xalgo_camellia;
-extern const akmos_cipher_xalgo_t akmos_xalgo_cast6;
-extern const akmos_cipher_xalgo_t akmos_xalgo_rc6;
-extern const akmos_cipher_xalgo_t akmos_xalgo_rijndael;
-extern const akmos_cipher_xalgo_t akmos_xalgo_serpent;
-extern const akmos_cipher_xalgo_t akmos_xalgo_seed;
-extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_256;
-extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_512;
-extern const akmos_cipher_xalgo_t akmos_xalgo_threefish_1024;
-extern const akmos_cipher_xalgo_t akmos_xalgo_twofish;
+const akmos_cipher_xalgo_t *akmos_cipher_xalgo(akmos_algo_id);
+
+extern const akmos_cipher_xalgo_t akmos_cipher_xlist[];
 
 extern const akmos_cipher_xmode_t akmos_xmode_ecb;
 extern const akmos_cipher_xmode_t akmos_xmode_cbc;

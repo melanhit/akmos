@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2013, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2013-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -58,11 +58,11 @@ int akmos_hmac_init(akmos_hmac_t *ctx, akmos_algo_id algo)
     if(err)
         return err;
 
-    ctx->diglen = akmos_diglen(algo);
-    if(!ctx->diglen)
+    ctx->outlen = akmos_digest_outlen(algo);
+    if(!ctx->outlen)
         return AKMOS_ERR_ALGOID;
 
-    ctx->blklen = akmos_blklen(algo);
+    ctx->blklen = akmos_digest_blklen(algo);
     if(!ctx->blklen)
         return AKMOS_ERR_ALGOID;;
 
@@ -127,7 +127,7 @@ int akmos_hmac_done(akmos_hmac_t *ctx, uint8_t *mac)
     uint8_t *buf;
     int err;
 
-    buf = malloc(ctx->diglen);
+    buf = malloc(ctx->outlen);
     if(!buf)
         return AKMOS_ERR_ENOMEM;
 
@@ -138,12 +138,12 @@ int akmos_hmac_done(akmos_hmac_t *ctx, uint8_t *mac)
         goto out;
 
     akmos_digest_update(ctx->dctx, ctx->o_key, ctx->blklen);
-    akmos_digest_update(ctx->dctx, buf, ctx->diglen);
+    akmos_digest_update(ctx->dctx, buf, ctx->outlen);
 
     akmos_digest_done(ctx->dctx, mac);
 
 out:
-    akmos_memzero(buf, ctx->diglen);
+    akmos_memzero(buf, ctx->outlen);
     free(buf);
 
     akmos_memzero(ctx->i_key, ctx->blklen * 2);

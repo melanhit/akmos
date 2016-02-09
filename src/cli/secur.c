@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -144,7 +144,7 @@ int secur_rand_buf(uint8_t *buf, size_t len)
     uint8_t tbuf[BUFSIZ], *sbuf, *md, *key, *pbuf;
 
     err = EXIT_SUCCESS;
-    diglen = akmos_diglen(SECUR_ALGO);
+    diglen = akmos_digest_outlen(SECUR_ALGO);
 
     AMALLOC(sbuf, diglen * 2, err);
     if(err)

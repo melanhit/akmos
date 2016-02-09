@@ -39,66 +39,6 @@
 
 #include "mask.h"
 
-int akmos_str2algo(const char *name)
-{
-    if(name == NULL)
-        return -1;
-    else if(strcasecmp(name, akmos_xalgo_anubis.name) == 0)
-        return AKMOS_ALGO_ANUBIS;
-    else if(strcasecmp(name, akmos_xalgo_cast6.name) == 0)
-        return AKMOS_ALGO_CAST6;
-    else if(strcasecmp(name, akmos_xalgo_rc6.name) == 0)
-        return AKMOS_ALGO_RC6;
-    else if(strcasecmp(name, akmos_xalgo_serpent.name) == 0)
-        return AKMOS_ALGO_SERPENT;
-    else if(strcasecmp(name, akmos_xalgo_sha1.name) == 0)
-        return AKMOS_ALGO_SHA1;
-    else if(strcasecmp(name, akmos_xalgo_sha2_224.name) == 0)
-        return AKMOS_ALGO_SHA2_224;
-    else if(strcasecmp(name, akmos_xalgo_sha2_256.name) == 0)
-        return AKMOS_ALGO_SHA2_256;
-    else if(strcasecmp(name, akmos_xalgo_sha2_384.name) == 0)
-        return AKMOS_ALGO_SHA2_384;
-    else if(strcasecmp(name, akmos_xalgo_sha2_512.name) == 0)
-        return AKMOS_ALGO_SHA2_512;
-    else if(strcasecmp(name, akmos_xalgo_sha3_224.name) == 0)
-        return AKMOS_ALGO_SHA3_224;
-    else if(strcasecmp(name, akmos_xalgo_sha3_256.name) == 0)
-        return AKMOS_ALGO_SHA3_256;
-    else if(strcasecmp(name, akmos_xalgo_sha3_384.name) == 0)
-        return AKMOS_ALGO_SHA3_384;
-    else if(strcasecmp(name, akmos_xalgo_sha3_512.name) == 0)
-        return AKMOS_ALGO_SHA3_512;
-    else if(strcasecmp(name, akmos_xalgo_twofish.name) == 0)
-        return AKMOS_ALGO_TWOFISH;
-    else if(strcasecmp(name, akmos_xalgo_ripemd_160.name) == 0)
-        return AKMOS_ALGO_RIPEMD_160;
-    else if(strcasecmp(name, akmos_xalgo_ripemd_256.name) == 0)
-        return AKMOS_ALGO_RIPEMD_256;
-    else if(strcasecmp(name, akmos_xalgo_ripemd_320.name) == 0)
-        return AKMOS_ALGO_RIPEMD_320;
-    else if(strcasecmp(name, akmos_xalgo_threefish_256.name) == 0)
-        return AKMOS_ALGO_THREEFISH_256;
-    else if(strcasecmp(name, akmos_xalgo_threefish_512.name) == 0)
-        return AKMOS_ALGO_THREEFISH_512;
-    else if(strcasecmp(name, akmos_xalgo_threefish_1024.name) == 0)
-        return AKMOS_ALGO_THREEFISH_1024;
-    else if(strcasecmp(name, akmos_xalgo_camellia.name) == 0)
-        return AKMOS_ALGO_CAMELLIA;
-    else if(strcasecmp(name, akmos_xalgo_rijndael.name) == 0)
-        return AKMOS_ALGO_RIJNDAEL;
-    else if(strcasecmp(name, akmos_xalgo_tiger.name) == 0)
-        return AKMOS_ALGO_TIGER;
-    else if(strcasecmp(name, akmos_xalgo_whirlpool.name) == 0)
-        return AKMOS_ALGO_WHIRLPOOL;
-    else if(strcasecmp(name, akmos_xalgo_blowfish.name) == 0)
-        return AKMOS_ALGO_BLOWFISH;
-    else if(strcasecmp(name, akmos_xalgo_seed.name) == 0)
-        return AKMOS_ALGO_SEED;
-    else
-        return -1;
-}
-
 int akmos_str2mode(const char *name)
 {
     if(name == NULL)
@@ -121,92 +61,6 @@ int akmos_str2mode(const char *name)
         return AKMOS_MODE_CMAC;
     else
         return -1;
-}
-
-const char *akmos_algo2str(akmos_algo_id algo)
-{
-    switch(algo & AKMOS_ALGO_MASK) {
-        case AKMOS_ALGO_ANUBIS:
-            return akmos_xalgo_anubis.name;
-
-        case AKMOS_ALGO_CAST6:
-            return akmos_xalgo_cast6.name;
-
-        case AKMOS_ALGO_RC6:
-            return akmos_xalgo_rc6.name;
-
-        case AKMOS_ALGO_SERPENT:
-            return akmos_xalgo_serpent.name;
-
-        case AKMOS_ALGO_SHA1:
-            return akmos_xalgo_sha1.name;
-
-        case AKMOS_ALGO_SHA2_224:
-            return akmos_xalgo_sha2_224.name;
-
-        case AKMOS_ALGO_SHA2_256:
-            return akmos_xalgo_sha2_256.name;
-
-        case AKMOS_ALGO_SHA2_384:
-            return akmos_xalgo_sha2_384.name;
-
-        case AKMOS_ALGO_SHA2_512:
-            return akmos_xalgo_sha2_512.name;
-
-        case AKMOS_ALGO_SHA3_224:
-            return akmos_xalgo_sha3_224.name;
-
-        case AKMOS_ALGO_SHA3_256:
-            return akmos_xalgo_sha3_256.name;
-
-        case AKMOS_ALGO_SHA3_384:
-            return akmos_xalgo_sha3_384.name;
-
-        case AKMOS_ALGO_SHA3_512:
-            return akmos_xalgo_sha3_512.name;
-
-        case AKMOS_ALGO_TWOFISH:
-            return akmos_xalgo_twofish.name;
-
-        case AKMOS_ALGO_RIPEMD_160:
-            return akmos_xalgo_ripemd_160.name;
-
-        case AKMOS_ALGO_RIPEMD_256:
-            return akmos_xalgo_ripemd_256.name;
-
-        case AKMOS_ALGO_RIPEMD_320:
-            return akmos_xalgo_ripemd_320.name;
-
-        case AKMOS_ALGO_THREEFISH_256:
-            return akmos_xalgo_threefish_256.name;
-
-        case AKMOS_ALGO_THREEFISH_512:
-            return akmos_xalgo_threefish_512.name;
-
-        case AKMOS_ALGO_THREEFISH_1024:
-            return akmos_xalgo_threefish_1024.name;
-
-        case AKMOS_ALGO_CAMELLIA:
-            return akmos_xalgo_camellia.name;
-
-        case AKMOS_ALGO_RIJNDAEL:
-            return akmos_xalgo_rijndael.name;
-
-        case AKMOS_ALGO_TIGER:
-            return akmos_xalgo_tiger.name;
-
-        case AKMOS_ALGO_WHIRLPOOL:
-            return akmos_xalgo_whirlpool.name;
-
-        case AKMOS_ALGO_BLOWFISH:
-            return akmos_xalgo_blowfish.name;
-
-        case AKMOS_ALGO_SEED:
-            return akmos_xalgo_seed.name;
-
-        default:
-            return NULL;
-    }
 }
 
 const char *akmos_mode2str(akmos_mode_id mode)
@@ -238,103 +92,6 @@ const char *akmos_mode2str(akmos_mode_id mode)
 
         default:
             return NULL;
-    }
-}
-
-size_t akmos_diglen(akmos_algo_id algo)
-{
-    const akmos_digest_xalgo_t *digest;
-
-    digest = akmos_xalgo_digest(algo & AKMOS_ALGO_DIGEST_MASK);
-    if(digest)
-        return digest->diglen;
-    else
-        return 0;
-}
-
-size_t akmos_blklen(akmos_algo_id algo)
-{
-    switch(algo & AKMOS_ALGO_MASK) {
-        case AKMOS_ALGO_ANUBIS:
-            return AKMOS_ANUBIS_BLKLEN;
-
-        case AKMOS_ALGO_CAST6:
-            return AKMOS_CAST6_BLKLEN;
-
-        case AKMOS_ALGO_RC6:
-            return AKMOS_RC6_BLKLEN;
-
-        case AKMOS_ALGO_SERPENT:
-            return AKMOS_SERPENT_BLKLEN;
-
-        case AKMOS_ALGO_SHA1:
-            return AKMOS_SHA1_BLKLEN;
-
-        case AKMOS_ALGO_SHA2_224:
-            return AKMOS_SHA2_224_BLKLEN;
-
-        case AKMOS_ALGO_SHA2_256:
-            return AKMOS_SHA2_256_BLKLEN;
-
-        case AKMOS_ALGO_SHA2_384:
-            return AKMOS_SHA2_384_BLKLEN;
-
-        case AKMOS_ALGO_SHA2_512:
-            return AKMOS_SHA2_512_BLKLEN;
-
-        case AKMOS_ALGO_SHA3_224:
-            return AKMOS_SHA3_224_BLKLEN;
-
-        case AKMOS_ALGO_SHA3_256:
-            return AKMOS_SHA3_256_BLKLEN;
-
-        case AKMOS_ALGO_SHA3_384:
-            return AKMOS_SHA3_384_BLKLEN;
-
-        case AKMOS_ALGO_SHA3_512:
-            return AKMOS_SHA3_512_BLKLEN;
-
-        case AKMOS_ALGO_TWOFISH:
-            return AKMOS_TWOFISH_BLKLEN;
-
-        case AKMOS_ALGO_RIPEMD_160:
-            return AKMOS_RIPEMD_160_BLKLEN;
-
-        case AKMOS_ALGO_RIPEMD_256:
-            return AKMOS_RIPEMD_256_BLKLEN;
-
-        case AKMOS_ALGO_RIPEMD_320:
-            return AKMOS_RIPEMD_320_BLKLEN;
-
-        case AKMOS_ALGO_THREEFISH_256:
-            return AKMOS_THREEFISH_256_BLKLEN;
-
-        case AKMOS_ALGO_THREEFISH_512:
-            return AKMOS_THREEFISH_512_BLKLEN;
-
-        case AKMOS_ALGO_THREEFISH_1024:
-            return AKMOS_THREEFISH_1024_BLKLEN;
-
-        case AKMOS_ALGO_CAMELLIA:
-            return AKMOS_CAMELLIA_BLKLEN;
-
-        case AKMOS_ALGO_RIJNDAEL:
-            return AKMOS_RIJNDAEL_BLKLEN;
-
-        case AKMOS_ALGO_TIGER:
-            return AKMOS_TIGER_BLKLEN;
-
-        case AKMOS_ALGO_WHIRLPOOL:
-            return AKMOS_WHIRLPOOL_BLKLEN;
-
-        case AKMOS_ALGO_BLOWFISH:
-            return AKMOS_BLOWFISH_BLKLEN;
-
-        case AKMOS_ALGO_SEED:
-            return AKMOS_SEED_BLKLEN;
-
-        default:
-            return 0;
     }
 }
 
@@ -401,126 +158,127 @@ void akmos_memzero(volatile void *p, size_t len)
         *_p++=0;
 }
 
-const akmos_cipher_xalgo_t *akmos_xalgo_cipher(akmos_algo_id algo)
+const akmos_cipher_xalgo_t *akmos_cipher_xalgo(akmos_algo_id algo)
 {
     const akmos_cipher_xalgo_t *xalgo;
 
-    switch(algo & AKMOS_ALGO_CIPHER_MASK) {
-        case AKMOS_ALGO_ANUBIS:
-            xalgo = &akmos_xalgo_anubis;
+    for(xalgo = akmos_cipher_xlist; xalgo != NULL; xalgo++) {
+        if(xalgo->desc.id == (algo & AKMOS_ALGO_CIPHER_MASK))
             break;
-
-        case AKMOS_ALGO_BLOWFISH:
-            xalgo = &akmos_xalgo_blowfish;
-            break;
-
-        case AKMOS_ALGO_CAMELLIA:
-            xalgo = &akmos_xalgo_camellia;
-            break;
-
-        case AKMOS_ALGO_CAST6:
-            xalgo = &akmos_xalgo_cast6;
-            break;
-
-        case AKMOS_ALGO_RC6:
-            xalgo = &akmos_xalgo_rc6;
-            break;
-
-        case AKMOS_ALGO_RIJNDAEL:
-            xalgo = &akmos_xalgo_rijndael;
-            break;
-
-        case AKMOS_ALGO_SEED:
-            xalgo = &akmos_xalgo_seed;
-            break;
-
-        case AKMOS_ALGO_SERPENT:
-            xalgo = &akmos_xalgo_serpent;
-            break;
-
-        case AKMOS_ALGO_THREEFISH_256:
-            xalgo = &akmos_xalgo_threefish_256;
-            break;
-
-        case AKMOS_ALGO_THREEFISH_512:
-            xalgo = &akmos_xalgo_threefish_512;
-            break;
-
-        case AKMOS_ALGO_THREEFISH_1024:
-            xalgo = &akmos_xalgo_threefish_1024;
-            break;
-
-        case AKMOS_ALGO_TWOFISH:
-            xalgo = &akmos_xalgo_twofish;
-            break;
-
-        default:
-            return NULL;
     }
 
     return xalgo;
 }
 
-const akmos_digest_xalgo_t *akmos_xalgo_digest(akmos_algo_id algo)
+const akmos_cipher_xdesc_t *akmos_cipher_desc(akmos_algo_id algo)
+{
+    const akmos_cipher_xalgo_t *xalgo;
+
+    xalgo = akmos_cipher_xalgo(algo);
+    if(!xalgo)
+        return NULL;
+
+    return &xalgo->desc;
+}
+
+const char *akmos_cipher_name(akmos_algo_id algo)
+{
+    const akmos_cipher_xdesc_t *desc;
+
+    desc = akmos_cipher_desc(algo);
+    if(!desc)
+        return NULL;
+
+    return desc->name;
+}
+
+akmos_algo_id akmos_cipher_id(const char *name)
+{
+    const akmos_cipher_xalgo_t *xalgo;
+
+    for(xalgo = akmos_cipher_xlist; xalgo != NULL; xalgo++) {
+        if(strcasecmp(xalgo->desc.name, name) == 0)
+            return xalgo->desc.id;
+    }
+
+    return 0;
+}
+
+size_t akmos_cipher_blklen(akmos_algo_id algo)
+{
+    const akmos_cipher_xdesc_t *desc;
+
+    desc = akmos_cipher_desc(algo);
+    if(!desc)
+        return 0;
+
+    return desc->blklen;
+}
+
+const akmos_digest_xalgo_t *akmos_digest_xalgo(akmos_algo_id algo)
 {
     const akmos_digest_xalgo_t *xalgo;
 
-    switch(algo & AKMOS_ALGO_DIGEST_MASK) {
-        case AKMOS_ALGO_RIPEMD_160:
-            xalgo = &akmos_xalgo_ripemd_160;
+    for(xalgo = akmos_digest_xlist; xalgo != NULL; xalgo++) {
+        if(xalgo->desc.id == (algo & AKMOS_ALGO_DIGEST_MASK))
             break;
-
-        case AKMOS_ALGO_RIPEMD_256:
-            xalgo = &akmos_xalgo_ripemd_256;
-            break;
-
-        case AKMOS_ALGO_RIPEMD_320:
-            xalgo = &akmos_xalgo_ripemd_320;
-            break;
-
-        case AKMOS_ALGO_SHA1:
-            xalgo = &akmos_xalgo_sha1;
-            break;
-
-        case AKMOS_ALGO_SHA2_224:
-            xalgo = &akmos_xalgo_sha2_224;
-            break;
-
-        case AKMOS_ALGO_SHA2_256:
-            xalgo = &akmos_xalgo_sha2_256;
-            break;
-
-        case AKMOS_ALGO_SHA2_384:
-            xalgo = &akmos_xalgo_sha2_384;
-            break;
-
-        case AKMOS_ALGO_SHA2_512:
-            xalgo = &akmos_xalgo_sha2_512;
-            break;
-
-        case AKMOS_ALGO_SHA3_224:
-            xalgo = &akmos_xalgo_sha3_224;
-            break;
-
-        case AKMOS_ALGO_SHA3_256:
-            xalgo = &akmos_xalgo_sha3_256;
-            break;
-
-        case AKMOS_ALGO_SHA3_384:
-            xalgo = &akmos_xalgo_sha3_384;
-            break;
-
-        case AKMOS_ALGO_SHA3_512:
-            xalgo = &akmos_xalgo_sha3_512;
-            break;
-
-        case AKMOS_ALGO_WHIRLPOOL:
-            xalgo = &akmos_xalgo_whirlpool;
-            break;
-
-        default:
-            return NULL;
     }
 
     return xalgo;
+}
+
+const akmos_digest_xdesc_t *akmos_digest_desc(akmos_algo_id algo)
+{
+    const akmos_digest_xalgo_t *xalgo;
+
+    xalgo = akmos_digest_xalgo(algo);
+    if(!xalgo)
+        return NULL;
+
+    return &xalgo->desc;
+}
+
+const char *akmos_digest_name(akmos_algo_id algo)
+{
+    const akmos_digest_xdesc_t *desc;
+
+    desc = akmos_digest_desc(algo);
+    if(!desc)
+        return NULL;
+
+    return desc->name;
+}
+
+akmos_algo_id akmos_digest_id(const char *name)
+{
+    const akmos_digest_xalgo_t *xalgo;
+
+    for(xalgo = akmos_digest_xlist; xalgo != NULL; xalgo++) {
+        if(strcasecmp(xalgo->desc.name, name) == 0)
+            return xalgo->desc.id;
+    }
+
+    return 0;
+}
+
+size_t akmos_digest_blklen(akmos_algo_id algo)
+{
+    const akmos_digest_xdesc_t *desc;
+
+    desc = akmos_digest_desc(algo);
+    if(!desc)
+        return 0;
+
+    return desc->blklen;
+}
+
+size_t akmos_digest_outlen(akmos_algo_id algo)
+{
+    const akmos_digest_xdesc_t *desc;
+
+    desc = akmos_digest_desc(algo);
+    if(!desc)
+        return 0;
+
+    return desc->outlen;
 }

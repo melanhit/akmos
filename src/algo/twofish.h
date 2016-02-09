@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) 1999, Dr B. R Gladman (gladman@seven77.demon.co.uk)
  *   All rights reserved.
  *
@@ -31,6 +31,9 @@
 #define AKMOS_ALGO_TWOFISH_H
 
 #define AKMOS_TWOFISH_BLKLEN    16
+#define AKMOS_TWOFISH_KEYMIN    16
+#define AKMOS_TWOFISH_KEYMAX    32
+#define AKMOS_TWOFISH_KEYSTEP   8
 
 typedef struct {
     uint32_t l_key[40];

@@ -95,6 +95,15 @@ typedef enum {
 /* Cipher */
 typedef struct akmos_cipher_s akmos_cipher_ctx;
 
+typedef struct akmos_cipher_xdesc_s {
+    akmos_algo_id id;
+    char   *name;
+    size_t blklen;
+    size_t keymin;
+    size_t keymax;
+    size_t keystep;
+} akmos_cipher_xdesc_t;
+
 int  akmos_cipher_init   (akmos_cipher_ctx **, akmos_algo_id, akmos_mode_id);
 int  akmos_cipher_setkey (akmos_cipher_ctx *, const uint8_t *, size_t);
 void akmos_cipher_setiv  (akmos_cipher_ctx *, const uint8_t *);
@@ -104,13 +113,33 @@ void akmos_cipher_free   (akmos_cipher_ctx *);
 int  akmos_cipher_ex     (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t,
                           const uint8_t *, const uint8_t *, size_t, uint8_t *);
 
+const char *akmos_cipher_name(akmos_algo_id);
+akmos_algo_id akmos_cipher_id(const char *);
+size_t akmos_cipher_blklen   (akmos_algo_id);
+
+const akmos_cipher_xdesc_t *akmos_cipher_desc(akmos_algo_id);
+
 /* Hashing */
 typedef struct akmos_digest_s akmos_digest_ctx;
+
+typedef struct akmos_digest_xdesc_s {
+    akmos_algo_id id;
+    char *name;
+    size_t blklen;
+    size_t outlen;
+} akmos_digest_xdesc_t;
 
 int  akmos_digest_init  (akmos_digest_ctx **, akmos_algo_id);
 void akmos_digest_update(akmos_digest_ctx *, const uint8_t *, size_t);
 void akmos_digest_done  (akmos_digest_ctx *, uint8_t *);
 int  akmos_digest_ex    (akmos_algo_id, const uint8_t *, size_t, uint8_t *);
+
+const char *akmos_digest_name(akmos_algo_id);
+akmos_algo_id akmos_digest_id(const char *);
+size_t akmos_digest_blklen   (akmos_algo_id);
+size_t akmos_digest_outlen   (akmos_algo_id);
+
+const akmos_digest_xdesc_t *akmos_digest_desc(akmos_algo_id);
 
 /* Message authentication code (MAC) */
 typedef struct akmos_mac_s akmos_mac_ctx;
@@ -126,44 +155,14 @@ int akmos_kdf_pbkdf2(uint8_t *, size_t, const uint8_t *, size_t, const char *, u
 int akmos_kdf_kdf2(uint8_t *, size_t, const uint8_t *, size_t, const uint8_t *, size_t, uint32_t, akmos_algo_id);
 
 /* Misc */
-int   akmos_str2algo(const char *);
 int   akmos_str2mode(const char *);
-const char *akmos_algo2str(akmos_algo_id);
 const char *akmos_mode2str(akmos_mode_id);
-void  akmos_memzero(volatile void *, size_t);
 
-size_t akmos_diglen(akmos_algo_id);
-size_t akmos_blklen(akmos_algo_id);
+void  akmos_memzero(volatile void *, size_t);
 
 void   akmos_padadd(const uint8_t *, size_t, uint8_t *, size_t);
 size_t akmos_padrem(uint8_t *, size_t);
 
 int akmos_perror(akmos_err_id);
-
-/* xform objects */
-typedef struct akmos_cipher_xalgo_s {
-    akmos_algo_id id;
-    char   *name;
-    size_t blklen;
-    size_t keymin;
-    size_t keymax;
-    size_t keystep;
-    void (*setkey)  (void *, const uint8_t *, size_t);
-    void (*encrypt) (void *, const uint8_t *, uint8_t *);
-    void (*decrypt) (void *, const uint8_t *, uint8_t *);
-} akmos_cipher_xalgo_t;
-
-typedef struct akmos_digest_xalgo_s {
-    akmos_algo_id id;
-    char *name;
-    size_t blklen;
-    size_t diglen;
-    void (*init)   (void *);
-    void (*update) (void *, const uint8_t *, size_t);
-    void (*done)   (void *, uint8_t *);
-} akmos_digest_xalgo_t;
-
-const akmos_cipher_xalgo_t *akmos_xalgo_cipher(akmos_algo_id);
-const akmos_digest_xalgo_t *akmos_xalgo_digest(akmos_algo_id);
 
 #endif  /* AKMOS_H */

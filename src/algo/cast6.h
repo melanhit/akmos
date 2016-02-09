@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,9 @@
 #define AKMOS_ALGO_CAST6_H
 
 #define AKMOS_CAST6_BLKLEN  16
+#define AKMOS_CAST6_KEYMIN  16
+#define AKMOS_CAST6_KEYMAX  32
+#define AKMOS_CAST6_KEYSTEP 8
 
 typedef struct {
     uint32_t l_key[96];

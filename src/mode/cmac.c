@@ -112,7 +112,7 @@ int akmos_cmac_setkey(akmos_cmac_t *ctx, const uint8_t *key, size_t len)
     size_t l;
     int err;
 
-    l = akmos_blklen(ctx->algo);
+    l = akmos_cipher_blklen(ctx->algo);
     k0 = malloc(l);
     if(!k0)
         return AKMOS_ERR_ENOMEM;
@@ -202,7 +202,7 @@ int akmos_cmac_done(akmos_cmac_t *ctx, uint8_t *mac)
     int err, i;
 
     err = AKMOS_ERR_SUCCESS;
-    blklen = akmos_blklen(ctx->algo);
+    blklen = akmos_cipher_blklen(ctx->algo);
 
     if(!ctx->len && ctx->c) {
         err = akmos_cipher_ex(ctx->algo, AKMOS_MODE_ECB|AKMOS_MODE_DECRYPT, ctx->key, ctx->klen,

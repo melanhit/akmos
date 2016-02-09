@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@ void akmos_ctr_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
     akmos_ctr_t *ptr;
     size_t len;
 
-    len = ctx->xalgo->blklen - sizeof(uint64_t);
+    len = ctx->xalgo->desc.blklen - sizeof(uint64_t);
 
     ptr = &ctx->mctx.ctr;
 
@@ -78,7 +78,7 @@ void akmos_ctr_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
             ptr->rem_buf += i;
     }
 
-    blklen = ctx->xalgo->blklen;
+    blklen = ctx->xalgo->desc.blklen;
     n = in_len / blklen;
 
     for(i = 0; i < n; i++) {
@@ -88,8 +88,8 @@ void akmos_ctr_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
 
         ctx->pxor(in_blk, ptr->tmp, out_blk);
 
-        out_blk += ctx->xalgo->blklen;
-        in_blk  += ctx->xalgo->blklen;
+        out_blk += blklen;
+        in_blk  += blklen;
     }
 
     n = in_len - (n * blklen);
@@ -116,6 +116,6 @@ void akmos_ctr_zero(akmos_cipher_ctx *ctx)
 
     ptr = &ctx->mctx.ctr;
 
-    akmos_memzero(ptr->tmp, ctx->xalgo->blklen);
-    akmos_memzero(ptr->iv, ctx->xalgo->blklen);
+    akmos_memzero(ptr->tmp, ctx->xalgo->desc.blklen);
+    akmos_memzero(ptr->iv, ctx->xalgo->desc.blklen);
 }
