@@ -162,7 +162,7 @@ const akmos_cipher_xalgo_t *akmos_cipher_xalgo(akmos_algo_id algo)
 {
     const akmos_cipher_xalgo_t *xalgo;
 
-    for(xalgo = akmos_cipher_xlist; xalgo != NULL; xalgo++) {
+    for(xalgo = akmos_cipher_xlist; xalgo->desc.id; xalgo++) {
         if(xalgo->desc.id == (algo & AKMOS_ALGO_CIPHER_MASK))
             break;
     }
@@ -196,7 +196,7 @@ akmos_algo_id akmos_cipher_id(const char *name)
 {
     const akmos_cipher_xalgo_t *xalgo;
 
-    for(xalgo = akmos_cipher_xlist; xalgo != NULL; xalgo++) {
+    for(xalgo = akmos_cipher_xlist; xalgo->desc.id; xalgo++) {
         if(strcasecmp(xalgo->desc.name, name) == 0)
             return xalgo->desc.id;
     }
@@ -219,7 +219,7 @@ const akmos_digest_xalgo_t *akmos_digest_xalgo(akmos_algo_id algo)
 {
     const akmos_digest_xalgo_t *xalgo;
 
-    for(xalgo = akmos_digest_xlist; xalgo != NULL; xalgo++) {
+    for(xalgo = akmos_digest_xlist; xalgo->desc.id; xalgo++) {
         if(xalgo->desc.id == (algo & AKMOS_ALGO_DIGEST_MASK))
             break;
     }
@@ -253,7 +253,7 @@ akmos_algo_id akmos_digest_id(const char *name)
 {
     const akmos_digest_xalgo_t *xalgo;
 
-    for(xalgo = akmos_digest_xlist; xalgo != NULL; xalgo++) {
+    for(xalgo = akmos_digest_xlist; xalgo->desc.id; xalgo++) {
         if(strcasecmp(xalgo->desc.name, name) == 0)
             return xalgo->desc.id;
     }
