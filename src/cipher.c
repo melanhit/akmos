@@ -81,24 +81,24 @@ static int cipher_init_mode(akmos_cipher_ctx *ctx, akmos_mode_id mode)
 
 static void cipher_setkey(akmos_cipher_ctx *ctx, const uint8_t *key, size_t len)
 {
-    ctx->xalgo->setkey(ctx->actx0, key, len);
+    ctx->xalgo->setkey(&ctx->actx, key, len);
 }
 
 static void cipher_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    ctx->xalgo->encrypt(ctx->actx0, in_blk, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx, in_blk, out_blk);
 }
 
 static void cipher_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    ctx->xalgo->decrypt(ctx->actx0, in_blk, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx, in_blk, out_blk);
 }
 
 static void cipher_setkey3(akmos_cipher_ctx *ctx, const uint8_t *key, size_t len)
 {
-    ctx->xalgo->setkey(ctx->actx0, key, len);
-    ctx->xalgo->setkey(ctx->actx1, key + len, len);
-    ctx->xalgo->setkey(ctx->actx2, key + len * 2, len);
+    ctx->xalgo->setkey(&ctx->actx[0], key, len);
+    ctx->xalgo->setkey(&ctx->actx[1], key + len, len);
+    ctx->xalgo->setkey(&ctx->actx[2], key + len * 2, len);
 }
 
 static void cipher_ede_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -107,9 +107,9 @@ static void cipher_ede_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uin
 
     t = out_blk;
 
-    ctx->xalgo->encrypt(ctx->actx0, in_blk, out_blk);
-    ctx->xalgo->decrypt(ctx->actx1, t, out_blk);
-    ctx->xalgo->encrypt(ctx->actx2, t, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[0], in_blk, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[1], t, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[2], t, out_blk);
 }
 
 static void cipher_ede_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -118,9 +118,9 @@ static void cipher_ede_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uin
 
     t = out_blk;
 
-    ctx->xalgo->decrypt(ctx->actx2, in_blk, out_blk);
-    ctx->xalgo->encrypt(ctx->actx1, t, out_blk);
-    ctx->xalgo->decrypt(ctx->actx0, t, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[2], in_blk, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[1], t, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[0], t, out_blk);
 }
 
 static void cipher_eee_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -129,9 +129,9 @@ static void cipher_eee_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uin
 
     t = out_blk;
 
-    ctx->xalgo->encrypt(ctx->actx0, in_blk, out_blk);
-    ctx->xalgo->encrypt(ctx->actx1, t, out_blk);
-    ctx->xalgo->encrypt(ctx->actx2, t, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[0], in_blk, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[1], t, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[2], t, out_blk);
 }
 
 static void cipher_eee_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -140,27 +140,19 @@ static void cipher_eee_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, uin
 
     t = out_blk;
 
-    ctx->xalgo->decrypt(ctx->actx2, in_blk, out_blk);
-    ctx->xalgo->decrypt(ctx->actx1, t, out_blk);
-    ctx->xalgo->decrypt(ctx->actx0, t, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[2], in_blk, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[1], t, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[0], t, out_blk);
 }
 
-static int cipher_init_actx(akmos_cipher_ctx *ctx)
+static void cipher_init_actx(akmos_cipher_ctx *ctx)
 {
     ctx->setkey  = &cipher_setkey;
     ctx->encrypt = &cipher_encrypt;
     ctx->decrypt = &cipher_decrypt;
-
-    ctx->actx0 = malloc(sizeof(akmos_cipher_algo_ctx));
-    if(!ctx->actx0)
-        return AKMOS_ERR_ENOMEM;
-
-    memset(ctx->actx0, 0, sizeof(akmos_cipher_algo_ctx));
-
-    return AKMOS_ERR_SUCCESS;
 }
 
-static int cipher_init3(akmos_cipher_ctx *ctx, akmos_algo_id flag)
+static void cipher_init3(akmos_cipher_ctx *ctx, akmos_algo_id flag)
 {
     switch(flag) {
         case AKMOS_ALGO_FLAG_EDE:
@@ -176,19 +168,8 @@ static int cipher_init3(akmos_cipher_ctx *ctx, akmos_algo_id flag)
             break;
 
         default:
-            return AKMOS_ERR_FLAGID;
+            break;
     }
-
-    ctx->actx0 = malloc(sizeof(akmos_cipher_algo_ctx) * 3);
-    if(!ctx->actx0)
-        return AKMOS_ERR_ENOMEM;
-
-    ctx->actx1 = ctx->actx0 + 1;
-    ctx->actx2 = ctx->actx1 + 1;
-
-    memset(ctx->actx0, 0, sizeof(akmos_cipher_algo_ctx) * 3);
-
-    return AKMOS_ERR_SUCCESS;
 }
 
 int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id mode)
@@ -219,16 +200,13 @@ int akmos_cipher_init(akmos_cipher_ctx **ctx, akmos_algo_id algo, akmos_mode_id 
     switch(flag) {
         case AKMOS_ALGO_FLAG_EDE:
         case AKMOS_ALGO_FLAG_EEE:
-            err = cipher_init3(ptr, flag);
+            cipher_init3(ptr, flag);
             break;
 
         default:
-            err = cipher_init_actx(ptr);
+            cipher_init_actx(ptr);
             break;
     }
-
-    if(err)
-        goto out;
 
     switch(ptr->xalgo->desc.blklen) {
         case 8:
@@ -306,20 +284,6 @@ void akmos_cipher_free(akmos_cipher_ctx *ctx)
 {
     if(!ctx)
         return;
-
-    if(ctx->xmode->zero)
-        ctx->xmode->zero(ctx);
-
-    if(ctx->actx2)
-        akmos_memzero(ctx->actx2, sizeof(akmos_cipher_algo_ctx));
-
-    if(ctx->actx1)
-        akmos_memzero(ctx->actx1, sizeof(akmos_cipher_algo_ctx));
-
-    if(ctx->actx0) {
-        akmos_memzero(ctx->actx0, sizeof(akmos_cipher_algo_ctx));
-        free(ctx->actx0);
-    }
 
     akmos_memzero(ctx, sizeof(akmos_cipher_ctx));
     free(ctx);

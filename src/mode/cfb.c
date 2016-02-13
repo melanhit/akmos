@@ -78,16 +78,3 @@ void akmos_cfb_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
         ctx->pxor(ptr->buf, in_blk, out_blk);
     }
 }
-
-void akmos_cfb_zero(akmos_cipher_ctx *ctx)
-{
-    akmos_cfb_t *ptr;
-
-    if(!ctx)
-        return;
-
-    ptr = &ctx->mctx.cfb;
-
-    akmos_memzero(ptr->iv, ctx->xalgo->desc.blklen);
-    akmos_memzero(ptr->buf, ctx->xalgo->desc.blklen);
-}

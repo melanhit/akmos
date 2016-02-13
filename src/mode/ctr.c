@@ -106,16 +106,3 @@ void akmos_ctr_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     ptr->rem_len = blklen - i;
     ptr->rem_buf = ptr->tmp + i;
 }
-
-void akmos_ctr_zero(akmos_cipher_ctx *ctx)
-{
-    akmos_ctr_t *ptr;
-
-    if(!ctx)
-        return;
-
-    ptr = &ctx->mctx.ctr;
-
-    akmos_memzero(ptr->tmp, ctx->xalgo->desc.blklen);
-    akmos_memzero(ptr->iv, ctx->xalgo->desc.blklen);
-}

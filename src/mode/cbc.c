@@ -81,16 +81,3 @@ void akmos_cbc_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
         memcpy(out_blk, ptr->buf, blklen);
     }
 }
-
-void akmos_cbc_zero(akmos_cipher_ctx *ctx)
-{
-    akmos_cbc_t *ptr;
-
-    if(!ctx)
-        return;
-
-    ptr = &ctx->mctx.cbc;
-
-    akmos_memzero(ptr->buf, ctx->xalgo->desc.blklen);
-    akmos_memzero(ptr->iv, ctx->xalgo->desc.blklen);
-}

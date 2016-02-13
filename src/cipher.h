@@ -83,18 +83,12 @@ typedef struct {
     void (*setiv)   (akmos_cipher_ctx *, const uint8_t *);
     void (*encrypt) (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
     void (*decrypt) (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
-    void (*zero)    (akmos_cipher_ctx *);
 } akmos_cipher_xmode_t;
 
 struct akmos_cipher_s {
     /* algo */
     const akmos_cipher_xalgo_t  *xalgo;
-
-    struct {
-        akmos_cipher_algo_ctx   *actx0;
-        akmos_cipher_algo_ctx   *actx1;
-        akmos_cipher_algo_ctx   *actx2;
-    };
+    akmos_cipher_algo_ctx       actx[3];
 
     /* mode */
     const akmos_cipher_xmode_t  *xmode;

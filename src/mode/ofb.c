@@ -68,15 +68,3 @@ void akmos_ofb_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     for(j = 0; j < n; j++)
         out_blk[j] = in_blk[j] ^ ptr->iv[j];
 }
-
-void akmos_ofb_zero(akmos_cipher_ctx *ctx)
-{
-    akmos_ofb_t *ptr;
-
-    if(!ctx)
-        return;
-
-    ptr = &ctx->mctx.ofb;
-
-    akmos_memzero(ptr->iv, ctx->xalgo->desc.blklen);
-}
