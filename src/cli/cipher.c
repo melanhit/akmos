@@ -80,7 +80,7 @@ struct opt_cipher_s {
         char keylen;
         char iter;
         char over;
-        char ede;
+        int flag;
     } set;
 };
 
@@ -130,13 +130,16 @@ static int parse_algo(struct opt_cipher_s *opt, char *algo_str)
             akmos_perror(AKMOS_ERR_ALGOID);
             return EXIT_FAILURE;
         }
-        opt->set.ede = 0;
+        opt->set.flag = 0;
     } else {
-        if(strcasecmp(s2, "ede")) {
-            printf("Unknown cipher profile \'%s\'\n", s2);
+        if(strcasecmp(s2, "ede") == 0)
+            opt->set.flag = AKMOS_ALGO_FLAG_EDE;
+        else if(strcasecmp(s2, "eee") == 0)
+            opt->set.flag = AKMOS_ALGO_FLAG_EEE;
+        else {
+            printf("Unknown cipher flag \'%s\'\n", s2);
             return EXIT_FAILURE;
         }
-        opt->set.ede = 1;
     }
 
     opt->algo = akmos_cipher_id(s1);
@@ -288,8 +291,8 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
         opt->iter = DEFAULT_ITER;
     }
 
-    if(opt->set.ede)
-        opt->algo |= AKMOS_ALGO_FLAG_EDE;
+    if(opt->set.flag)
+        opt->algo |= opt->set.flag;
 
     return EXIT_SUCCESS;
 }
@@ -344,7 +347,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
     /* Setup master keys */
     keylen = opt.keylen * 2;
-    if(opt.set.ede)
+    if(opt.set.flag)
         keylen *= 3;
 
     AMALLOC(keybuf, keylen, err);

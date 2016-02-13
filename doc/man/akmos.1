@@ -62,17 +62,22 @@ print short help
 .SH "SYMMETRIC CIPHERING"
 .SS ""
 .HP \w'\fBakmos\ enc|dec\fR\ 'u
-\fBakmos enc|dec\fR [\-a\ \fIalgo[:ede]\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-i\ \fIiter\fR] [\-y] [\-h] {input} {output}
+\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-i\ \fIiter\fR] [\-y] [\-h] {input} {output}
 .SS "Options"
 .PP
 .PP
-\-a\ algo[:ede]
+\-a\ algo[:flag]
 .RS 4
 Crypto algorithm to use\&. By default is
 \fBTwofish\fR
 .sp
+Supported FLAGS
+.sp
 \fB:ede\fR
 flag put cipher into Encrypt\-Decrypt\-Encrypt mode (like 3DES)
+.sp
+\fB:eee\fR
+flag put cipher into Encrypt\-Encrypt\-Encrypt mode
 .RE
 .PP
 \-m\ mode

@@ -36,7 +36,8 @@ typedef enum {
     AKMOS_ERR_MODEID,
     AKMOS_ERR_KEYLEN,
     AKMOS_ERR_ENOMEM,
-    AKMOS_ERR_BLKLEN
+    AKMOS_ERR_BLKLEN,
+    AKMOS_ERR_FLAGID
 } akmos_err_id;
 
 typedef enum {
@@ -71,7 +72,8 @@ typedef enum {
     AKMOS_ALGO_WHIRLPOOL        = 0x0000e000,
 
     /* cipher algo flag */
-    AKMOS_ALGO_FLAG_EDE         = 0x10000000
+    AKMOS_ALGO_FLAG_EDE         = 0x10000000,
+    AKMOS_ALGO_FLAG_EEE         = 0x20000000
 } akmos_algo_id;
 
 typedef enum {

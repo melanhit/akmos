@@ -73,7 +73,7 @@
             <refsect2>
                 <cmdsynopsis>
                     <command>akmos enc|dec</command>
-                    <arg>-a <replaceable>algo[:ede]</replaceable></arg>
+                    <arg>-a <replaceable>algo[:flag]</replaceable></arg>
                     <arg>-m <replaceable>mode</replaceable></arg>
                     <arg>-k <replaceable>keyfile</replaceable></arg>
                     <arg>-l <replaceable>keylen</replaceable></arg>
@@ -91,10 +91,12 @@
                 <para>
                     <variablelist>
                         <varlistentry>
-                            <term><arg choice="plain">-a algo[:ede]</arg></term>
+                            <term><arg choice="plain">-a algo[:flag]</arg></term>
                             <listitem>
                                 <para>Crypto algorithm to use. By default is <constant>Twofish</constant></para>
+                                <para>Supported FLAGS</para>
                                 <para><constant>:ede</constant> flag put cipher into Encrypt-Decrypt-Encrypt mode (like 3DES)</para>
+                                <para><constant>:eee</constant> flag put cipher into Encrypt-Encrypt-Encrypt mode</para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
