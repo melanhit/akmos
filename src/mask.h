@@ -30,19 +30,17 @@
 #define AKMOS_MASK_H
 
 typedef enum akmos_algo_mask_e {
-    AKMOS_ALGO_MASK         = 0x0fffffff,
+    AKMOS_ALGO_MASK         = 0x000fffff,
     AKMOS_ALGO_CIPHER_MASK  = 0x00000fff,
     AKMOS_ALGO_DIGEST_MASK  = 0x000ff000,
-    AKMOS_ALGO_BLOCK_MASK   = 0x000000ff,
-    AKMOS_ALGO_FLAG_MASK    = 0xf0000000
+    AKMOS_ALGO_FLAG_MASK    = 0x70000000
 } akmos_algo_mask_t;
 
 typedef enum akmos_mode_mask_e {
-    AKMOS_MODE_MASK         = 0x0fffffff,
-    AKMOS_MODE_CIPHER_MASK  = 0x000000ff,
-    AKMOS_MODE_MAC_MASK     = 0x00000f00,
-    AKMOS_MODE_BLOCK_MASK   = 0x0000000f,
-    AKMOS_MODE_FLAG_MASK    = 0xf0000000
+    AKMOS_MODE_MASK         = 0x000000ff,
+    AKMOS_MODE_CIPHER_MASK  = 0x0000000f,
+    AKMOS_MODE_MAC_MASK     = 0x000000f0,
+    AKMOS_MODE_FLAG_MASK    = 0x70000000
 } akmos_mode_mask_t;
 
 #endif  /* AKMOS_MASK_H */

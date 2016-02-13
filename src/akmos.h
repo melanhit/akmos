@@ -85,9 +85,9 @@ typedef enum {
     AKMOS_MODE_CFB              = 0x00000005,
 
     /* MAC mode */
-    AKMOS_MODE_HMAC             = 0x00000100,
-    AKMOS_MODE_CBCMAC           = 0x00000200,
-    AKMOS_MODE_CMAC             = 0x00000300,
+    AKMOS_MODE_HMAC             = 0x00000010,
+    AKMOS_MODE_CBCMAC           = 0x00000020,
+    AKMOS_MODE_CMAC             = 0x00000030,
 
     /* cipher mode flag */
     AKMOS_MODE_ENCRYPT          = 0x10000000,
