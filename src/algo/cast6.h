@@ -36,6 +36,7 @@
 
 typedef struct {
     uint32_t l_key[96];
+    uint32_t lk[24];
 } akmos_cast6_t;
 
 void akmos_cast6_setkey (akmos_cast6_t *, const uint8_t *, size_t);

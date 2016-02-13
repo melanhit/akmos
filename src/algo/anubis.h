@@ -38,9 +38,12 @@
 #define AKMOS_ANUBIS_MAX_R      (AKMOS_ANUBIS_MAX_N + 8)
 
 typedef struct {
-    int R;
+    int r;
     uint32_t e_key[AKMOS_ANUBIS_MAX_R + 1][4];
     uint32_t d_key[AKMOS_ANUBIS_MAX_R + 1][4];
+    uint32_t kappa[AKMOS_ANUBIS_MAX_N];
+    uint32_t inter[AKMOS_ANUBIS_MAX_N];
+    uint32_t state[4];
 } akmos_anubis_t;
 
 void akmos_anubis_setkey (akmos_anubis_t *, const uint8_t *, size_t);

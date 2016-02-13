@@ -64,9 +64,10 @@
 static void sha1_transform(akmos_sha1_t *ctx, const uint8_t *block, uint32_t nb)
 {
     uint32_t A, B, C, D, E, i;
-    uint32_t w[AKMOS_SHA1_BLKLEN / 4];
+    uint32_t *w;
     const uint8_t *sub;
 
+    w = ctx->w;
 
     for(i = 0; i < nb; i++) {
         A = ctx->h[0]; B = ctx->h[1];
@@ -174,8 +175,6 @@ static void sha1_transform(akmos_sha1_t *ctx, const uint8_t *block, uint32_t nb)
         ctx->h[3] += D;
         ctx->h[4] += E;
     }
-
-    akmos_memzero(w, sizeof(w));
 }
 
 void akmos_sha1_init(akmos_sha1_t *ctx)

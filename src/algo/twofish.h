@@ -40,6 +40,7 @@ typedef struct {
     uint32_t s_key[AKMOS_TWOFISH_BLKLEN];
     uint32_t mk_tab[4*256];
     uint32_t k_len;
+    uint32_t me_key[8];
 } akmos_twofish_t;
 
 void akmos_twofish_setkey (akmos_twofish_t *, const uint8_t *, size_t);

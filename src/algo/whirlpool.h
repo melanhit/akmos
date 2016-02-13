@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -36,6 +36,7 @@
 
 typedef struct {
     uint64_t h[8];
+    uint64_t w[24];
     uint8_t  block[2 * AKMOS_WHIRLPOOL_BLKLEN];
     size_t   total;
     size_t   len;

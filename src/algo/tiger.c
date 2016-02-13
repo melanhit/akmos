@@ -71,10 +71,13 @@
 
 static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, uint32_t nb)
 {
-    uint64_t a, b, c, aa, bb, cc, w[8];
-    uint8_t t[8];
+    uint64_t a, b, c, aa, bb, cc, *w;
+    uint8_t *t;
     const uint8_t *sub;
     size_t i;
+
+    w = ctx->w;
+    t = ctx->t;
 
     a = aa = ctx->h[0];
     b = bb = ctx->h[1];
@@ -129,9 +132,6 @@ static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, uint32_t n
     ctx->h[0] = a;
     ctx->h[1] = b;
     ctx->h[2] = c;
-
-    akmos_memzero(w, sizeof(w));
-    akmos_memzero(t, sizeof(t));
 }
 
 void akmos_tiger_init(akmos_tiger_t *ctx)

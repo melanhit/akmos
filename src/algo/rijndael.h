@@ -37,6 +37,7 @@
 typedef struct {
     uint32_t ke[4*(14+1)];
     uint32_t kd[4*(14+1)];
+    uint32_t w[4];
     size_t   r;
 } akmos_rijndael_t;
 

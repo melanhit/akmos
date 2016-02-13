@@ -38,6 +38,7 @@ typedef struct {
     uint64_t k[24];
     uint64_t ke[6];
     uint64_t kw[4];
+    uint64_t ka[8];
     int bits;
 } akmos_camellia_t;
 

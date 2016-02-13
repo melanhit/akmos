@@ -174,10 +174,11 @@ static const uint64_t sha512_k[80] = {
 
 static void sha256_transform(akmos_sha2_256_t *ctx, const uint8_t *m, size_t nb)
 {
-    uint32_t w[128], *wv, t1, t2;
+    uint32_t *w, *wv, t1, t2;
     const uint8_t *sub;
     size_t i;
 
+    w  = ctx->w;
     wv = w + 64;
 
     for(i = 0; i < nb; i++) {
@@ -248,16 +249,15 @@ static void sha256_transform(akmos_sha2_256_t *ctx, const uint8_t *m, size_t nb)
         ctx->h[4] += wv[4]; ctx->h[5] += wv[5];
         ctx->h[6] += wv[6]; ctx->h[7] += wv[7];
     }
-
-    akmos_memzero(w, sizeof(w));
 }
 
 static void sha512_transform(akmos_sha2_512_t *ctx, const uint8_t *m, size_t nb)
 {
-    uint64_t w[88], *wv, t1, t2;
+    uint64_t *w, *wv, t1, t2;
     const uint8_t *sub;
     size_t i, j;
 
+    w  = ctx->w;
     wv = w + 80;
 
     for(i = 0; i <  nb; i++) {
@@ -313,8 +313,6 @@ static void sha512_transform(akmos_sha2_512_t *ctx, const uint8_t *m, size_t nb)
         ctx->h[6] += wv[6]; ctx->h[7] += wv[7];
 
     }
-
-    akmos_memzero(w, sizeof(w));
 }
 
 void akmos_sha2_224_init(akmos_sha2_256_t *ctx)

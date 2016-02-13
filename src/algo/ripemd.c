@@ -83,9 +83,12 @@ static uint8_t PADDING[64] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static void ripemd_160_transform(uint32_t *state, const uint8_t *block)
+static void ripemd_160_transform(akmos_ripemd_t *ctx, const uint8_t *block)
 {
-    uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, x[16];
+    uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, *x, *state;
+
+    state = ctx->state;
+    x = ctx->x;
 
     memcpy(x, block, 64);
 
@@ -281,13 +284,14 @@ static void ripemd_160_transform(uint32_t *state, const uint8_t *block)
     state[3] = state[4] + aa + b;
     state[4] = state[0] + bb + c;
     state[0] = t;
-
-    akmos_memzero(x, sizeof(x));
 }
 
-static void ripemd_256_transform(uint32_t *state, const uint8_t *block)
+static void ripemd_256_transform(akmos_ripemd_t *ctx, const uint8_t *block)
 {
-    uint32_t a, b, c, d, aa, bb, cc, dd, t, x[16];
+    uint32_t a, b, c, d, aa, bb, cc, dd, t, *x, *state;
+
+    state = ctx->state;
+    x = ctx->x;
 
     memcpy(x, block, 64);
 
@@ -456,13 +460,14 @@ static void ripemd_256_transform(uint32_t *state, const uint8_t *block)
     state[5] += bb;
     state[6] += cc;
     state[7] += dd;
-
-    akmos_memzero(x, sizeof(x));
 }
 
-static void ripemd_320_transform(uint32_t *state, const uint8_t *block)
+static void ripemd_320_transform(akmos_ripemd_t *ctx, const uint8_t *block)
 {
-    uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, x[16];
+    uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, *x, *state;
+
+    state = ctx->state;
+    x = ctx->x;
 
     memcpy(x, block, 64);
 
@@ -672,8 +677,6 @@ static void ripemd_320_transform(uint32_t *state, const uint8_t *block)
     state[7] += cc;
     state[8] += dd;
     state[9] += ee;
-
-    akmos_memzero(x, sizeof(x));
 }
 
 void akmos_ripemd_160_init(akmos_ripemd_t *ctx)
@@ -735,15 +738,15 @@ void akmos_ripemd_update(akmos_ripemd_t *ctx, const uint8_t *input, size_t len)
 
             switch(ctx->diglen) {
                 case AKMOS_RIPEMD_160_DIGLEN:
-                    ripemd_160_transform(ctx->state, ctx->buffer);
+                    ripemd_160_transform(ctx, ctx->buffer);
                     break;
 
                 case AKMOS_RIPEMD_256_DIGLEN:
-                    ripemd_256_transform(ctx->state, ctx->buffer);
+                    ripemd_256_transform(ctx, ctx->buffer);
                     break;
 
                 case AKMOS_RIPEMD_320_DIGLEN:
-                    ripemd_320_transform(ctx->state, ctx->buffer);
+                    ripemd_320_transform(ctx, ctx->buffer);
                     break;
             }
 
@@ -754,15 +757,15 @@ void akmos_ripemd_update(akmos_ripemd_t *ctx, const uint8_t *input, size_t len)
         while(off + 64 <= len) {
             switch(ctx->diglen) {
                 case AKMOS_RIPEMD_160_DIGLEN:
-                    ripemd_160_transform(ctx->state, input + off);
+                    ripemd_160_transform(ctx, input + off);
                     break;
 
                 case AKMOS_RIPEMD_256_DIGLEN:
-                    ripemd_256_transform(ctx->state, input + off);
+                    ripemd_256_transform(ctx, input + off);
                     break;
 
                 case AKMOS_RIPEMD_320_DIGLEN:
-                    ripemd_320_transform(ctx->state, input + off);
+                    ripemd_320_transform(ctx, input + off);
                     break;
             }
             off += 64;

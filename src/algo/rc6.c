@@ -47,15 +47,17 @@
         c = ROTR32(c - l_key[i + 1], t) ^ u;\
         a = ROTR32(a - l_key[i], u) ^ t
 
-void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *key, size_t len)
+void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *in_key, size_t len)
 {
-    uint32_t i, j, k, a, b, l[8], t;
-    uint32_t in_key[8], *l_key;
+    uint32_t i, j, k, a, b, t;
+    uint32_t *key, *l_key, *l;
 
+    l     = ctx->l;
+    key   = ctx->key;
     l_key = ctx->l_key;
 
     for(i = 0; i < (len / 4); i++)
-        in_key[i] = PACK32BE(key + (i * 4));
+        key[i] = PACK32BE(in_key + (i * 4));
 
     l_key[0] = 0xb7e15163;
 
@@ -63,7 +65,7 @@ void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *key, size_t len)
         l_key[k] = l_key[k - 1] + 0x9e3779b9;
 
     for(k = 0; k < len / 4; ++k)
-        l[k] = in_key[k];
+        l[k] = key[k];
 
     t = (len / 4) - 1;
 
@@ -76,9 +78,6 @@ void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *key, size_t len)
         i = (i == 43 ? 0 : i + 1);
         j = (j == t ? 0 : j + 1);
     }
-
-    akmos_memzero(in_key, sizeof(in_key));
-    akmos_memzero(l, sizeof(l));
 }
 
 void akmos_rc6_encrypt(akmos_rc6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)

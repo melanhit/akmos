@@ -46,8 +46,10 @@
 void akmos_blowfish_setkey(akmos_blowfish_t *ctx, const uint8_t *in_key, size_t len)
 {
     const uint8_t *key;
-    uint8_t buf[AKMOS_BLOWFISH_BLKLEN] = { 0 };
+    uint8_t *buf;
     size_t i, j;
+
+    buf = ctx->b;
 
     j = len / 4;
     for(i = 0, key = in_key; i < 18; i++, key += 4) {
@@ -62,6 +64,9 @@ void akmos_blowfish_setkey(akmos_blowfish_t *ctx, const uint8_t *in_key, size_t 
         ctx->s[i] = S[i];
     }
 
+    for(i = 0; i < AKMOS_BLOWFISH_BLKLEN; i++)
+        buf[i] = 0;
+
     for(i = 0; i < 18; i += 2) {
         akmos_blowfish_encrypt(ctx, buf, buf);
         ctx->p[i] = PACK32LE(buf);
@@ -73,8 +78,6 @@ void akmos_blowfish_setkey(akmos_blowfish_t *ctx, const uint8_t *in_key, size_t 
         ctx->s[i] = PACK32LE(buf);
         ctx->s[i+1] = PACK32LE(buf + 4);
     }
-
-    akmos_memzero(buf, sizeof(buf));
 }
 
 void akmos_blowfish_encrypt(akmos_blowfish_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)

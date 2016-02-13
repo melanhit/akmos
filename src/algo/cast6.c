@@ -77,8 +77,9 @@
 
 void akmos_cast6_setkey(akmos_cast6_t *ctx, const uint8_t *key, size_t len)
 {
-    uint32_t *l_key, i, j, t, cm, cr, lk[24], *tm, *tr;
+    uint32_t *l_key, i, j, t, cm, cr, *lk, *tm, *tr;
 
+    lk = ctx->lk;
     tm = lk + 8;
     tr = lk + 16;
 
@@ -112,8 +113,6 @@ void akmos_cast6_setkey(akmos_cast6_t *ctx, const uint8_t *key, size_t len)
         l_key[i + 4] = lk[7]; l_key[i + 5] = lk[5];
         l_key[i + 6] = lk[3]; l_key[i + 7] = lk[1];
     }
-
-    akmos_memzero(lk, sizeof(lk));
 }
 
 void akmos_cast6_encrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)

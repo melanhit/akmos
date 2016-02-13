@@ -109,9 +109,10 @@ static uint64_t flinv(uint64_t in, uint64_t k)
 static void camellia_setkey128(akmos_camellia_t *ctx, const uint8_t *key)
 {
     uint64_t d1, d2, t;
-    uint64_t ka[4], *k;
+    uint64_t *ka, *k;
 
-    k = ka + 2;
+    ka = ctx->ka;
+    k  = ka + 2;
 
     k[0] = PACK64LE(key); k[1] = PACK64LE(key + 8);
 
@@ -148,15 +149,14 @@ static void camellia_setkey128(akmos_camellia_t *ctx, const uint8_t *key)
     ctx->k[15] = Q2ROTL(ka[1], ka[0],  94);
     ctx->k[16] = Q2ROTL(k [0], k [1], 111);
     ctx->k[17] = Q2ROTL(k [1], k [0], 111);
-
-    akmos_memzero(ka, sizeof(ka));
 }
 
 static void camellia_setkey256(akmos_camellia_t *ctx, const uint8_t *key, size_t len)
 {
     uint64_t d1, d2, t;
-    uint64_t ka[8], *kb, *k;
+    uint64_t *ka, *kb, *k;
 
+    ka = ctx->ka;
     kb = ka + 2;
     k  = ka + 4;
 
@@ -214,8 +214,6 @@ static void camellia_setkey256(akmos_camellia_t *ctx, const uint8_t *key, size_t
     ctx->k[21] = Q2ROTL(ka[1], ka[0],  94);
     ctx->k[22] = Q2ROTL(k [0], k [1], 111);
     ctx->k[23] = Q2ROTL(k [1], k [0], 111);
-
-    akmos_memzero(ka, sizeof(ka));
 }
 
 void akmos_camellia_setkey(akmos_camellia_t *ctx, const uint8_t *key, size_t len)

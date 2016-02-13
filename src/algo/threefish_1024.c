@@ -35,7 +35,7 @@
 #include "threefish.h"
 #include "threefish_mix.h"
 
-#define WORDS_1024  16
+#define WORDS_1024  AKMOS_THREEFISH_WORDS_1024
 #define ROUNDS_1024 80
 #define SKEYS_1024  ((ROUNDS_1024 / 4) + 1)
 
@@ -47,8 +47,10 @@ void akmos_threefish_1024_setkey(akmos_threefish_1024_t *ctx,
                                  const uint8_t *key,
                                  size_t len)
 {
-    uint64_t k[WORDS_1024 + 1], *S;
+    uint64_t *k, *S;
     int i, y;
+
+    k = ctx->k;
 
     for(i = 0; i < WORDS_1024; i++)
         k[i] = PACK64BE(key + (i * SZ_U64));
@@ -65,8 +67,6 @@ void akmos_threefish_1024_setkey(akmos_threefish_1024_t *ctx,
 
         S[WORDS_1024-1] += i;
     }
-
-    akmos_memzero(k, sizeof(k));
 }
 
 void akmos_threefish_1024_encrypt(akmos_threefish_1024_t *ctx,

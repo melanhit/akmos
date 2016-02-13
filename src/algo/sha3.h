@@ -45,6 +45,7 @@
 
 typedef struct {
     uint64_t S[25];
+    uint64_t B[35];
     uint8_t  b[AKMOS_SHA3_224_BLKLEN * 2];
     size_t   r;
     size_t   blklen;

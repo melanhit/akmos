@@ -44,16 +44,23 @@
 #define AKMOS_THREEFISH_1024_KEYMAX     128
 #define AKMOS_THREEFISH_1024_KEYSTEP    128
 
+#define AKMOS_THREEFISH_WORDS_256       4
+#define AKMOS_THREEFISH_WORDS_512       8
+#define AKMOS_THREEFISH_WORDS_1024      16
+
 typedef struct {
     uint64_t S[4*19];
+    uint64_t k[AKMOS_THREEFISH_WORDS_256 + 1];
 } akmos_threefish_256_t;
 
 typedef struct {
     uint64_t S[8*19];
+    uint64_t k[AKMOS_THREEFISH_WORDS_512 + 1];
 } akmos_threefish_512_t;
 
 typedef struct {
     uint64_t S[16*21];
+    uint64_t k[AKMOS_THREEFISH_WORDS_1024 + 1];
 } akmos_threefish_1024_t;
 
 void akmos_threefish_256_setkey (akmos_threefish_256_t *, const uint8_t *, size_t);

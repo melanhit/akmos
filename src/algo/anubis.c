@@ -47,12 +47,14 @@ static const uint32_t rc[] = {
 void akmos_anubis_setkey(akmos_anubis_t *ctx, const uint8_t *key, size_t len)
 {
     int N, R, i, j, r;
-    uint32_t kappa[AKMOS_ANUBIS_MAX_N];
-    uint32_t inter[AKMOS_ANUBIS_MAX_N];
+    uint32_t *kappa, *inter;
     uint32_t v, K0, K1, K2, K3;
 
     N = (len * 8) >> 5;
-    ctx->R = R = 8 + N;
+    ctx->r = R = 8 + N;
+
+    kappa = ctx->kappa;
+    inter = ctx->inter;
 
     for(i = 0; i < N; i++, key += 4)
         kappa[i] = PACK32LE(key);
@@ -122,25 +124,25 @@ void akmos_anubis_setkey(akmos_anubis_t *ctx, const uint8_t *key, size_t len)
                 S3[S4[(v      ) & 0xff] & 0xff];
         }
     }
-
-    akmos_memzero(kappa, sizeof(kappa));
-    akmos_memzero(inter, sizeof(inter));
 }
 
-static void anubis_crypt(const uint32_t r_key[AKMOS_ANUBIS_MAX_R + 1][4],
-                         int R,
+static void anubis_crypt(akmos_anubis_t *ctx,
+                         const uint32_t r_key[AKMOS_ANUBIS_MAX_R + 1][4],
                          const uint8_t *in_blk,
                          uint8_t *out_blk)
 {
     int r;
-    uint32_t state[4], inter[4];
+    uint32_t *state, *inter;
+
+    state = ctx->state;
+    inter = ctx->inter;
 
     state[0] = PACK32LE(in_blk     ) ^ r_key[0][0];
     state[1] = PACK32LE(in_blk +  4) ^ r_key[0][1];
     state[2] = PACK32LE(in_blk +  8) ^ r_key[0][2];
     state[3] = PACK32LE(in_blk + 12) ^ r_key[0][3];
 
-    for (r = 1; r < R; r++) {
+    for (r = 1; r < ctx->r; r++) {
         inter[0] =
             S0[(state[0] >> 24)       ] ^
             S1[(state[1] >> 24)       ] ^
@@ -177,41 +179,38 @@ static void anubis_crypt(const uint32_t r_key[AKMOS_ANUBIS_MAX_R + 1][4],
         (S1[(state[1] >> 24)       ] & 0x00ff0000U) ^
         (S2[(state[2] >> 24)       ] & 0x0000ff00U) ^
         (S3[(state[3] >> 24)       ] & 0x000000ffU) ^
-        r_key[R][0];
+        r_key[ctx->r][0];
     inter[1] =
         (S0[(state[0] >> 16) & 0xff] & 0xff000000U) ^
         (S1[(state[1] >> 16) & 0xff] & 0x00ff0000U) ^
         (S2[(state[2] >> 16) & 0xff] & 0x0000ff00U) ^
         (S3[(state[3] >> 16) & 0xff] & 0x000000ffU) ^
-        r_key[R][1];
+        r_key[ctx->r][1];
     inter[2] =
         (S0[(state[0] >>  8) & 0xff] & 0xff000000U) ^
         (S1[(state[1] >>  8) & 0xff] & 0x00ff0000U) ^
         (S2[(state[2] >>  8) & 0xff] & 0x0000ff00U) ^
         (S3[(state[3] >>  8) & 0xff] & 0x000000ffU) ^
-        r_key[R][2];
+        r_key[ctx->r][2];
     inter[3] =
         (S0[(state[0]      ) & 0xff] & 0xff000000U) ^
         (S1[(state[1]      ) & 0xff] & 0x00ff0000U) ^
         (S2[(state[2]      ) & 0xff] & 0x0000ff00U) ^
         (S3[(state[3]      ) & 0xff] & 0x000000ffU) ^
-        r_key[R][3];
+        r_key[ctx->r][3];
 
     UNPACK32LE(out_blk     , inter[0]);
     UNPACK32LE(out_blk +  4, inter[1]);
     UNPACK32LE(out_blk +  8, inter[2]);
     UNPACK32LE(out_blk + 12, inter[3]);
-
-    akmos_memzero(state, sizeof(state));
-    akmos_memzero(inter, sizeof(inter));
 }
 
 void akmos_anubis_encrypt(akmos_anubis_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    anubis_crypt((const uint32_t (*)[4])ctx->e_key, ctx->R, in_blk, out_blk);
+    anubis_crypt(ctx, (const uint32_t (*)[4])ctx->e_key, in_blk, out_blk);
 }
 
 void akmos_anubis_decrypt(akmos_anubis_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    anubis_crypt((const uint32_t (*)[4])ctx->d_key, ctx->R, in_blk, out_blk);
+    anubis_crypt(ctx, (const uint32_t (*)[4])ctx->d_key, in_blk, out_blk);
 }

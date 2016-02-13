@@ -442,6 +442,28 @@ akmos_sha3_transform:
     jmp     .L4
 
 .L1:
+    /* clear stack */
+    pushq   $0
+    pushq   $0
+    pushq   $0
+    pushq   $0
+    pushq   $0
+    pushq   $0
+    pushq   $0
+    pushq   $0
+    pushq   $0
+    pushq   $0
+    popq    %rax
+    popq    %rax
+    popq    %rax
+    popq    %rax
+    popq    %rax
+    popq    %rax
+    popq    %rax
+    popq    %rax
+    popq    %rax
+    popq    %rax
+
     popq    %r12
     popq    %r13
     popq    %r14

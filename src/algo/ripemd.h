@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,7 @@
 
 typedef struct {
     uint32_t state[10];
+    uint32_t x[16];
     uint64_t count;
     uint8_t  buffer[64];
     int      diglen;

@@ -37,6 +37,7 @@
 typedef struct {
     uint32_t p[18];
     uint32_t s[4*256];
+    uint8_t  b[AKMOS_BLOWFISH_BLKLEN];
 } akmos_blowfish_t;
 
 void akmos_blowfish_setkey (akmos_blowfish_t *, const uint8_t *, size_t);
