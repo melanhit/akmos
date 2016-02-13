@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 #ifndef AKMOS_MODE_ECB_H
 #define AKMOS_MODE_ECB_H
 
-void akmos_ecb_encrypt(akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
-void akmos_ecb_decrypt(akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
+void akmos_ecb_encrypt(akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
+void akmos_ecb_decrypt(akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
 
 #endif  /* AKMOS_MODE_ECB_H */

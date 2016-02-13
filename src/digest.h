@@ -44,7 +44,7 @@ typedef union {
     akmos_sha3_t        sha3;
     akmos_tiger_t       tiger;
     akmos_whirlpool_t   whirlpool;
-} akmos_digest_algo_ctx;
+} akmos_digest_algo_t;
 
 typedef struct akmos_digest_xalgo_s {
     akmos_digest_xdesc_t desc;
@@ -55,7 +55,7 @@ typedef struct akmos_digest_xalgo_s {
 
 struct akmos_digest_s {
     const akmos_digest_xalgo_t  *xalgo;
-    akmos_digest_algo_ctx       actx;
+    akmos_digest_algo_t         actx;
 };
 
 const akmos_digest_xalgo_t *akmos_digest_xalgo(akmos_algo_id);

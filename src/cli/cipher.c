@@ -297,7 +297,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     return EXIT_SUCCESS;
 }
 
-static int lb_padbuf(akmos_cipher_ctx *ctx, uint8_t *buf, size_t *rlen, size_t blklen, const int enc)
+static int lb_padbuf(akmos_cipher_t *ctx, uint8_t *buf, size_t *rlen, size_t blklen, const int enc)
 {
     size_t len, tmplen;
 
@@ -325,7 +325,7 @@ static int lb_padbuf(akmos_cipher_ctx *ctx, uint8_t *buf, size_t *rlen, size_t b
 
 int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 {
-    akmos_cipher_ctx *ctx;
+    akmos_cipher_t *ctx;
     struct opt_cipher_s opt;
     akmos_cipher_header_t hd;
     struct stat sb;

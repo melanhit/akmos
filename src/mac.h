@@ -37,7 +37,7 @@ typedef union {
     akmos_hmac_t    hmac;
     akmos_cmac_t    cmac;
     akmos_cbcmac_t  cbcmac;
-} akmos_mac_mode_ctx;
+} akmos_mac_mode_t;
 
 typedef struct {
     akmos_mode_id   id;
@@ -51,7 +51,7 @@ typedef struct {
 
 struct akmos_mac_s {
     const akmos_mac_xmode_t *xmode;
-    akmos_mac_mode_ctx      mctx;
+    akmos_mac_mode_t        mctx;
 };
 
 extern const akmos_mac_xmode_t akmos_xmode_hmac;

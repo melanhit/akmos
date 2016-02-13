@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 #define AKMOS_MODE_CBCMAC_H
 
 typedef struct {
-    akmos_cipher_ctx *actx;
+    akmos_cipher_t *actx;
     uint8_t buf[AKMOS_BUFSZ];
     uint8_t *key;
     size_t klen;

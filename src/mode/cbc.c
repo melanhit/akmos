@@ -33,7 +33,7 @@
 #include "../akmos.h"
 #include "../cipher.h"
 
-void akmos_cbc_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
+void akmos_cbc_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
 {
     akmos_cbc_t *ptr = &ctx->mctx.cbc;
 
@@ -43,7 +43,7 @@ void akmos_cbc_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
         memcpy(ptr->iv, iv, ctx->xalgo->desc.blklen);
 }
 
-void akmos_cbc_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+void akmos_cbc_encrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     akmos_cbc_t *ptr;
     size_t i, nb, blklen;
@@ -62,7 +62,7 @@ void akmos_cbc_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
     }
 }
 
-void akmos_cbc_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+void akmos_cbc_decrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     akmos_cbc_t *ptr;
     size_t i, nb, blklen;

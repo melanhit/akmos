@@ -33,7 +33,7 @@ typedef struct {
     uint8_t iv[AKMOS_CIPHER_MAX_BLKLEN];
 } akmos_ofb_t;
 
-void akmos_ofb_setiv  (akmos_cipher_ctx *, const uint8_t *);
-void akmos_ofb_encrypt(akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
+void akmos_ofb_setiv  (akmos_cipher_t *, const uint8_t *);
+void akmos_ofb_encrypt(akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
 
 #endif  /* AKMOS_MODE_OFB_H */

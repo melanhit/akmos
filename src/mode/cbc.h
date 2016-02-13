@@ -34,8 +34,8 @@ typedef struct {
     uint8_t buf[AKMOS_CIPHER_MAX_BLKLEN];
 } akmos_cbc_t;
 
-void akmos_cbc_setiv  (akmos_cipher_ctx *, const uint8_t *);
-void akmos_cbc_encrypt(akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
-void akmos_cbc_decrypt(akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
+void akmos_cbc_setiv  (akmos_cipher_t *, const uint8_t *);
+void akmos_cbc_encrypt(akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
+void akmos_cbc_decrypt(akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
 
 #endif  /* AKMOS_MODE_CBC_H */

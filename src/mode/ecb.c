@@ -32,7 +32,7 @@
 #include "../akmos.h"
 #include "../cipher.h"
 
-void akmos_ecb_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+void akmos_ecb_encrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     size_t i, nb, blklen;
 
@@ -43,7 +43,7 @@ void akmos_ecb_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_l
         ctx->encrypt(ctx, in_blk, out_blk);
 }
 
-void akmos_ecb_decrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+void akmos_ecb_decrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     size_t i, nb, blklen;
 

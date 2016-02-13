@@ -61,14 +61,14 @@ typedef union {
     akmos_threefish_512_t   tf_512;
     akmos_threefish_1024_t  tf_1024;
     akmos_twofish_t         twofish;
-} akmos_cipher_algo_ctx;
+} akmos_cipher_algo_t;
 
 typedef union {
     akmos_cbc_t cbc;
     akmos_cfb_t cfb;
     akmos_ctr_t ctr;
     akmos_ofb_t ofb;
-} akmos_cipher_mode_ctx;
+} akmos_cipher_mode_t;
 
 typedef struct akmos_cipher_xalgo_s {
     akmos_cipher_xdesc_t desc;
@@ -80,23 +80,23 @@ typedef struct akmos_cipher_xalgo_s {
 typedef struct {
     akmos_mode_id   id;
     char            *name;
-    void (*setiv)   (akmos_cipher_ctx *, const uint8_t *);
-    void (*encrypt) (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
-    void (*decrypt) (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
+    void (*setiv)   (akmos_cipher_t *, const uint8_t *);
+    void (*encrypt) (akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
+    void (*decrypt) (akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
 } akmos_cipher_xmode_t;
 
 struct akmos_cipher_s {
     /* algo */
     const akmos_cipher_xalgo_t  *xalgo;
-    akmos_cipher_algo_ctx       actx[3];
+    akmos_cipher_algo_t         actx[3];
 
     /* mode */
     const akmos_cipher_xmode_t  *xmode;
-    akmos_cipher_mode_ctx       mctx;
-    void (*setkey)              (akmos_cipher_ctx *, const uint8_t *, size_t);
-    void (*encrypt)             (akmos_cipher_ctx *, const uint8_t *, uint8_t *);
-    void (*decrypt)             (akmos_cipher_ctx *, const uint8_t *, uint8_t *);
-    void (*crypt)               (akmos_cipher_ctx *, const uint8_t *, size_t, uint8_t *);
+    akmos_cipher_mode_t         mctx;
+    void (*setkey)              (akmos_cipher_t *, const uint8_t *, size_t);
+    void (*encrypt)             (akmos_cipher_t *, const uint8_t *, uint8_t *);
+    void (*decrypt)             (akmos_cipher_t *, const uint8_t *, uint8_t *);
+    void (*crypt)               (akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
     void (*pxor)                (const uint8_t *, const uint8_t *, uint8_t *);
 };
 

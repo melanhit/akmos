@@ -33,18 +33,18 @@
 #include "akmos.h"
 #include "mac.h"
 
-int akmos_mac_init(akmos_mac_ctx **ctx, akmos_algo_id algo, akmos_mode_id mode)
+int akmos_mac_init(akmos_mac_t **ctx, akmos_algo_id algo, akmos_mode_id mode)
 {
-    akmos_mac_ctx *ptr;
+    akmos_mac_t *ptr;
     int err;
 
     err = AKMOS_ERR_SUCCESS;
 
-    ptr = *ctx = malloc(sizeof(akmos_mac_ctx));
+    ptr = *ctx = malloc(sizeof(akmos_mac_t));
     if(!ptr)
         return AKMOS_ERR_ENOMEM;
 
-    memset(ptr, 0, sizeof(akmos_mac_ctx));
+    memset(ptr, 0, sizeof(akmos_mac_t));
 
     switch(mode) {
         case AKMOS_MODE_HMAC:
@@ -77,17 +77,17 @@ out:
     return err;
 }
 
-int akmos_mac_setkey(akmos_mac_ctx *ctx, const uint8_t *key, size_t len)
+int akmos_mac_setkey(akmos_mac_t *ctx, const uint8_t *key, size_t len)
 {
     return ctx->xmode->setkey(&ctx->mctx, key, len);
 }
 
-void akmos_mac_update(akmos_mac_ctx *ctx, const uint8_t *blk, size_t len)
+void akmos_mac_update(akmos_mac_t *ctx, const uint8_t *blk, size_t len)
 {
     ctx->xmode->update(&ctx->mctx, blk, len);
 }
 
-int akmos_mac_done(akmos_mac_ctx *ctx, uint8_t *mac)
+int akmos_mac_done(akmos_mac_t *ctx, uint8_t *mac)
 {
     int err;
 
@@ -95,7 +95,7 @@ int akmos_mac_done(akmos_mac_ctx *ctx, uint8_t *mac)
     if(err)
         return err;
 
-    akmos_memzero(ctx, sizeof(akmos_mac_ctx));
+    akmos_memzero(ctx, sizeof(akmos_mac_t));
     free(ctx);
 
     return AKMOS_ERR_SUCCESS;
@@ -106,7 +106,7 @@ int akmos_mac_ex(akmos_algo_id algo, akmos_mode_id mode,
                  const uint8_t *blk, size_t blklen,
                  uint8_t *out)
 {
-    akmos_mac_ctx *ctx;
+    akmos_mac_t *ctx;
     int err;
 
     if(!(key || blk || out))

@@ -34,7 +34,7 @@
 #include "../bits.h"
 #include "../cipher.h"
 
-void akmos_ctr_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
+void akmos_ctr_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
 {
     akmos_ctr_t *ptr;
     size_t len;
@@ -54,7 +54,7 @@ void akmos_ctr_setiv(akmos_cipher_ctx *ctx, const uint8_t *iv)
     memset(ptr->ctr, 0, sizeof(uint64_t));
 }
 
-void akmos_ctr_encrypt(akmos_cipher_ctx *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+void akmos_ctr_encrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     akmos_ctr_t *ptr;
     size_t i, n, blklen;

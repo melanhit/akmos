@@ -299,7 +299,7 @@ static void mac_print_raw(uint8_t *md, size_t len)
 
 static int mac_proc(struct opt_mac_s *opt, char *path, uint8_t *buf, uint8_t *keybuf, uint8_t *macbuf)
 {
-    akmos_mac_ctx *ctx;
+    akmos_mac_t *ctx;
     size_t len;
     int fd_in, err;
 
