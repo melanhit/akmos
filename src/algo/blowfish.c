@@ -73,6 +73,8 @@ void akmos_blowfish_setkey(akmos_blowfish_t *ctx, const uint8_t *in_key, size_t 
         ctx->s[i] = PACK32LE(buf);
         ctx->s[i+1] = PACK32LE(buf + 4);
     }
+
+    akmos_memzero(buf, sizeof(buf));
 }
 
 void akmos_blowfish_encrypt(akmos_blowfish_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)

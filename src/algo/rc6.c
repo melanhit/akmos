@@ -76,6 +76,9 @@ void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *key, size_t len)
         i = (i == 43 ? 0 : i + 1);
         j = (j == t ? 0 : j + 1);
     }
+
+    akmos_memzero(in_key, sizeof(in_key));
+    akmos_memzero(l, sizeof(l));
 }
 
 void akmos_rc6_encrypt(akmos_rc6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)

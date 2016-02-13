@@ -174,6 +174,8 @@ static void sha1_transform(akmos_sha1_t *ctx, const uint8_t *block, uint32_t nb)
         ctx->h[3] += D;
         ctx->h[4] += E;
     }
+
+    akmos_memzero(w, sizeof(w));
 }
 
 void akmos_sha1_init(akmos_sha1_t *ctx)

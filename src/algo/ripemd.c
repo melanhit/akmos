@@ -281,6 +281,8 @@ static void ripemd_160_transform(uint32_t *state, const uint8_t *block)
     state[3] = state[4] + aa + b;
     state[4] = state[0] + bb + c;
     state[0] = t;
+
+    akmos_memzero(x, sizeof(x));
 }
 
 static void ripemd_256_transform(uint32_t *state, const uint8_t *block)
@@ -454,6 +456,8 @@ static void ripemd_256_transform(uint32_t *state, const uint8_t *block)
     state[5] += bb;
     state[6] += cc;
     state[7] += dd;
+
+    akmos_memzero(x, sizeof(x));
 }
 
 static void ripemd_320_transform(uint32_t *state, const uint8_t *block)
@@ -668,6 +672,8 @@ static void ripemd_320_transform(uint32_t *state, const uint8_t *block)
     state[7] += cc;
     state[8] += dd;
     state[9] += ee;
+
+    akmos_memzero(x, sizeof(x));
 }
 
 void akmos_ripemd_160_init(akmos_ripemd_t *ctx)

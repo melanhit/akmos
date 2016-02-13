@@ -109,7 +109,9 @@ static uint64_t flinv(uint64_t in, uint64_t k)
 static void camellia_setkey128(akmos_camellia_t *ctx, const uint8_t *key)
 {
     uint64_t d1, d2, t;
-    uint64_t ka[2], k[2];
+    uint64_t ka[4], *k;
+
+    k = ka + 2;
 
     k[0] = PACK64LE(key); k[1] = PACK64LE(key + 8);
 
@@ -146,12 +148,17 @@ static void camellia_setkey128(akmos_camellia_t *ctx, const uint8_t *key)
     ctx->k[15] = Q2ROTL(ka[1], ka[0],  94);
     ctx->k[16] = Q2ROTL(k [0], k [1], 111);
     ctx->k[17] = Q2ROTL(k [1], k [0], 111);
+
+    akmos_memzero(ka, sizeof(ka));
 }
 
 static void camellia_setkey256(akmos_camellia_t *ctx, const uint8_t *key, size_t len)
 {
     uint64_t d1, d2, t;
-    uint64_t ka[2], kb[2], k[4];
+    uint64_t ka[8], *kb, *k;
+
+    kb = ka + 2;
+    k  = ka + 4;
 
     k[0] = PACK64LE(key     );
     k[1] = PACK64LE(key +  8);
@@ -207,6 +214,8 @@ static void camellia_setkey256(akmos_camellia_t *ctx, const uint8_t *key, size_t
     ctx->k[21] = Q2ROTL(ka[1], ka[0],  94);
     ctx->k[22] = Q2ROTL(k [0], k [1], 111);
     ctx->k[23] = Q2ROTL(k [1], k [0], 111);
+
+    akmos_memzero(ka, sizeof(ka));
 }
 
 void akmos_camellia_setkey(akmos_camellia_t *ctx, const uint8_t *key, size_t len)
@@ -245,7 +254,7 @@ void akmos_camellia_encrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_
 
     ct[0] = fl(ct[0], ctx->ke[0]);
     ct[1] = flinv(ct[1], ctx->ke[1]);
-    
+
     t = ct[0] ^ ctx->k[ 6]; ct[1] ^= F(t);
     t = ct[1] ^ ctx->k[ 7]; ct[0] ^= F(t);
     t = ct[0] ^ ctx->k[ 8]; ct[1] ^= F(t);
@@ -255,7 +264,7 @@ void akmos_camellia_encrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_
 
     ct[0] = fl(ct[0], ctx->ke[2]);
     ct[1] = flinv(ct[1], ctx->ke[3]);
-    
+
     t = ct[0] ^ ctx->k[12]; ct[1] ^= F(t);
     t = ct[1] ^ ctx->k[13]; ct[0] ^= F(t);
     t = ct[0] ^ ctx->k[14]; ct[1] ^= F(t);
@@ -268,7 +277,7 @@ void akmos_camellia_encrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_
 
     ct[0] = fl(ct[0], ctx->ke[4]);
     ct[1] = flinv(ct[1], ctx->ke[5]);
-    
+
     t = ct[0] ^ ctx->k[18]; ct[1] ^= F(t);
     t = ct[1] ^ ctx->k[19]; ct[0] ^= F(t);
     t = ct[0] ^ ctx->k[20]; ct[1] ^= F(t);
@@ -303,7 +312,7 @@ void akmos_camellia_decrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_
         pt[0] = fl(pt[0], ctx->ke[5]);
         pt[1] = flinv(pt[1], ctx->ke[4]);
     }
-        
+
     t = pt[0] ^ ctx->k[17]; pt[1] ^= F(t);
     t = pt[1] ^ ctx->k[16]; pt[0] ^= F(t);
     t = pt[0] ^ ctx->k[15]; pt[1] ^= F(t);
@@ -313,7 +322,7 @@ void akmos_camellia_decrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_
 
     pt[0] = fl(pt[0], ctx->ke[3]);
     pt[1] = flinv(pt[1], ctx->ke[2]);
-    
+
     t = pt[0] ^ ctx->k[11]; pt[1] ^= F(t);
     t = pt[1] ^ ctx->k[10]; pt[0] ^= F(t);
     t = pt[0] ^ ctx->k[ 9]; pt[1] ^= F(t);
@@ -323,7 +332,7 @@ void akmos_camellia_decrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_
 
     pt[0] = fl(pt[0], ctx->ke[1]);
     pt[1] = flinv(pt[1], ctx->ke[0]);
-    
+
     t = pt[0] ^ ctx->k[ 5]; pt[1] ^= F(t);
     t = pt[1] ^ ctx->k[ 4]; pt[0] ^= F(t);
     t = pt[0] ^ ctx->k[ 3]; pt[1] ^= F(t);

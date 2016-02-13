@@ -122,6 +122,9 @@ void akmos_anubis_setkey(akmos_anubis_t *ctx, const uint8_t *key, size_t len)
                 S3[S4[(v      ) & 0xff] & 0xff];
         }
     }
+
+    akmos_memzero(kappa, sizeof(kappa));
+    akmos_memzero(inter, sizeof(inter));
 }
 
 static void anubis_crypt(const uint32_t r_key[AKMOS_ANUBIS_MAX_R + 1][4],
@@ -198,6 +201,9 @@ static void anubis_crypt(const uint32_t r_key[AKMOS_ANUBIS_MAX_R + 1][4],
     UNPACK32LE(out_blk +  4, inter[1]);
     UNPACK32LE(out_blk +  8, inter[2]);
     UNPACK32LE(out_blk + 12, inter[3]);
+
+    akmos_memzero(state, sizeof(state));
+    akmos_memzero(inter, sizeof(inter));
 }
 
 void akmos_anubis_encrypt(akmos_anubis_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)

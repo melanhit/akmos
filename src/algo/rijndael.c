@@ -200,6 +200,8 @@ void akmos_rijndael_encrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_
 
     UNPACK32LE(out_blk    , s[0]); UNPACK32LE(out_blk +  4, s[1]);
     UNPACK32LE(out_blk + 8, s[2]); UNPACK32LE(out_blk + 12, s[3]);
+
+    akmos_memzero(w, sizeof(w));
 }
 
 void akmos_rijndael_decrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -244,4 +246,6 @@ void akmos_rijndael_decrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_
 
     UNPACK32LE(out_blk    , s[0]); UNPACK32LE(out_blk +  4, s[1]);
     UNPACK32LE(out_blk + 8, s[2]); UNPACK32LE(out_blk + 12, s[3]);
+
+    akmos_memzero(w, sizeof(w));
 }

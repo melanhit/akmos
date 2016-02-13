@@ -160,8 +160,10 @@ static uint32_t mds_rem(uint32_t p0, uint32_t p1)
 
 void akmos_twofish_setkey(akmos_twofish_t *ctx, const uint8_t *in_key, size_t len)
 {
-    uint32_t  i, a, b, me_key[4], mo_key[4];
+    uint32_t  i, a, b, me_key[8], *mo_key;
     uint32_t *l_key, *s_key;
+
+    mo_key = me_key + 4;
 
     l_key = ctx->l_key;
     s_key = ctx->s_key;
@@ -189,6 +191,8 @@ void akmos_twofish_setkey(akmos_twofish_t *ctx, const uint8_t *in_key, size_t le
     }
 
     gen_mk_tab(ctx, s_key);
+
+    akmos_memzero(me_key, sizeof(me_key));
 }
 
 /* encrypt a block of text  */

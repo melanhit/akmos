@@ -66,6 +66,8 @@ void akmos_threefish_256_setkey(akmos_threefish_256_t *ctx,
 
         S[WORDS_256-1] += i;
     }
+
+    akmos_memzero(k, sizeof(k));
 }
 
 void akmos_threefish_256_encrypt(akmos_threefish_256_t *ctx,

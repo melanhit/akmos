@@ -161,8 +161,11 @@ static const uint32_t RO[25] = {
 
 void akmos_sha3_transform(akmos_sha3_t *ctx, const uint8_t *blk, size_t nb)
 {
-    uint64_t B[25], C[5], D[5];
+    uint64_t B[35], *C, *D;
     size_t i, y;
+
+    C = B + 25;
+    D = B + 30;
 
     for(i = 0; i < nb; i++) {
         for(y = 0; y < ctx->r; y++) {
@@ -177,4 +180,6 @@ void akmos_sha3_transform(akmos_sha3_t *ctx, const uint8_t *blk, size_t nb)
             f_iota(ctx->S, y);
         }
     }
+
+    akmos_memzero(B, sizeof(B));
 }

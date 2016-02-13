@@ -65,6 +65,8 @@ void akmos_threefish_1024_setkey(akmos_threefish_1024_t *ctx,
 
         S[WORDS_1024-1] += i;
     }
+
+    akmos_memzero(k, sizeof(k));
 }
 
 void akmos_threefish_1024_encrypt(akmos_threefish_1024_t *ctx,

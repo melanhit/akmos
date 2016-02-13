@@ -129,6 +129,9 @@ static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, uint32_t n
     ctx->h[0] = a;
     ctx->h[1] = b;
     ctx->h[2] = c;
+
+    akmos_memzero(w, sizeof(w));
+    akmos_memzero(t, sizeof(t));
 }
 
 void akmos_tiger_init(akmos_tiger_t *ctx)

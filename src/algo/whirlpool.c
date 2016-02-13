@@ -46,9 +46,12 @@ static const uint64_t RC[10] = {
 
 static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, uint32_t nb)
 {
-    uint64_t w[8], s[8], k[8], *h;
+    uint64_t w[24], *s, *k, *h;
     const uint8_t *sub;
     size_t i, y;
+
+    s = w + 8;
+    k = w + 16;
 
     h = ctx->h;
 
@@ -168,6 +171,8 @@ static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, ui
         h[0] ^= w[0]; h[1] ^= w[1]; h[2] ^= w[2]; h[3] ^= w[3];
         h[4] ^= w[4]; h[5] ^= w[5]; h[6] ^= w[6]; h[7] ^= w[7];
     }
+
+    akmos_memzero(w, sizeof(w));
 }
 
 void akmos_whirlpool_init(akmos_whirlpool_t *ctx)
