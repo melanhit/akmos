@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -45,8 +45,8 @@ typedef struct {
     uint64_t total;
     uint32_t len;
     uint8_t  block[2 * AKMOS_SHA2_256_BLKLEN];
-    uint32_t h[8];
-    uint32_t w[128];
+    uint32_t h[136];
+    uint32_t *w;
     size_t   diglen;
 } akmos_sha2_256_t;
 
@@ -54,8 +54,8 @@ typedef struct {
     uint64_t total;
     uint32_t len;
     uint8_t  block[2 * AKMOS_SHA2_512_BLKLEN];
-    uint64_t h[8];
-    uint64_t w[88];
+    uint64_t h[96];
+    uint64_t *w;
     size_t   diglen;
 } akmos_sha2_512_t;
 

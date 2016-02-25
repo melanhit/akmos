@@ -65,7 +65,7 @@
 #define SHA256_EXP(a, b, c, d, e, f, g, h, j)               \
 {                                                           \
     t1 = wv[h] + SHA256_F2(wv[e]) + CH(wv[e], wv[f], wv[g]) \
-    + sha256_k[j] + w[j];                                   \
+    + tw[j];                                                \
                                                             \
     t2 = SHA256_F1(wv[a]) + MAJ(wv[a], wv[b], wv[c]);       \
     wv[d] += t1;                                            \
@@ -75,7 +75,7 @@
 #define SHA512_EXP(a, b, c, d, e, f, g ,h, j)               \
 {                                                           \
     t1 = wv[h] + SHA512_F2(wv[e]) + CH(wv[e], wv[f], wv[g]) \
-    + sha512_k[j] + w[j];                                   \
+    + tw[j];                                                \
                                                             \
     t2 = SHA512_F1(wv[a]) + MAJ(wv[a], wv[b], wv[c]);       \
     wv[d] += t1;                                            \
@@ -172,13 +172,12 @@ static const uint64_t sha512_k[80] = {
     0x5fcb6fab3ad6faec, 0x6c44198c4a475817
 };
 
-static void sha256_transform(akmos_sha2_256_t *ctx, const uint8_t *m, size_t nb)
+static void sha256_transform(uint32_t *h, uint32_t *w, const uint8_t *m, size_t nb)
 {
-    uint32_t *w, *wv, t1, t2;
+    uint32_t *wv, *tw, t1, t2;
     const uint8_t *sub;
-    size_t i;
+    size_t i, j;
 
-    w  = ctx->w;
     wv = w + 64;
 
     for(i = 0; i < nb; i++) {
@@ -193,71 +192,42 @@ static void sha256_transform(akmos_sha2_256_t *ctx, const uint8_t *m, size_t nb)
         w[12] = PACK32LE(sub + 48); w[13] = PACK32LE(sub + 52);
         w[14] = PACK32LE(sub + 56); w[15] = PACK32LE(sub + 60);
 
-        SHA256_SCR(16); SHA256_SCR(17); SHA256_SCR(18); SHA256_SCR(19);
-        SHA256_SCR(20); SHA256_SCR(21); SHA256_SCR(22); SHA256_SCR(23);
-        SHA256_SCR(24); SHA256_SCR(25); SHA256_SCR(26); SHA256_SCR(27);
-        SHA256_SCR(28); SHA256_SCR(29); SHA256_SCR(30); SHA256_SCR(31);
-        SHA256_SCR(32); SHA256_SCR(33); SHA256_SCR(34); SHA256_SCR(35);
-        SHA256_SCR(36); SHA256_SCR(37); SHA256_SCR(38); SHA256_SCR(39);
-        SHA256_SCR(40); SHA256_SCR(41); SHA256_SCR(42); SHA256_SCR(43);
-        SHA256_SCR(44); SHA256_SCR(45); SHA256_SCR(46); SHA256_SCR(47);
-        SHA256_SCR(48); SHA256_SCR(49); SHA256_SCR(50); SHA256_SCR(51);
-        SHA256_SCR(52); SHA256_SCR(53); SHA256_SCR(54); SHA256_SCR(55);
-        SHA256_SCR(56); SHA256_SCR(57); SHA256_SCR(58); SHA256_SCR(59);
-        SHA256_SCR(60); SHA256_SCR(61); SHA256_SCR(62); SHA256_SCR(63);
+        for(j = 16; j < 64; j++)
+            SHA256_SCR(j);
 
-        wv[0] = ctx->h[0]; wv[1] = ctx->h[1];
-        wv[2] = ctx->h[2]; wv[3] = ctx->h[3];
-        wv[4] = ctx->h[4]; wv[5] = ctx->h[5];
-        wv[6] = ctx->h[6]; wv[7] = ctx->h[7];
+        for(j = 0; j < 64; j++)
+            w[j] += sha256_k[j];
 
-        SHA256_EXP(0,1,2,3,4,5,6,7, 0); SHA256_EXP(7,0,1,2,3,4,5,6, 1);
-        SHA256_EXP(6,7,0,1,2,3,4,5, 2); SHA256_EXP(5,6,7,0,1,2,3,4, 3);
-        SHA256_EXP(4,5,6,7,0,1,2,3, 4); SHA256_EXP(3,4,5,6,7,0,1,2, 5);
-        SHA256_EXP(2,3,4,5,6,7,0,1, 6); SHA256_EXP(1,2,3,4,5,6,7,0, 7);
-        SHA256_EXP(0,1,2,3,4,5,6,7, 8); SHA256_EXP(7,0,1,2,3,4,5,6, 9);
-        SHA256_EXP(6,7,0,1,2,3,4,5,10); SHA256_EXP(5,6,7,0,1,2,3,4,11);
-        SHA256_EXP(4,5,6,7,0,1,2,3,12); SHA256_EXP(3,4,5,6,7,0,1,2,13);
-        SHA256_EXP(2,3,4,5,6,7,0,1,14); SHA256_EXP(1,2,3,4,5,6,7,0,15);
-        SHA256_EXP(0,1,2,3,4,5,6,7,16); SHA256_EXP(7,0,1,2,3,4,5,6,17);
-        SHA256_EXP(6,7,0,1,2,3,4,5,18); SHA256_EXP(5,6,7,0,1,2,3,4,19);
-        SHA256_EXP(4,5,6,7,0,1,2,3,20); SHA256_EXP(3,4,5,6,7,0,1,2,21);
-        SHA256_EXP(2,3,4,5,6,7,0,1,22); SHA256_EXP(1,2,3,4,5,6,7,0,23);
-        SHA256_EXP(0,1,2,3,4,5,6,7,24); SHA256_EXP(7,0,1,2,3,4,5,6,25);
-        SHA256_EXP(6,7,0,1,2,3,4,5,26); SHA256_EXP(5,6,7,0,1,2,3,4,27);
-        SHA256_EXP(4,5,6,7,0,1,2,3,28); SHA256_EXP(3,4,5,6,7,0,1,2,29);
-        SHA256_EXP(2,3,4,5,6,7,0,1,30); SHA256_EXP(1,2,3,4,5,6,7,0,31);
-        SHA256_EXP(0,1,2,3,4,5,6,7,32); SHA256_EXP(7,0,1,2,3,4,5,6,33);
-        SHA256_EXP(6,7,0,1,2,3,4,5,34); SHA256_EXP(5,6,7,0,1,2,3,4,35);
-        SHA256_EXP(4,5,6,7,0,1,2,3,36); SHA256_EXP(3,4,5,6,7,0,1,2,37);
-        SHA256_EXP(2,3,4,5,6,7,0,1,38); SHA256_EXP(1,2,3,4,5,6,7,0,39);
-        SHA256_EXP(0,1,2,3,4,5,6,7,40); SHA256_EXP(7,0,1,2,3,4,5,6,41);
-        SHA256_EXP(6,7,0,1,2,3,4,5,42); SHA256_EXP(5,6,7,0,1,2,3,4,43);
-        SHA256_EXP(4,5,6,7,0,1,2,3,44); SHA256_EXP(3,4,5,6,7,0,1,2,45);
-        SHA256_EXP(2,3,4,5,6,7,0,1,46); SHA256_EXP(1,2,3,4,5,6,7,0,47);
-        SHA256_EXP(0,1,2,3,4,5,6,7,48); SHA256_EXP(7,0,1,2,3,4,5,6,49);
-        SHA256_EXP(6,7,0,1,2,3,4,5,50); SHA256_EXP(5,6,7,0,1,2,3,4,51);
-        SHA256_EXP(4,5,6,7,0,1,2,3,52); SHA256_EXP(3,4,5,6,7,0,1,2,53);
-        SHA256_EXP(2,3,4,5,6,7,0,1,54); SHA256_EXP(1,2,3,4,5,6,7,0,55);
-        SHA256_EXP(0,1,2,3,4,5,6,7,56); SHA256_EXP(7,0,1,2,3,4,5,6,57);
-        SHA256_EXP(6,7,0,1,2,3,4,5,58); SHA256_EXP(5,6,7,0,1,2,3,4,59);
-        SHA256_EXP(4,5,6,7,0,1,2,3,60); SHA256_EXP(3,4,5,6,7,0,1,2,61);
-        SHA256_EXP(2,3,4,5,6,7,0,1,62); SHA256_EXP(1,2,3,4,5,6,7,0,63);
+        wv[0] = h[0]; wv[1] = h[1];
+        wv[2] = h[2]; wv[3] = h[3];
+        wv[4] = h[4]; wv[5] = h[5];
+        wv[6] = h[6]; wv[7] = h[7];
 
-        ctx->h[0] += wv[0]; ctx->h[1] += wv[1];
-        ctx->h[2] += wv[2]; ctx->h[3] += wv[3];
-        ctx->h[4] += wv[4]; ctx->h[5] += wv[5];
-        ctx->h[6] += wv[6]; ctx->h[7] += wv[7];
+        tw = w;
+        for(j = 0; j < 64; j += 8, tw += 8) {
+            SHA256_EXP(0,1,2,3,4,5,6,7, 0);
+            SHA256_EXP(7,0,1,2,3,4,5,6, 1);
+            SHA256_EXP(6,7,0,1,2,3,4,5, 2);
+            SHA256_EXP(5,6,7,0,1,2,3,4, 3);
+            SHA256_EXP(4,5,6,7,0,1,2,3, 4);
+            SHA256_EXP(3,4,5,6,7,0,1,2, 5);
+            SHA256_EXP(2,3,4,5,6,7,0,1, 6);
+            SHA256_EXP(1,2,3,4,5,6,7,0, 7);
+        }
+
+        h[0] += wv[0]; h[1] += wv[1];
+        h[2] += wv[2]; h[3] += wv[3];
+        h[4] += wv[4]; h[5] += wv[5];
+        h[6] += wv[6]; h[7] += wv[7];
     }
 }
 
-static void sha512_transform(akmos_sha2_512_t *ctx, const uint8_t *m, size_t nb)
+static void sha512_transform(uint64_t *h, uint64_t *w, const uint8_t *m, size_t nb)
 {
-    uint64_t *w, *wv, t1, t2;
+    uint64_t *wv, *tw, t1, t2;
     const uint8_t *sub;
     size_t i, j;
 
-    w  = ctx->w;
     wv = w + 80;
 
     for(i = 0; i <  nb; i++) {
@@ -272,51 +242,41 @@ static void sha512_transform(akmos_sha2_512_t *ctx, const uint8_t *m, size_t nb)
         w[12] = PACK64LE(sub +  96); w[13] = PACK64LE(sub + 104);
         w[14] = PACK64LE(sub + 112); w[15] = PACK64LE(sub + 120);
 
-        SHA512_SCR(16); SHA512_SCR(17); SHA512_SCR(18); SHA512_SCR(19);
-        SHA512_SCR(20); SHA512_SCR(21); SHA512_SCR(22); SHA512_SCR(23);
-        SHA512_SCR(24); SHA512_SCR(25); SHA512_SCR(26); SHA512_SCR(27);
-        SHA512_SCR(28); SHA512_SCR(29); SHA512_SCR(30); SHA512_SCR(31);
-        SHA512_SCR(32); SHA512_SCR(33); SHA512_SCR(34); SHA512_SCR(35);
-        SHA512_SCR(36); SHA512_SCR(37); SHA512_SCR(38); SHA512_SCR(39);
-        SHA512_SCR(40); SHA512_SCR(41); SHA512_SCR(42); SHA512_SCR(43);
-        SHA512_SCR(44); SHA512_SCR(45); SHA512_SCR(46); SHA512_SCR(47);
-        SHA512_SCR(48); SHA512_SCR(49); SHA512_SCR(50); SHA512_SCR(51);
-        SHA512_SCR(52); SHA512_SCR(53); SHA512_SCR(54); SHA512_SCR(55);
-        SHA512_SCR(56); SHA512_SCR(57); SHA512_SCR(58); SHA512_SCR(59);
-        SHA512_SCR(60); SHA512_SCR(61); SHA512_SCR(62); SHA512_SCR(63);
-        SHA512_SCR(64); SHA512_SCR(65); SHA512_SCR(66); SHA512_SCR(67);
-        SHA512_SCR(68); SHA512_SCR(69); SHA512_SCR(70); SHA512_SCR(71);
-        SHA512_SCR(72); SHA512_SCR(73); SHA512_SCR(74); SHA512_SCR(75);
-        SHA512_SCR(76); SHA512_SCR(77); SHA512_SCR(78); SHA512_SCR(79);
+        for(j = 16; j < 80; j++)
+            SHA512_SCR(j);
 
-        wv[0] = ctx->h[0]; wv[1] = ctx->h[1];
-        wv[2] = ctx->h[2]; wv[3] = ctx->h[3];
-        wv[4] = ctx->h[4]; wv[5] = ctx->h[5];
-        wv[6] = ctx->h[6]; wv[7] = ctx->h[7];
+        wv[0] = h[0]; wv[1] = h[1];
+        wv[2] = h[2]; wv[3] = h[3];
+        wv[4] = h[4]; wv[5] = h[5];
+        wv[6] = h[6]; wv[7] = h[7];
 
-        j = 0;
+        for(j = 0; j < 80; j++)
+            w[j] += sha512_k[j];
 
-        do {
-            SHA512_EXP(0,1,2,3,4,5,6,7,j); j++;
-            SHA512_EXP(7,0,1,2,3,4,5,6,j); j++;
-            SHA512_EXP(6,7,0,1,2,3,4,5,j); j++;
-            SHA512_EXP(5,6,7,0,1,2,3,4,j); j++;
-            SHA512_EXP(4,5,6,7,0,1,2,3,j); j++;
-            SHA512_EXP(3,4,5,6,7,0,1,2,j); j++;
-            SHA512_EXP(2,3,4,5,6,7,0,1,j); j++;
-            SHA512_EXP(1,2,3,4,5,6,7,0,j); j++;
-        } while (j < 80);
+        tw = w;
+        for(j = 0; j < 80; j += 8, tw += 8) {
+            SHA512_EXP(0,1,2,3,4,5,6,7,0);
+            SHA512_EXP(7,0,1,2,3,4,5,6,1);
+            SHA512_EXP(6,7,0,1,2,3,4,5,2);
+            SHA512_EXP(5,6,7,0,1,2,3,4,3);
+            SHA512_EXP(4,5,6,7,0,1,2,3,4);
+            SHA512_EXP(3,4,5,6,7,0,1,2,5);
+            SHA512_EXP(2,3,4,5,6,7,0,1,6);
+            SHA512_EXP(1,2,3,4,5,6,7,0,7);
+        }
 
-        ctx->h[0] += wv[0]; ctx->h[1] += wv[1];
-        ctx->h[2] += wv[2]; ctx->h[3] += wv[3];
-        ctx->h[4] += wv[4]; ctx->h[5] += wv[5];
-        ctx->h[6] += wv[6]; ctx->h[7] += wv[7];
+        h[0] += wv[0]; h[1] += wv[1];
+        h[2] += wv[2]; h[3] += wv[3];
+        h[4] += wv[4]; h[5] += wv[5];
+        h[6] += wv[6]; h[7] += wv[7];
 
     }
 }
 
 void akmos_sha2_224_init(akmos_sha2_256_t *ctx)
 {
+    ctx->w = ctx->h + 8;
+
     ctx->h[0] = sha224_h0[0];
     ctx->h[1] = sha224_h0[1];
     ctx->h[2] = sha224_h0[2];
@@ -332,6 +292,8 @@ void akmos_sha2_224_init(akmos_sha2_256_t *ctx)
 
 void akmos_sha2_256_init(akmos_sha2_256_t *ctx)
 {
+    ctx->w = ctx->h + 8;
+
     ctx->h[0] = sha256_h0[0];
     ctx->h[1] = sha256_h0[1];
     ctx->h[2] = sha256_h0[2];
@@ -365,8 +327,8 @@ void akmos_sha2_256_update(akmos_sha2_256_t *ctx, const uint8_t *input, size_t l
 
     sfi = input + rem_len;
 
-    sha256_transform(ctx, ctx->block, 1);
-    sha256_transform(ctx, sfi, nb);
+    sha256_transform(ctx->h, ctx->w, ctx->block, 1);
+    sha256_transform(ctx->h, ctx->w, sfi, nb);
 
     rem_len = new_len % AKMOS_SHA2_256_BLKLEN;
 
@@ -391,7 +353,7 @@ void akmos_sha2_256_done(akmos_sha2_256_t *ctx, uint8_t *digest)
     UNPACK64LE(ctx->block + pm_len - 8, len_b);
 
     if(nb > 0)
-        sha256_transform(ctx, ctx->block, nb);
+        sha256_transform(ctx->h, ctx->w, ctx->block, nb);
 
     for(i = 0; i < ctx->diglen / (sizeof(uint32_t)); i++)
         UNPACK32LE(digest + (i * sizeof(uint32_t)), ctx->h[i]);
@@ -399,6 +361,8 @@ void akmos_sha2_256_done(akmos_sha2_256_t *ctx, uint8_t *digest)
 
 void akmos_sha2_384_init(akmos_sha2_512_t *ctx)
 {
+    ctx->w = ctx->h + 8;
+
     ctx->h[0] = sha384_h0[0];
     ctx->h[1] = sha384_h0[1];
     ctx->h[2] = sha384_h0[2];
@@ -414,6 +378,8 @@ void akmos_sha2_384_init(akmos_sha2_512_t *ctx)
 
 void akmos_sha2_512_init(akmos_sha2_512_t *ctx)
 {
+    ctx->w = ctx->h + 8;
+
     ctx->h[0] = sha512_h0[0];
     ctx->h[1] = sha512_h0[1];
     ctx->h[2] = sha512_h0[2];
@@ -447,8 +413,8 @@ void akmos_sha2_512_update(akmos_sha2_512_t *ctx, const uint8_t *input, size_t l
 
     sfi = input + rem_len;
 
-    sha512_transform(ctx, ctx->block, 1);
-    sha512_transform(ctx, sfi, nb);
+    sha512_transform(ctx->h, ctx->w, ctx->block, 1);
+    sha512_transform(ctx->h, ctx->w, sfi, nb);
 
     rem_len = new_len % AKMOS_SHA2_512_BLKLEN;
 
@@ -473,7 +439,7 @@ void akmos_sha2_512_done(akmos_sha2_512_t *ctx, uint8_t *digest)
     UNPACK64LE(ctx->block + pm_len - 8, len_b);
 
     if(nb > 0)
-        sha512_transform(ctx, ctx->block, nb);
+        sha512_transform(ctx->h, ctx->w, ctx->block, nb);
 
     for(i = 0; i < ctx->diglen / (sizeof(uint64_t)); i++)
         UNPACK64LE(digest + (i * sizeof(uint64_t)), ctx->h[i]);
