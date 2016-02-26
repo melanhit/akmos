@@ -48,7 +48,7 @@ static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, ui
 {
     uint64_t *w, *s, *k, *h;
     const uint8_t *sub;
-    size_t i, y;
+    size_t i, j;
 
     w = ctx->w;
     s = w + 8;
@@ -79,12 +79,12 @@ static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, ui
         w[4] ^= k[4]; w[5] ^= k[5];
         w[6] ^= k[6]; w[7] ^= k[7];
 
-        for(y = 0; y < AKMOS_WHIRLPOOL_ROUNDS; y++) {
+        for(j = 0; j < AKMOS_WHIRLPOOL_ROUNDS; j++) {
             /* compute key */
             s[0] = SB0[(k[0] >> 56) & 0xff] ^ SB1[(k[7] >> 48) & 0xff] ^
                    SB2[(k[6] >> 40) & 0xff] ^ SB3[(k[5] >> 32) & 0xff] ^
                    SB4[(k[4] >> 24) & 0xff] ^ SB5[(k[3] >> 16) & 0xff] ^
-                   SB6[(k[2] >>  8) & 0xff] ^ SB7[(k[1] >>  0) & 0xff] ^ RC[y];
+                   SB6[(k[2] >>  8) & 0xff] ^ SB7[(k[1] >>  0) & 0xff] ^ RC[j];
 
             s[1] = SB0[(k[1] >> 56) & 0xff] ^ SB1[(k[0] >> 48) & 0xff] ^
                    SB2[(k[7] >> 40) & 0xff] ^ SB3[(k[6] >> 32) & 0xff] ^
@@ -125,45 +125,45 @@ static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, ui
             k[4] = s[4]; k[5] = s[5]; k[6] = s[6]; k[7] = s[7];
 
             /* transformation */
-            s[0] = SB0[(w[0] >> 56) & 0xff] ^ SB1[(w[7] >> 48) & 0xff] ^
-                   SB2[(w[6] >> 40) & 0xff] ^ SB3[(w[5] >> 32) & 0xff] ^
-                   SB4[(w[4] >> 24) & 0xff] ^ SB5[(w[3] >> 16) & 0xff] ^
-                   SB6[(w[2] >>  8) & 0xff] ^ SB7[(w[1] >>  0) & 0xff] ^ k[0];
+            s[0] ^= SB0[(w[0] >> 56) & 0xff] ^ SB1[(w[7] >> 48) & 0xff] ^
+                    SB2[(w[6] >> 40) & 0xff] ^ SB3[(w[5] >> 32) & 0xff] ^
+                    SB4[(w[4] >> 24) & 0xff] ^ SB5[(w[3] >> 16) & 0xff] ^
+                    SB6[(w[2] >>  8) & 0xff] ^ SB7[(w[1] >>  0) & 0xff];
 
-            s[1] = SB0[(w[1] >> 56) & 0xff] ^ SB1[(w[0] >> 48) & 0xff] ^
-                   SB2[(w[7] >> 40) & 0xff] ^ SB3[(w[6] >> 32) & 0xff] ^
-                   SB4[(w[5] >> 24) & 0xff] ^ SB5[(w[4] >> 16) & 0xff] ^
-                   SB6[(w[3] >>  8) & 0xff] ^ SB7[(w[2] >>  0) & 0xff] ^ k[1];
+            s[1] ^= SB0[(w[1] >> 56) & 0xff] ^ SB1[(w[0] >> 48) & 0xff] ^
+                    SB2[(w[7] >> 40) & 0xff] ^ SB3[(w[6] >> 32) & 0xff] ^
+                    SB4[(w[5] >> 24) & 0xff] ^ SB5[(w[4] >> 16) & 0xff] ^
+                    SB6[(w[3] >>  8) & 0xff] ^ SB7[(w[2] >>  0) & 0xff];
 
-            s[2] = SB0[(w[2] >> 56) & 0xff] ^ SB1[(w[1] >> 48) & 0xff] ^
-                   SB2[(w[0] >> 40) & 0xff] ^ SB3[(w[7] >> 32) & 0xff] ^
-                   SB4[(w[6] >> 24) & 0xff] ^ SB5[(w[5] >> 16) & 0xff] ^
-                   SB6[(w[4] >>  8) & 0xff] ^ SB7[(w[3] >>  0) & 0xff] ^ k[2];
+            s[2] ^= SB0[(w[2] >> 56) & 0xff] ^ SB1[(w[1] >> 48) & 0xff] ^
+                    SB2[(w[0] >> 40) & 0xff] ^ SB3[(w[7] >> 32) & 0xff] ^
+                    SB4[(w[6] >> 24) & 0xff] ^ SB5[(w[5] >> 16) & 0xff] ^
+                    SB6[(w[4] >>  8) & 0xff] ^ SB7[(w[3] >>  0) & 0xff];
 
-            s[3] = SB0[(w[3] >> 56) & 0xff] ^ SB1[(w[2] >> 48) & 0xff] ^
-                   SB2[(w[1] >> 40) & 0xff] ^ SB3[(w[0] >> 32) & 0xff] ^
-                   SB4[(w[7] >> 24) & 0xff] ^ SB5[(w[6] >> 16) & 0xff] ^
-                   SB6[(w[5] >>  8) & 0xff] ^ SB7[(w[4] >>  0) & 0xff] ^ k[3];
+            s[3] ^= SB0[(w[3] >> 56) & 0xff] ^ SB1[(w[2] >> 48) & 0xff] ^
+                    SB2[(w[1] >> 40) & 0xff] ^ SB3[(w[0] >> 32) & 0xff] ^
+                    SB4[(w[7] >> 24) & 0xff] ^ SB5[(w[6] >> 16) & 0xff] ^
+                    SB6[(w[5] >>  8) & 0xff] ^ SB7[(w[4] >>  0) & 0xff];
 
-            s[4] = SB0[(w[4] >> 56) & 0xff] ^ SB1[(w[3] >> 48) & 0xff] ^
-                   SB2[(w[2] >> 40) & 0xff] ^ SB3[(w[1] >> 32) & 0xff] ^
-                   SB4[(w[0] >> 24) & 0xff] ^ SB5[(w[7] >> 16) & 0xff] ^
-                   SB6[(w[6] >>  8) & 0xff] ^ SB7[(w[5] >>  0) & 0xff] ^ k[4];
+            s[4] ^= SB0[(w[4] >> 56) & 0xff] ^ SB1[(w[3] >> 48) & 0xff] ^
+                    SB2[(w[2] >> 40) & 0xff] ^ SB3[(w[1] >> 32) & 0xff] ^
+                    SB4[(w[0] >> 24) & 0xff] ^ SB5[(w[7] >> 16) & 0xff] ^
+                    SB6[(w[6] >>  8) & 0xff] ^ SB7[(w[5] >>  0) & 0xff];
 
-            s[5] = SB0[(w[5] >> 56) & 0xff] ^ SB1[(w[4] >> 48) & 0xff] ^
-                   SB2[(w[3] >> 40) & 0xff] ^ SB3[(w[2] >> 32) & 0xff] ^
-                   SB4[(w[1] >> 24) & 0xff] ^ SB5[(w[0] >> 16) & 0xff] ^
-                   SB6[(w[7] >>  8) & 0xff] ^ SB7[(w[6] >>  0) & 0xff] ^ k[5];
+            s[5] ^= SB0[(w[5] >> 56) & 0xff] ^ SB1[(w[4] >> 48) & 0xff] ^
+                    SB2[(w[3] >> 40) & 0xff] ^ SB3[(w[2] >> 32) & 0xff] ^
+                    SB4[(w[1] >> 24) & 0xff] ^ SB5[(w[0] >> 16) & 0xff] ^
+                    SB6[(w[7] >>  8) & 0xff] ^ SB7[(w[6] >>  0) & 0xff];
 
-            s[6] = SB0[(w[6] >> 56) & 0xff] ^ SB1[(w[5] >> 48) & 0xff] ^
-                   SB2[(w[4] >> 40) & 0xff] ^ SB3[(w[3] >> 32) & 0xff] ^
-                   SB4[(w[2] >> 24) & 0xff] ^ SB5[(w[1] >> 16) & 0xff] ^
-                   SB6[(w[0] >>  8) & 0xff] ^ SB7[(w[7] >>  0) & 0xff] ^ k[6];
+            s[6] ^= SB0[(w[6] >> 56) & 0xff] ^ SB1[(w[5] >> 48) & 0xff] ^
+                    SB2[(w[4] >> 40) & 0xff] ^ SB3[(w[3] >> 32) & 0xff] ^
+                    SB4[(w[2] >> 24) & 0xff] ^ SB5[(w[1] >> 16) & 0xff] ^
+                    SB6[(w[0] >>  8) & 0xff] ^ SB7[(w[7] >>  0) & 0xff];
 
-            s[7] = SB0[(w[7] >> 56) & 0xff] ^ SB1[(w[6] >> 48) & 0xff] ^
-                   SB2[(w[5] >> 40) & 0xff] ^ SB3[(w[4] >> 32) & 0xff] ^
-                   SB4[(w[3] >> 24) & 0xff] ^ SB5[(w[2] >> 16) & 0xff] ^
-                   SB6[(w[1] >>  8) & 0xff] ^ SB7[(w[0] >>  0) & 0xff] ^ k[7];
+            s[7] ^= SB0[(w[7] >> 56) & 0xff] ^ SB1[(w[6] >> 48) & 0xff] ^
+                    SB2[(w[5] >> 40) & 0xff] ^ SB3[(w[4] >> 32) & 0xff] ^
+                    SB4[(w[3] >> 24) & 0xff] ^ SB5[(w[2] >> 16) & 0xff] ^
+                    SB6[(w[1] >>  8) & 0xff] ^ SB7[(w[0] >>  0) & 0xff];
 
             w[0] = s[0]; w[1] = s[1]; w[2] = s[2]; w[3] = s[3];
             w[4] = s[4]; w[5] = s[5]; w[6] = s[6]; w[7] = s[7];
