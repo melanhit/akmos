@@ -41,8 +41,6 @@
 
 #define CONST_240   0x1bd11bdaa9fc1a22
 
-#define SZ_U64      sizeof(uint64_t)
-
 void akmos_threefish_1024_setkey(akmos_threefish_1024_t *ctx,
                                  const uint8_t *key,
                                  size_t len)
@@ -52,8 +50,8 @@ void akmos_threefish_1024_setkey(akmos_threefish_1024_t *ctx,
 
     k = ctx->k;
 
-    for(i = 0; i < WORDS_1024; i++)
-        k[i] = PACK64BE(key + (i * SZ_U64));
+    for(i = 0; i < WORDS_1024; i++, key +=8)
+        k[i] = PACK64BE(key);
 
     k[WORDS_1024] = CONST_240;
     for(i = 0; i < WORDS_1024; i++)
@@ -76,8 +74,8 @@ void akmos_threefish_1024_encrypt(akmos_threefish_1024_t *ctx,
     uint64_t s[WORDS_1024], *S;
     int i, y;
 
-    for(i = 0; i < WORDS_1024; i++)
-        s[i] = PACK64BE(in_blk + (i * SZ_U64));
+    for(i = 0; i < WORDS_1024; i++, in_blk += 8)
+        s[i] = PACK64BE(in_blk);
 
     for(i = 0, S = ctx->S; i < ROUNDS_1024 / 8; i++, S += WORDS_1024) {
         for(y = 0; y < WORDS_1024; y++)
@@ -97,8 +95,8 @@ void akmos_threefish_1024_encrypt(akmos_threefish_1024_t *ctx,
         threefish_1024_emix4(s,  9, 48, 35, 52, 23, 31, 37, 20);
     }
 
-    for(i = 0; i < WORDS_1024; i++)
-        UNPACK64BE(out_blk + (i * SZ_U64), s[i] + S[i]);
+    for(i = 0; i < WORDS_1024; i++, out_blk += 8)
+        UNPACK64BE(out_blk, s[i] + S[i]);
 }
 
 void akmos_threefish_1024_decrypt(akmos_threefish_1024_t *ctx,
@@ -108,8 +106,8 @@ void akmos_threefish_1024_decrypt(akmos_threefish_1024_t *ctx,
     uint64_t s[WORDS_1024], *S;
     int i, y;
 
-    for(i = 0; i < WORDS_1024; i++)
-        s[i] = PACK64BE(in_blk + (i * SZ_U64));
+    for(i = 0; i < WORDS_1024; i++, in_blk += 8)
+        s[i] = PACK64BE(in_blk);
 
     S = ctx->S + (WORDS_1024 * (SKEYS_1024 - 1));
     for(i = 0; i < WORDS_1024; i++)
@@ -133,6 +131,6 @@ void akmos_threefish_1024_decrypt(akmos_threefish_1024_t *ctx,
             s[y] -= S[y];
     }
 
-    for(i = 0; i < WORDS_1024; i++)
-        UNPACK64BE(out_blk + (i * SZ_U64), s[i]);
+    for(i = 0; i < WORDS_1024; i++, out_blk += 8)
+        UNPACK64BE(out_blk, s[i]);
 }

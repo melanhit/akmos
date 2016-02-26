@@ -41,8 +41,6 @@
 
 #define CONST_240   0x1bd11bdaa9fc1a22
 
-#define SZ_U64      sizeof(uint64_t)
-
 void akmos_threefish_512_setkey(akmos_threefish_512_t *ctx,
                                 const uint8_t *key,
                                 size_t len)
@@ -52,8 +50,8 @@ void akmos_threefish_512_setkey(akmos_threefish_512_t *ctx,
 
     k = ctx->k;
 
-    for(i = 0; i < WORDS_512; i++)
-        k[i] = PACK64BE(key + (i * SZ_U64));
+    for(i = 0; i < WORDS_512; i++, key += 8)
+        k[i] = PACK64BE(key);
 
     k[WORDS_512] = CONST_240;
 
@@ -77,8 +75,8 @@ void akmos_threefish_512_encrypt(akmos_threefish_512_t *ctx,
     uint64_t s[WORDS_512], *S;
     int i, y;
 
-    for(i = 0; i < WORDS_512; i++)
-        s[i] = PACK64BE(in_blk + (i * SZ_U64));
+    for(i = 0; i < WORDS_512; i++, in_blk += 8)
+        s[i] = PACK64BE(in_blk);
 
     for(i = 0, S = ctx->S; i < ROUNDS_512 / 8; i++, S += WORDS_512) {
         for(y = 0; y < WORDS_512; y++)
@@ -98,8 +96,8 @@ void akmos_threefish_512_encrypt(akmos_threefish_512_t *ctx,
         threefish_512_emix4(s,  8, 35, 56, 22);
     }
 
-    for(i = 0; i < WORDS_512; i++)
-        UNPACK64BE(out_blk + (i * SZ_U64), s[i] + S[i]);
+    for(i = 0; i < WORDS_512; i++, out_blk += 8)
+        UNPACK64BE(out_blk, s[i] + S[i]);
 }
 
 void akmos_threefish_512_decrypt(akmos_threefish_512_t *ctx,
@@ -109,8 +107,8 @@ void akmos_threefish_512_decrypt(akmos_threefish_512_t *ctx,
     uint64_t s[WORDS_512], *S;
     int i, y;
 
-    for(i = 0; i < WORDS_512; i++)
-        s[i] = PACK64BE(in_blk + (i * SZ_U64));
+    for(i = 0; i < WORDS_512; i++, in_blk += 8)
+        s[i] = PACK64BE(in_blk);
 
     S = ctx->S + (WORDS_512 * (SKEYS_512 - 1));
     for(i = 0; i < WORDS_512; i++)
@@ -134,6 +132,6 @@ void akmos_threefish_512_decrypt(akmos_threefish_512_t *ctx,
             s[y] -= S[y];
     }
 
-    for(i = 0; i < WORDS_512; i++)
-        UNPACK64BE(out_blk + (i * SZ_U64), s[i]);
+    for(i = 0; i < WORDS_512; i++, out_blk += 8)
+        UNPACK64BE(out_blk, s[i]);
 }
