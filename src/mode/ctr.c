@@ -54,6 +54,18 @@ void akmos_ctr_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
     memset(ptr->ctr, 0, sizeof(uint64_t));
 }
 
+void akmos_ctr_setcnt(akmos_cipher_t *ctx, const uint8_t *cnt)
+{
+    akmos_ctr_t *ptr;
+
+    ptr = &ctx->mctx.ctr;
+
+    if(cnt)
+        ptr->cnt = PACK64LE(cnt);
+    else
+        ptr->cnt = 0;
+}
+
 void akmos_ctr_encrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     akmos_ctr_t *ptr;

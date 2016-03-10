@@ -186,7 +186,7 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
 /* cipher modes */
 const akmos_cipher_xmode_t akmos_xmode_ecb = {
     AKMOS_MODE_ECB, "ECB",
-    NULL,
+    NULL, NULL,
     (void *)&akmos_ecb_encrypt,
     (void *)&akmos_ecb_decrypt
 };
@@ -194,6 +194,7 @@ const akmos_cipher_xmode_t akmos_xmode_ecb = {
 const akmos_cipher_xmode_t akmos_xmode_cbc = {
     AKMOS_MODE_CBC, "CBC",
     (void *)&akmos_cbc_setiv,
+    NULL,
     (void *)&akmos_cbc_encrypt,
     (void *)&akmos_cbc_decrypt
 };
@@ -201,6 +202,7 @@ const akmos_cipher_xmode_t akmos_xmode_cbc = {
 const akmos_cipher_xmode_t akmos_xmode_cfb = {
     AKMOS_MODE_CFB, "CFB",
     (void *)&akmos_cfb_setiv,
+    NULL,
     (void *)&akmos_cfb_encrypt,
     (void *)&akmos_cfb_decrypt
 };
@@ -209,6 +211,7 @@ const akmos_cipher_xmode_t akmos_xmode_cfb = {
 const akmos_cipher_xmode_t akmos_xmode_ctr = {
     AKMOS_MODE_CTR, "CTR",
     (void *)&akmos_ctr_setiv,
+    (void *)&akmos_ctr_setcnt,
     (void *)&akmos_ctr_encrypt,
     (void *)&akmos_ctr_encrypt
 };
@@ -216,6 +219,7 @@ const akmos_cipher_xmode_t akmos_xmode_ctr = {
 const akmos_cipher_xmode_t akmos_xmode_ofb = {
     AKMOS_MODE_OFB, "OFB",
     (void *)&akmos_ofb_setiv,
+    NULL,
     (void *)&akmos_ofb_encrypt,
     (void *)&akmos_ofb_encrypt
 };

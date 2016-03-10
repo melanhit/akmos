@@ -469,6 +469,9 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     if(opt.mode != AKMOS_MODE_ECB)
         akmos_cipher_setiv(ctx, hd.iv);
 
+    if(opt.mode == AKMOS_MODE_CTR)
+        akmos_cipher_setcnt(ctx, NULL);
+
     /* enc/dec input to output */
     AMALLOC(buf, BUFLEN + opt.blklen, err);
     if(err)

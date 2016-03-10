@@ -109,7 +109,7 @@ typedef struct akmos_cipher_xdesc_s {
 int  akmos_cipher_init   (akmos_cipher_t **, akmos_algo_id, akmos_mode_id);
 int  akmos_cipher_setkey (akmos_cipher_t *, const uint8_t *, size_t);
 void akmos_cipher_setiv  (akmos_cipher_t *, const uint8_t *);
-void akmos_cipher_setcnt (akmos_cipher_t *, uint64_t);
+void akmos_cipher_setcnt (akmos_cipher_t *, const uint8_t *);
 void akmos_cipher_crypt  (akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
 void akmos_cipher_free   (akmos_cipher_t *);
 int  akmos_cipher_ex     (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t,

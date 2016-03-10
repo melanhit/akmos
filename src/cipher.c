@@ -196,6 +196,15 @@ int akmos_cipher_init(akmos_cipher_t **ctx, akmos_algo_id algo, akmos_mode_id mo
     if(err)
         goto out;
 
+    /* set iv routines */
+    if(ptr->xmode->setiv)
+        ptr->setiv = ptr->xmode->setiv;
+
+    /* set cnt routines */
+    if(ptr->xmode->setcnt)
+        ptr->setcnt = ptr->xmode->setcnt;
+
+    /* TDEA */
     flag = algo & AKMOS_ALGO_FLAG_MASK;
     switch(flag) {
         case AKMOS_ALGO_FLAG_EDE:
@@ -259,20 +268,14 @@ int akmos_cipher_setkey(akmos_cipher_t *ctx, const uint8_t *key, size_t len)
 
 void akmos_cipher_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
 {
-    if(ctx->xmode->setiv)
-        ctx->xmode->setiv(ctx, iv);
+    if(ctx->setiv)
+        ctx->setiv(ctx, iv);
 }
 
-void akmos_cipher_setcnt(akmos_cipher_t *ctx, uint64_t cnt)
+void akmos_cipher_setcnt(akmos_cipher_t *ctx, const uint8_t *cnt)
 {
-    switch(ctx->xmode->id) {
-        case AKMOS_MODE_CTR:
-            ctx->mctx.ctr.cnt = cnt;
-            break;
-
-        default:
-            break;
-    }
+    if(ctx->setcnt)
+        ctx->setcnt(ctx, cnt);
 }
 
 void akmos_cipher_crypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
