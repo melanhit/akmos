@@ -103,35 +103,23 @@ static void cipher_setkey3(akmos_cipher_t *ctx, const uint8_t *key, size_t len)
 
 static void cipher_ede_encrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    uint8_t *t;
-
-    t = out_blk;
-
     ctx->xalgo->encrypt(&ctx->actx[0], in_blk, out_blk);
-    ctx->xalgo->decrypt(&ctx->actx[1], t, out_blk);
-    ctx->xalgo->encrypt(&ctx->actx[2], t, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[1], out_blk, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[2], out_blk, out_blk);
 }
 
 static void cipher_ede_decrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    uint8_t *t;
-
-    t = out_blk;
-
     ctx->xalgo->decrypt(&ctx->actx[2], in_blk, out_blk);
-    ctx->xalgo->encrypt(&ctx->actx[1], t, out_blk);
-    ctx->xalgo->decrypt(&ctx->actx[0], t, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[1], out_blk, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[0], out_blk, out_blk);
 }
 
 static void cipher_eee_encrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    uint8_t *t;
-
-    t = out_blk;
-
     ctx->xalgo->encrypt(&ctx->actx[0], in_blk, out_blk);
-    ctx->xalgo->encrypt(&ctx->actx[1], t, out_blk);
-    ctx->xalgo->encrypt(&ctx->actx[2], t, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[1], out_blk, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[2], out_blk, out_blk);
 }
 
 static void cipher_eee_decrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
@@ -141,8 +129,8 @@ static void cipher_eee_decrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, uint8
     t = out_blk;
 
     ctx->xalgo->decrypt(&ctx->actx[2], in_blk, out_blk);
-    ctx->xalgo->decrypt(&ctx->actx[1], t, out_blk);
-    ctx->xalgo->decrypt(&ctx->actx[0], t, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[1], out_blk, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[0], out_blk, out_blk);
 }
 
 static void cipher_init_actx(akmos_cipher_t *ctx)
@@ -170,6 +158,36 @@ static void cipher_init3(akmos_cipher_t *ctx, akmos_algo_id flag)
         default:
             break;
     }
+}
+
+static int cipher_pxor(akmos_cipher_t *ctx)
+{
+    switch(ctx->xalgo->desc.blklen) {
+        case 8:
+            ctx->pxor = &akmos_pxor8;
+            break;
+
+        case 16:
+            ctx->pxor = &akmos_pxor16;
+            break;
+
+        case 32:
+            ctx->pxor = &akmos_pxor32;
+            break;
+
+        case 64:
+            ctx->pxor = &akmos_pxor64;
+            break;
+
+        case 128:
+            ctx->pxor = &akmos_pxor128;
+            break;
+
+        default:
+            return AKMOS_ERR_BLKLEN;
+    }
+
+    return AKMOS_ERR_SUCCESS;
 }
 
 int akmos_cipher_init(akmos_cipher_t **ctx, akmos_algo_id algo, akmos_mode_id mode)
@@ -217,31 +235,10 @@ int akmos_cipher_init(akmos_cipher_t **ctx, akmos_algo_id algo, akmos_mode_id mo
             break;
     }
 
-    switch(ptr->xalgo->desc.blklen) {
-        case 8:
-            ptr->pxor = &akmos_pxor8;
-            break;
-
-        case 16:
-            ptr->pxor = &akmos_pxor16;
-            break;
-
-        case 32:
-            ptr->pxor = &akmos_pxor32;
-            break;
-
-        case 64:
-            ptr->pxor = &akmos_pxor64;
-            break;
-
-        case 128:
-            ptr->pxor = &akmos_pxor128;
-            break;
-
-        default:
-            err = AKMOS_ERR_BLKLEN;
-            goto out;
-    }
+    /* set parallel xor routine */
+    err = cipher_pxor(ptr);
+    if(err)
+        goto out;
 
     return AKMOS_ERR_SUCCESS;
 
