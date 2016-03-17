@@ -1,3 +1,11 @@
+Changes to akmos-0.5 (18 March 2016)
+    * API change (rename context types, hide xform objects)
+    * support Triple Data Encryption Algorithm (TDEA)
+    * fix build for FreeBSD (9.3)
+    * SHA2, Whirlpool and Threefish code improvements
+    * use more strict compilation flags
+    * small fixes, code cleanup
+
 Changes to akmos-0.4 (6 February 2016)
     * API change (use bitmasking for algo/mode attributes)
     * add assembler version (amd64) of the 'sha3' digest algo
