@@ -89,7 +89,7 @@ static void cmac_update(akmos_cmac_t *ctx, const uint8_t *in_blk, size_t len)
     size_t i;
 
     for(i = 0; i < len; i += AKMOS_BUFSZ)
-        akmos_cipher_crypt(ctx->actx, in_blk + i, AKMOS_BUFSZ, ctx->buf);
+        akmos_cipher_crypt(ctx->actx, in_blk + i, AKMOS_BUFSZ & SIZE_T_MAX, ctx->buf);
 }
 
 int akmos_cmac_init(akmos_cmac_t *ctx, akmos_algo_id algo)
@@ -187,7 +187,7 @@ void akmos_cmac_update(akmos_cmac_t *ctx, const uint8_t *in_blk, size_t len)
 
     tbuf = in_blk + rem_len;
 
-    cmac_update(ctx, ctx->buf, AKMOS_BUFSZ);
+    cmac_update(ctx, ctx->buf, AKMOS_BUFSZ & SIZE_T_MAX);
     cmac_update(ctx, tbuf, tmp_len);
 
     rem_len = new_len % AKMOS_BUFSZ;
@@ -201,8 +201,8 @@ void akmos_cmac_update(akmos_cmac_t *ctx, const uint8_t *in_blk, size_t len)
 int akmos_cmac_done(akmos_cmac_t *ctx, uint8_t *mac)
 {
     uint8_t *p;
-    size_t blklen, tmplen;
-    int err, i;
+    size_t i, blklen, tmplen;
+    int err;
 
     err = AKMOS_ERR_SUCCESS;
     blklen = akmos_cipher_blklen(ctx->algo);
@@ -233,7 +233,7 @@ int akmos_cmac_done(akmos_cmac_t *ctx, uint8_t *mac)
 
 out:
     akmos_cipher_free(ctx->actx);
-    akmos_memzero(ctx->buf, AKMOS_BUFSZ);
+    akmos_memzero(ctx->buf, AKMOS_BUFSZ & SIZE_T_MAX);
 
     akmos_memzero(ctx->key, ctx->klen + (ctx->sklen * 2));
     free(ctx->key);

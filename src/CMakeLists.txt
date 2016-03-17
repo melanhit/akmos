@@ -1,7 +1,9 @@
 INCLUDE(CheckIncludeFiles)
 INCLUDE(CheckTypeSize)
+INCLUDE(CheckSymbolExists) 
 CHECK_INCLUDE_FILES(error.h HAVE_ERROR_H)
 CHECK_INCLUDE_FILES(err.h HAVE_ERR_H)
+CHECK_INCLUDE_FILES(limits.h HAVE_LIMITS_H)
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 CHECK_TYPE_SIZE(uint8_t UINT8_T)
@@ -9,6 +11,9 @@ CHECK_TYPE_SIZE(uint32_t UINT32_T)
 CHECK_TYPE_SIZE(uint64_t UINT64_T)
 CHECK_TYPE_SIZE(size_t SIZE_T)
 CHECK_TYPE_SIZE(ssize_t SSIZE_T)
+
+CHECK_SYMBOL_EXISTS(SIZE_T_MAX "limits.h" HAVE_DECL_SIZE_T_MAX)
+CHECK_SYMBOL_EXISTS(INT_MAX "limits.h" HAVE_DECL_INT_MAX)
 
 if(NOT HAVE_UINT8_T)
     unset(HAVE_UINT8_T)
@@ -114,7 +119,7 @@ add_library(akmos_obj OBJECT ${src_lib})
 
 add_definitions(-D_BSD_SOURCE -D_POSIX_C_SOURCE=199309L -D_XOPEN_SOURCE=500)
 add_definitions(-DAKMOS_BUFSZ=8192)
-set(CFLAGS "-fPIC -DPIC -ansi -Wall -Werror -Wmissing-prototypes -Wconversion")
+set(CFLAGS "-fPIC -DPIC -ansi -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion")
 separate_arguments(CFLAGS UNIX_COMMAND ${CFLAGS})
 target_compile_options(akmos_obj PRIVATE ${CFLAGS})
 

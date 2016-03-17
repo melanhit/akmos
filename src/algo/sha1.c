@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <limits.h>
 
 #include "../akmos.h"
 #include "../bits.h"
@@ -208,7 +209,7 @@ void akmos_sha1_update(akmos_sha1_t *ctx, const uint8_t *input, size_t len)
 
     sfi = input + rem_len;
 
-    sha1_transform(ctx, ctx->block, 1);
+    sha1_transform(ctx, ctx->block, 1 & SIZE_T_MAX);
     sha1_transform(ctx, sfi, nb);
 
     rem_len = new_len % AKMOS_SHA1_BLKLEN;
@@ -222,7 +223,7 @@ void akmos_sha1_update(akmos_sha1_t *ctx, const uint8_t *input, size_t len)
 
 void akmos_sha1_done(akmos_sha1_t *ctx, uint8_t *digest)
 {
-    uint32_t nb, pm_len;
+    size_t nb, pm_len;
     uint64_t len_bit;
 
     nb = (1 + ((AKMOS_SHA1_BLKLEN - 9) < (ctx->len % AKMOS_SHA1_BLKLEN)));

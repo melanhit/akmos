@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <limits.h>
 
 #include "../akmos.h"
 #include "../bits.h"
@@ -201,7 +202,7 @@ void akmos_whirlpool_update(akmos_whirlpool_t *ctx, const uint8_t *input, size_t
 
     sfi = input + rem_len;
 
-    whirlpool_transform(ctx, ctx->block, 1);
+    whirlpool_transform(ctx, ctx->block, 1 & SIZE_T_MAX);
     whirlpool_transform(ctx, sfi, nb);
 
     rem_len = new_len % AKMOS_WHIRLPOOL_BLKLEN;
@@ -215,7 +216,7 @@ void akmos_whirlpool_update(akmos_whirlpool_t *ctx, const uint8_t *input, size_t
 
 void akmos_whirlpool_done(akmos_whirlpool_t *ctx, uint8_t *digest)
 {
-    uint32_t nb, pm_len;
+    size_t nb, pm_len;
     uint64_t len_bit;
 
     nb = (1 + ((AKMOS_WHIRLPOOL_BLKLEN - 33) < (ctx->len % AKMOS_WHIRLPOOL_BLKLEN)));

@@ -80,7 +80,7 @@ void akmos_seed_setkey(akmos_seed_t *ctx, const uint8_t *in_key, size_t len)
     k0 = PACK32LE(in_key    ); k1 = PACK32LE(in_key +  4);
     k2 = PACK32LE(in_key + 8); k3 = PACK32LE(in_key + 12);
 
-    for(i = 0, y = 0; i < 16; i++, y += 2) {
+    for(i = 0, y = 0; i < len; i++, y += 2) {
         ctx->key[y] = k0 + k2 - KC[i];
         ctx->key[y] = G(ctx->key[y]);
 

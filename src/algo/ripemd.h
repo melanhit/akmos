@@ -43,7 +43,7 @@ typedef struct {
     uint32_t x[16];
     uint64_t count;
     uint8_t  buffer[64];
-    int      diglen;
+    size_t   diglen;
 } akmos_ripemd_t;
 
 void akmos_ripemd_160_init(akmos_ripemd_t *);

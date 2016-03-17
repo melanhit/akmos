@@ -41,7 +41,7 @@ static void cbcmac_update(akmos_cbcmac_t *ctx, const uint8_t *in_blk, size_t len
     size_t i;
 
     for(i = 0; i < len; i += AKMOS_BUFSZ)
-        akmos_cipher_crypt(ctx->actx, in_blk + i, AKMOS_BUFSZ, ctx->buf);
+        akmos_cipher_crypt(ctx->actx, in_blk + i, AKMOS_BUFSZ & SIZE_T_MAX, ctx->buf);
 }
 
 int akmos_cbcmac_init(akmos_cbcmac_t *ctx, akmos_algo_id algo)
@@ -103,7 +103,7 @@ void akmos_cbcmac_update(akmos_cbcmac_t *ctx, const uint8_t *in_blk, size_t len)
 
     tbuf = in_blk + rem_len;
 
-    cbcmac_update(ctx, ctx->buf, AKMOS_BUFSZ);
+    cbcmac_update(ctx, ctx->buf, AKMOS_BUFSZ & SIZE_T_MAX);
     cbcmac_update(ctx, tbuf, tmp_len);
 
     rem_len = new_len % AKMOS_BUFSZ;

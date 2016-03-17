@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <limits.h>
 
 #include "../akmos.h"
 #include "../bits.h"
@@ -99,7 +100,7 @@ void akmos_sha3_update(akmos_sha3_t *ctx, const uint8_t *input, size_t len)
 
     blk = input + rem_len;
 
-    sha3_transform(ctx, ctx->b, 1);
+    sha3_transform(ctx, ctx->b, 1 & SIZE_T_MAX);
     sha3_transform(ctx, blk, nb);
 
     rem_len = new_len % ctx->blklen;

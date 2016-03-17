@@ -179,7 +179,8 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
         (void *)&akmos_twofish_decrypt
     },
     {
-        { 0 }, NULL
+        { 0 , NULL, 0, 0, 0, 0 },
+        NULL, NULL, NULL
     }
 };
 

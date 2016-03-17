@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <limits.h>
 
 #include "../akmos.h"
 #include "../bits.h"
@@ -160,7 +161,7 @@ void akmos_tiger_update(akmos_tiger_t *ctx, const uint8_t *input, size_t len)
 
     sfi = input + rem_len;
 
-    tiger_transform(ctx, ctx->block, 1);
+    tiger_transform(ctx, ctx->block, 1 & SIZE_T_MAX);
     tiger_transform(ctx, sfi, nb);
 
     rem_len = new_len % AKMOS_TIGER_BLKLEN;
@@ -174,7 +175,7 @@ void akmos_tiger_update(akmos_tiger_t *ctx, const uint8_t *input, size_t len)
 
 void akmos_tiger_done(akmos_tiger_t *ctx, uint8_t *digest)
 {
-    uint32_t nb, pm_len;
+    size_t nb, pm_len;
     uint64_t len_bit;
 
     nb = (1 + ((AKMOS_TIGER_BLKLEN - 9) < (ctx->len % AKMOS_TIGER_BLKLEN)));

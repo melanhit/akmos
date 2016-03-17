@@ -160,6 +160,7 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
         (void *)akmos_whirlpool_done
     },
     {
-        { 0 }, NULL
+        { 0, NULL, 0, 0 }, 
+        NULL, NULL, NULL
     }
 };

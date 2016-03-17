@@ -46,7 +46,6 @@ typedef struct {
     int  (*setkey)  (void *, const uint8_t *, size_t);
     void (*update)  (void *, const uint8_t *, size_t);
     int  (*done)    (void *, uint8_t *);
-    void (*free)    (void *);
 } akmos_mac_xmode_t;
 
 struct akmos_mac_s {

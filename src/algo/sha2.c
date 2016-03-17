@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <limits.h>
 
 #include "../akmos.h"
 #include "../bits.h"
@@ -327,7 +328,7 @@ void akmos_sha2_256_update(akmos_sha2_256_t *ctx, const uint8_t *input, size_t l
 
     sfi = input + rem_len;
 
-    sha256_transform(ctx->h, ctx->w, ctx->block, 1);
+    sha256_transform(ctx->h, ctx->w, ctx->block, 1 & SIZE_T_MAX);
     sha256_transform(ctx->h, ctx->w, sfi, nb);
 
     rem_len = new_len % AKMOS_SHA2_256_BLKLEN;
@@ -340,7 +341,7 @@ void akmos_sha2_256_update(akmos_sha2_256_t *ctx, const uint8_t *input, size_t l
 
 void akmos_sha2_256_done(akmos_sha2_256_t *ctx, uint8_t *digest)
 {
-    uint32_t i, nb, pm_len;
+    size_t i, nb, pm_len;
     uint64_t len_b;
 
     nb = (1 + ((AKMOS_SHA2_256_BLKLEN - 9) < (ctx->len % AKMOS_SHA2_256_BLKLEN)));
@@ -413,7 +414,7 @@ void akmos_sha2_512_update(akmos_sha2_512_t *ctx, const uint8_t *input, size_t l
 
     sfi = input + rem_len;
 
-    sha512_transform(ctx->h, ctx->w, ctx->block, 1);
+    sha512_transform(ctx->h, ctx->w, ctx->block, 1 & SIZE_T_MAX);
     sha512_transform(ctx->h, ctx->w, sfi, nb);
 
     rem_len = new_len % AKMOS_SHA2_512_BLKLEN;
@@ -426,7 +427,7 @@ void akmos_sha2_512_update(akmos_sha2_512_t *ctx, const uint8_t *input, size_t l
 
 void akmos_sha2_512_done(akmos_sha2_512_t *ctx, uint8_t *digest)
 {
-    uint32_t i, nb, pm_len;
+    size_t i, nb, pm_len;
     uint64_t len_b;
 
     nb = (1 + ((AKMOS_SHA2_512_BLKLEN - 17) < (ctx->len % AKMOS_SHA2_512_BLKLEN)));

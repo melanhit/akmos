@@ -86,11 +86,13 @@ static uint8_t PADDING[64] = {
 static void ripemd_160_transform(akmos_ripemd_t *ctx, const uint8_t *block)
 {
     uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, *x, *state;
+    size_t i;
 
     state = ctx->state;
     x = ctx->x;
 
-    memcpy(x, block, 64);
+    for(i = 0; i < (AKMOS_RIPEMD_160_BLKLEN / 4); i++, block += 4)
+        x[i] = PACK32BE(block);
 
     a = state[0];
     b = state[1];
@@ -289,11 +291,13 @@ static void ripemd_160_transform(akmos_ripemd_t *ctx, const uint8_t *block)
 static void ripemd_256_transform(akmos_ripemd_t *ctx, const uint8_t *block)
 {
     uint32_t a, b, c, d, aa, bb, cc, dd, t, *x, *state;
+    size_t i;
 
     state = ctx->state;
     x = ctx->x;
-
-    memcpy(x, block, 64);
+    
+    for(i = 0; i < (AKMOS_RIPEMD_256_BLKLEN / 4); i++, block += 4)
+        x[i] = PACK32BE(block);
 
     a = state[0];
     b = state[1];
@@ -465,11 +469,13 @@ static void ripemd_256_transform(akmos_ripemd_t *ctx, const uint8_t *block)
 static void ripemd_320_transform(akmos_ripemd_t *ctx, const uint8_t *block)
 {
     uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, *x, *state;
+    size_t i;
 
     state = ctx->state;
     x = ctx->x;
-
-    memcpy(x, block, 64);
+    
+    for(i = 0; i < (AKMOS_RIPEMD_320_BLKLEN / 4); i++, block += 4)
+        x[i] = PACK32BE(block);
 
     a = state[0];
     b = state[1];
@@ -725,7 +731,7 @@ void akmos_ripemd_320_init(akmos_ripemd_t *ctx)
 
 void akmos_ripemd_update(akmos_ripemd_t *ctx, const uint8_t *input, size_t len)
 {
-    uint32_t have, off, need;
+    size_t have, off, need;
 
     have = (ctx->count / 8) % 64;
     need = 64 - have;
@@ -778,9 +784,8 @@ void akmos_ripemd_update(akmos_ripemd_t *ctx, const uint8_t *input, size_t len)
 
 void akmos_ripemd_done(akmos_ripemd_t *ctx, uint8_t *digest)
 {
-    int i;
     uint8_t size[8];
-    uint32_t padlen;
+    size_t i, padlen;
 
     UNPACK64BE(size, ctx->count);
 
@@ -789,7 +794,7 @@ void akmos_ripemd_done(akmos_ripemd_t *ctx, uint8_t *digest)
         padlen += 64;
 
     akmos_ripemd_update(ctx, PADDING, padlen - 8);
-    akmos_ripemd_update(ctx, size, 8);
+    akmos_ripemd_update(ctx, size, sizeof(size));
 
     if(digest != NULL) {
         for(i = 0; i < (ctx->diglen / 4); i++)
