@@ -134,12 +134,12 @@ void akmos_padadd(const uint8_t *in, size_t in_len, uint8_t *out, size_t out_len
 
 size_t akmos_padrem(uint8_t *in, size_t len)
 {
-    int i;
+    size_t i;
 
     if(!len)
         return len;
 
-    for(i = len - 1; i >= 0; i--) {
+    for(i = len - 1; i != 0; i--) {
         if(!in[i])
             continue;
 

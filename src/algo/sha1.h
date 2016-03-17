@@ -35,7 +35,7 @@
 typedef struct {
     uint32_t h[AKMOS_SHA1_DIGLEN / 4];
     uint32_t w[AKMOS_SHA1_BLKLEN / 4];
-    uint32_t len;
+    size_t   len;
     uint64_t total;
     uint8_t block[2 * AKMOS_SHA1_BLKLEN];
 } akmos_sha1_t;

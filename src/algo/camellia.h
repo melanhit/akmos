@@ -39,7 +39,7 @@ typedef struct {
     uint64_t ke[6];
     uint64_t kw[4];
     uint64_t ka[8];
-    int bits;
+    size_t bits;
 } akmos_camellia_t;
 
 void akmos_camellia_setkey (akmos_camellia_t *, const uint8_t *, size_t);

@@ -35,7 +35,7 @@
 
 #include "hmac.h"
 
-static int hmac_expkey(int algo, const uint8_t *key, size_t len, uint8_t *ekey)
+static int hmac_expkey(akmos_algo_id algo, const uint8_t *key, size_t len, uint8_t *ekey)
 {
     akmos_digest_t *ctx;
     int err;

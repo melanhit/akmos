@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <limits.h>
 
 #include "../akmos.h"
 #include "../cipher.h"
@@ -40,12 +41,14 @@ static const uint8_t CMAC_RB_256 [2] = {0x04, 0x25};
 static const uint8_t CMAC_RB_512 [2] = {0x01, 0x25};
 static const uint8_t CMAC_RB_1024[3] = {0x08, 0x00, 0x43};
 
-static void bitshift(uint8_t *buf, int len)
+static void bitshift(uint8_t *buf, size_t len)
 {
-    int i;
+    int i, nlen;
     uint8_t c, n;
 
-    for(i = len - 1, n = 0; i >= 0; i--) {
+    nlen = len & INT_MAX;
+
+    for(i = nlen - 1, n = 0; i >= 0; i--) {
         c = (buf[i] & 0x80)?1:0;
         buf[i] <<= 1;
         buf[i] |= n;

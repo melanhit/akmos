@@ -50,8 +50,10 @@ int akmos_kdf_kdf2(uint8_t *key, size_t keylen,
     err = AKMOS_ERR_SUCCESS;
 
     mdlen = akmos_digest_outlen(algo);
-    if(!mdlen)
-        return AKMOS_ERR_ALGOID;
+    if(!mdlen) {
+        err = AKMOS_ERR_ALGOID;
+        goto out;
+    }
 
     md = malloc(mdlen*2);
     if(!md) {
@@ -72,34 +74,26 @@ int akmos_kdf_kdf2(uint8_t *key, size_t keylen,
         UNPACK32LE(cnt, i);
 
         err = akmos_mac_init(&ctx, algo, AKMOS_MODE_HMAC);
-        if(err) {
-            akmos_perror(err);
+        if(err)
             goto out;
-        }
 
         err = akmos_mac_setkey(ctx, pass, passlen);
-        if(err) {
-            akmos_perror(err);
+        if(err)
             goto out;
-        }
 
         akmos_mac_update(ctx, salt, saltlen);
         akmos_mac_update(ctx, cnt, sizeof(uint32_t));
 
         err = akmos_mac_done(ctx, md);
-        if(err) {
-            akmos_perror(err);
+        if(err)
             goto out;
-        }
 
         memcpy(tbuf, md, mdlen);
 
         for(y = 1; y < iter; y++) {
             err = akmos_mac_ex(algo, AKMOS_MODE_HMAC, pass, passlen, md, mdlen, md);
-            if(err) {
-                akmos_perror(err);
+            if(err)
                 goto out;
-            }
 
             for(j = 0; j < mdlen; j++)
                 tbuf[j] ^= md[j];
@@ -118,7 +112,7 @@ out:
         free(md);
     }
 
-    memset(cnt, 0, sizeof(uint32_t));
+    memset(cnt, 0, sizeof(uint32_t));    
 
     return err;
 }

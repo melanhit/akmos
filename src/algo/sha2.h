@@ -43,7 +43,7 @@
 
 typedef struct {
     uint64_t total;
-    uint32_t len;
+    size_t   len;
     uint8_t  block[2 * AKMOS_SHA2_256_BLKLEN];
     uint32_t h[136];
     uint32_t *w;
@@ -52,7 +52,7 @@ typedef struct {
 
 typedef struct {
     uint64_t total;
-    uint32_t len;
+    size_t   len;
     uint8_t  block[2 * AKMOS_SHA2_512_BLKLEN];
     uint64_t h[96];
     uint64_t *w;

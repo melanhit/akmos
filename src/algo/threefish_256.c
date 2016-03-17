@@ -46,7 +46,7 @@ void akmos_threefish_256_setkey(akmos_threefish_256_t *ctx,
                                 size_t len)
 {
     uint64_t *k, *S;
-    int i, y;
+    size_t i, y;
 
     k = ctx->k;
 

@@ -169,7 +169,7 @@ void akmos_twofish_setkey(akmos_twofish_t *ctx, const uint8_t *in_key, size_t le
     l_key = ctx->l_key;
     s_key = ctx->s_key;
 
-    ctx->k_len = len / 8;   /* 2, 3 or 4 */
+    ctx->k_len = (len / 8) & 0xffffffff;   /* 2, 3 or 4 */
 
     for (i = 0; i < ctx->k_len; ++i) {
         a = PACK32BE(in_key + i*8);

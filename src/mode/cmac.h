@@ -30,6 +30,7 @@
 #define AKMOS_MODE_CMAC_H
 
 typedef struct {
+    akmos_algo_id   algo;
     akmos_cipher_t *actx;
     uint8_t buf[AKMOS_BUFSZ];
     uint8_t *key;
@@ -39,7 +40,6 @@ typedef struct {
     size_t klen;
     size_t sklen;
     size_t len;
-    int algo;
 } akmos_cmac_t;
 
 int  akmos_cmac_init  (akmos_cmac_t *, akmos_algo_id);

@@ -309,7 +309,7 @@ void akmos_sha2_256_init(akmos_sha2_256_t *ctx)
 
 void akmos_sha2_256_update(akmos_sha2_256_t *ctx, const uint8_t *input, size_t len)
 {
-    uint32_t nb, new_len, rem_len, tmp_len;
+    size_t nb, new_len, rem_len, tmp_len;
     const uint8_t *sfi;
 
     tmp_len = AKMOS_SHA2_256_BLKLEN - ctx->len;
@@ -395,7 +395,7 @@ void akmos_sha2_512_init(akmos_sha2_512_t *ctx)
 
 void akmos_sha2_512_update(akmos_sha2_512_t *ctx, const uint8_t *input, size_t len)
 {
-    uint32_t nb, new_len, rem_len, tmp_len;
+    size_t nb, new_len, rem_len, tmp_len;
     const uint8_t *sfi;
 
     tmp_len = AKMOS_SHA2_512_BLKLEN - ctx->len;

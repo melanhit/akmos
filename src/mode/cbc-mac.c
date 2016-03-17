@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <limits.h>
 
 #include "../akmos.h"
 #include "../cipher.h"
@@ -143,5 +144,5 @@ out:
     akmos_memzero(ctx->key, ctx->klen);
     free(ctx->key);
 
-    return err;
+    return err & INT_MAX;
 }

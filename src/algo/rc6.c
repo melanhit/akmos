@@ -49,8 +49,9 @@
 
 void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *in_key, size_t len)
 {
-    uint32_t i, j, k, a, b, t;
+    uint32_t i, j, k, a, b;
     uint32_t *key, *l_key, *l;
+    size_t t;
 
     l     = ctx->l;
     key   = ctx->key;

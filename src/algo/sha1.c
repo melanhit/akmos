@@ -61,7 +61,7 @@
 #define H3  0x10325476
 #define H4  0xc3d2e1f0
 
-static void sha1_transform(akmos_sha1_t *ctx, const uint8_t *block, uint32_t nb)
+static void sha1_transform(akmos_sha1_t *ctx, const uint8_t *block, size_t nb)
 {
     uint32_t A, B, C, D, E, i;
     uint32_t *w;
@@ -190,7 +190,7 @@ void akmos_sha1_init(akmos_sha1_t *ctx)
 
 void akmos_sha1_update(akmos_sha1_t *ctx, const uint8_t *input, size_t len)
 {
-    uint32_t nb, new_len, rem_len, tmp_len;
+    size_t nb, new_len, rem_len, tmp_len;
     const uint8_t *sfi;
 
     tmp_len = AKMOS_SHA1_BLKLEN - ctx->len;

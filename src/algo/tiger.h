@@ -37,7 +37,7 @@ typedef struct {
     uint64_t w[8];
     uint8_t  t[8];
     uint8_t  block[2 * AKMOS_TIGER_BLKLEN];
-    size_t   total;
+    uint32_t total;
     size_t   len;
 } akmos_tiger_t;
 

@@ -44,7 +44,7 @@ static const uint64_t RC[10] = {
     0xfbee7c66dd17479e, 0xca2dbf07ad5a8333,
 };
 
-static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, uint32_t nb)
+static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, size_t nb)
 {
     uint64_t *w, *s, *k, *h;
     const uint8_t *sub;
@@ -184,7 +184,7 @@ void akmos_whirlpool_init(akmos_whirlpool_t *ctx)
 
 void akmos_whirlpool_update(akmos_whirlpool_t *ctx, const uint8_t *input, size_t len)
 {
-    uint32_t nb, new_len, rem_len, tmp_len;
+    size_t nb, new_len, rem_len, tmp_len;
     const uint8_t *sfi;
 
     tmp_len = AKMOS_WHIRLPOOL_BLKLEN - ctx->len;

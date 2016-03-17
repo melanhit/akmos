@@ -38,7 +38,7 @@ typedef struct {
     uint64_t h[8];
     uint64_t w[24];
     uint8_t  block[2 * AKMOS_WHIRLPOOL_BLKLEN];
-    size_t   total;
+    uint64_t total;
     size_t   len;
 } akmos_whirlpool_t;
 

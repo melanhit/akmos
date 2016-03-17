@@ -29,6 +29,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <limits.h>
 
 #include "../akmos.h"
 #include "../bits.h"
@@ -50,7 +51,7 @@ void akmos_anubis_setkey(akmos_anubis_t *ctx, const uint8_t *key, size_t len)
     uint32_t *kappa, *inter;
     uint32_t v, K0, K1, K2, K3;
 
-    N = (len * 8) >> 5;
+    N = (len / 4) & INT_MAX;
     ctx->r = R = 8 + N;
 
     kappa = ctx->kappa;

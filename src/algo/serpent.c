@@ -410,7 +410,7 @@ void akmos_serpent_setkey(akmos_serpent_t *ctx, const uint8_t *key, size_t len)
     uint32_t t9, t10, t11, t12, t13, t14, t15, t16;
     uint32_t bits;
 
-    bits = len * 8;
+    bits = (len * 8) & 0xffffffff;
 
     lk = (bits + 31) / 32;
 

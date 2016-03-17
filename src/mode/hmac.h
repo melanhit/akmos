@@ -33,7 +33,7 @@
 #define AKMOS_HMAC_OPAD 0x5c
 
 typedef struct {
-    int algo;
+    akmos_algo_id algo;
     uint8_t *i_key;
     uint8_t *o_key;
     size_t outlen;

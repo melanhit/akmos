@@ -69,7 +69,7 @@
 #define H1  0xfedcba9876543210
 #define H2  0xf096a5b4c3b2e187
 
-static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, uint32_t nb)
+static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, size_t nb)
 {
     uint64_t a, b, c, aa, bb, cc, *w;
     uint8_t *t;
@@ -143,7 +143,7 @@ void akmos_tiger_init(akmos_tiger_t *ctx)
 
 void akmos_tiger_update(akmos_tiger_t *ctx, const uint8_t *input, size_t len)
 {
-    uint32_t nb, new_len, rem_len, tmp_len;
+    size_t nb, new_len, rem_len, tmp_len;
     const uint8_t *sfi;
 
     tmp_len = AKMOS_TIGER_BLKLEN - ctx->len;
