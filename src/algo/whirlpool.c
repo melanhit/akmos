@@ -38,11 +38,11 @@
 #include "whirlpool_sb64.h"
 
 static const uint64_t RC[10] = {
-    0x1823c6e887b8014f, 0x36a6d2f5796f9152,
-    0x60bc9b8ea30c7b35, 0x1de0d7c22e4bfe57,
-    0x157737e59ff04ada, 0x58c9290ab1a06b85,
-    0xbd5d10f4cb3e0567, 0xe427418ba77d95d8,
-    0xfbee7c66dd17479e, 0xca2dbf07ad5a8333,
+    UINT64_C(0x1823c6e887b8014f), UINT64_C(0x36a6d2f5796f9152),
+    UINT64_C(0x60bc9b8ea30c7b35), UINT64_C(0x1de0d7c22e4bfe57),
+    UINT64_C(0x157737e59ff04ada), UINT64_C(0x58c9290ab1a06b85),
+    UINT64_C(0xbd5d10f4cb3e0567), UINT64_C(0xe427418ba77d95d8),
+    UINT64_C(0xfbee7c66dd17479e), UINT64_C(0xca2dbf07ad5a8333)
 };
 
 static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, size_t nb)

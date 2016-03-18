@@ -35,12 +35,12 @@
 #include "camellia.h"
 #include "camellia_sb64.h"
 
-#define C0  0xa09e667f3bcc908b
-#define C1  0xb67ae8584caa73b2
-#define C2  0xc6ef372fe94f82be
-#define C3  0x54ff53a5f1d36f1c
-#define C4  0x10e527fade682d1d
-#define C5  0xb05688c2b3e6c1fd
+#define C0  UINT64_C(0xa09e667f3bcc908b)
+#define C1  UINT64_C(0xb67ae8584caa73b2)
+#define C2  UINT64_C(0xc6ef372fe94f82be)
+#define C3  UINT64_C(0x54ff53a5f1d36f1c)
+#define C4  UINT64_C(0x10e527fade682d1d)
+#define C5  UINT64_C(0xb05688c2b3e6c1fd)
 
 /* rotate 128bit via 2x64bit */
 /*  1..n..63 */

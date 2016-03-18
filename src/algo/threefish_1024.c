@@ -39,7 +39,7 @@
 #define ROUNDS_1024 80
 #define SKEYS_1024  ((ROUNDS_1024 / 4) + 1)
 
-#define CONST_240   0x1bd11bdaa9fc1a22
+#define CONST_240   UINT64_C(0x1bd11bdaa9fc1a22)
 
 void akmos_threefish_1024_setkey(akmos_threefish_1024_t *ctx,
                                  const uint8_t *key,

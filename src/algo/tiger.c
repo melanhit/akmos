@@ -40,35 +40,35 @@
 #define tiger_round(a, b, c, x, mul)                    \
 {                                                       \
     c ^= x;                                             \
-    UNPACK64BE(t, c);                                    \
+    UNPACK64BE(t, c);                                   \
     a -= SB0[t[0]] ^ SB1[t[2]] ^ SB2[t[4]] ^ SB3[t[6]]; \
     b += SB3[t[1]] ^ SB2[t[3]] ^ SB1[t[5]] ^ SB0[t[7]]; \
     b *= mul;                                           \
 }
 
-#define tiger_sched(w)                  \
-{                                       \
-    w[0] -= w[7] ^ 0xa5a5a5a5a5a5a5a5;  \
-    w[1] ^= w[0];                       \
-    w[2] += w[1];                       \
-    w[3] -= w[2] ^ ((~w[1]) << 19);     \
-    w[4] ^= w[3];                       \
-    w[5] += w[4];                       \
-    w[6] -= w[5] ^ ((~w[4]) >> 23);     \
-    w[7] ^= w[6];                       \
-    w[0] += w[7];                       \
-    w[1] -= w[0] ^ ((~w[7]) << 19);     \
-    w[2] ^= w[1];                       \
-    w[3] += w[2];                       \
-    w[4] -= w[3] ^ ((~w[2]) >> 23);     \
-    w[5] ^= w[4];                       \
-    w[6] += w[5];                       \
-    w[7] -= w[6] ^ 0x0123456789abcdef;  \
+#define tiger_sched(w)                                  \
+{                                                       \
+    w[0] -= w[7] ^ UINT64_C(0xa5a5a5a5a5a5a5a5);        \
+    w[1] ^= w[0];                                       \
+    w[2] += w[1];                                       \
+    w[3] -= w[2] ^ ((~w[1]) << 19);                     \
+    w[4] ^= w[3];                                       \
+    w[5] += w[4];                                       \
+    w[6] -= w[5] ^ ((~w[4]) >> 23);                     \
+    w[7] ^= w[6];                                       \
+    w[0] += w[7];                                       \
+    w[1] -= w[0] ^ ((~w[7]) << 19);                     \
+    w[2] ^= w[1];                                       \
+    w[3] += w[2];                                       \
+    w[4] -= w[3] ^ ((~w[2]) >> 23);                     \
+    w[5] ^= w[4];                                       \
+    w[6] += w[5];                                       \
+    w[7] -= w[6] ^ UINT64_C(0x0123456789abcdef);        \
 }
 
-#define H0  0x0123456789abcdef
-#define H1  0xfedcba9876543210
-#define H2  0xf096a5b4c3b2e187
+#define H0  UINT64_C(0x0123456789abcdef)
+#define H1  UINT64_C(0xfedcba9876543210)
+#define H2  UINT64_C(0xf096a5b4c3b2e187)
 
 static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, size_t nb)
 {

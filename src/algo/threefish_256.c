@@ -39,7 +39,7 @@
 #define ROUNDS_256  72
 #define SKEYS_256   ((ROUNDS_256 / 4) + 1)
 
-#define CONST_240   0x1bd11bdaa9fc1a22
+#define CONST_240   UINT64_C(0x1bd11bdaa9fc1a22)
 
 void akmos_threefish_256_setkey(akmos_threefish_256_t *ctx,
                                 const uint8_t *key,
