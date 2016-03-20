@@ -49,8 +49,8 @@ static void bitshift(uint8_t *buf, size_t len)
     nlen = len & INT_MAX;
 
     for(i = nlen - 1, n = 0; i >= 0; i--) {
-        c = (buf[i] & 0x80)?1:0;
-        buf[i] <<= 1;
+        c = (buf[i] & 0x80) ? 1 : 0;
+        buf[i] = (uint8_t)(buf[i] << 1);
         buf[i] |= n;
         n = c;
     }

@@ -414,23 +414,20 @@ void akmos_serpent_setkey(akmos_serpent_t *ctx, const uint8_t *key, size_t len)
 
     lk = (bits + 31) / 32;
 
-    for(i = 0; i < lk; i++)
-        ctx->l_key[i] = PACK32BE(key + 4 * i);
+    for(i = 0; i < lk; i++, key +=4)
+        ctx->l_key[i] = PACK32BE(key);
 
-    if (bits < 256) {
-        while (i < 8)
+    if(bits < 256) {
+        for(;i < 8; i++)
             ctx->l_key[i++] = 0;
 
-        i = bits / 32;
-        lk = 1 << bits % 32;
-
-        ctx->l_key[i] = (ctx->l_key[i] & (lk - 1)) | lk;
+        ctx->l_key[bits / 32] |= 1;
     }
 
     t1 = ctx->l_key[2] ^ ctx->l_key[4] ^ ctx->l_key[6] ^ 0x9e3779b9;
     t2 = ctx->l_key[3] ^ ctx->l_key[5] ^ ctx->l_key[7] ^ 0x9e3779b9;
 
-    for (i = 0; i < 132; i += 2) {
+    for(i = 0; i < 132; i += 2) {
         ctx->l_key[i + 8] = ROTL32(i ^ ctx->l_key[i] ^ t2, 11);
 
         t1 ^= ctx->l_key[i + 2] ^ ctx->l_key[i + 8];

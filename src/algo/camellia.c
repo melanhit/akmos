@@ -78,11 +78,11 @@ static uint64_t fl(uint64_t in, uint64_t k)
 {
     uint32_t k1, k2, x1, x2;
 
-    x1 = in >> 32;
-    x2 = in & 0xffffffff;
+    x1 = (uint32_t)(in >> 32);
+    x2 = (uint32_t)(in & 0xffffffff);
 
-    k1 = k >> 32;
-    k2 = k & 0xffffffff;
+    k1 = (uint32_t)(k >> 32);
+    k2 = (uint32_t)(k & 0xffffffff);
 
     x2 ^= ROTL32((x1 & k1), 1);
     x1 ^= (x2 | k2);
@@ -94,11 +94,11 @@ static uint64_t flinv(uint64_t in, uint64_t k)
 {
     uint32_t k1, k2, x1, x2;
 
-    x1 = in >> 32;
-    x2 = in & 0xffffffff;
+    x1 = (uint32_t)(in >> 32);
+    x2 = (uint32_t)(in & 0xffffffff);
 
-    k1 = k >> 32;
-    k2 = k & 0xffffffff;
+    k1 = (uint32_t)(k >> 32);
+    k2 = (uint32_t)(k & 0xffffffff);
 
     x1 ^= (x2 | k2);
     x2 ^= ROTL32((x1 & k1), 1);
