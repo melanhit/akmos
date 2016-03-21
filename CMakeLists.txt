@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(Akmos C)
 
-option(AKMOS_ENABLE_ASM  "Enable assembler optimization" ON)
+option(AKMOS_USE_ASM     "Enable assembler optimization" ON)
 option(AKMOS_ENABLE_TEST "Enable test suite" ON)
 
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g3")
