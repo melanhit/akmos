@@ -39,8 +39,8 @@
 
 typedef struct {
     int r;
-    uint32_t e_key[AKMOS_ANUBIS_MAX_R + 1][4];
-    uint32_t d_key[AKMOS_ANUBIS_MAX_R + 1][4];
+    uint32_t e_key[(AKMOS_ANUBIS_MAX_R + 1) * 4];
+    uint32_t d_key[(AKMOS_ANUBIS_MAX_R + 1) * 4];
     uint32_t kappa[AKMOS_ANUBIS_MAX_N];
     uint32_t inter[AKMOS_ANUBIS_MAX_N];
     uint32_t state[4];
