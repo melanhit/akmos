@@ -102,7 +102,7 @@ else()
     set(AMD64 FALSE)
 endif()
 
-if(AKMOS_ENABLE_ASM AND AMD64)
+if(AKMOS_USE_ASM AND AMD64)
     enable_language(ASM-ATT)
     if(CMAKE_ASM-ATT_COMPILER_WORKS)
         list(SORT src_amd64)
