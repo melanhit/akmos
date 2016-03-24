@@ -43,7 +43,7 @@
 
 void akmos_threefish_256_setkey(akmos_threefish_256_t *ctx,
                                 const uint8_t *key,
-                                size_t __unused len)
+                                size_t __attribute__((unused)) len)
 {
     uint64_t *k, *S;
     size_t i, y;
