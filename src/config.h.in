@@ -32,6 +32,7 @@
 #cmakedefine HAVE_ERROR_H
 #cmakedefine HAVE_ERR_H
 #cmakedefine HAVE_SIZE_T_MAX
+#cmakedefine HAVE_SIZE_MAX
 
 #ifdef HAVE_ERROR_H
  #include <error.h>
