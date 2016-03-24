@@ -1,7 +1,9 @@
 set(src
     main.c
     path.c
-    mode_ecb.c)
+    rand.c
+    mode_ecb.c
+    digest.c)
 
 set(src_enc
     enc.c)
@@ -45,14 +47,28 @@ set(vector
     ecb-threefish-1024-1024.bin
     ecb-twofish-128.bin
     ecb-twofish-192.bin
-    ecb-twofish-256.bin)
+    ecb-twofish-256.bin
+    digest-ripemd-160.bin
+    digest-ripemd-256.bin
+    digest-ripemd-320.bin    
+    digest-sha1.bin
+    digest-sha2-224.bin
+    digest-sha2-256.bin
+    digest-sha2-384.bin
+    digest-sha2-512.bin
+    digest-sha3-224.bin
+    digest-sha3-256.bin
+    digest-sha3-384.bin
+    digest-sha3-512.bin
+    digest-tiger.bin
+    digest-whirlpool.bin)
 
 list(SORT src)
 
 add_definitions(-D_BSD_SOURCE -D_POSIX_C_SOURCE=199309L -D_XOPEN_SOURCE=500)
 add_definitions(-DAKMOS_BUFSZ=8192)
 
-set(CFLAGS "-fPIC -DPIC -ansi -Wall -Werror -Wmissing-prototypes")
+set(CFLAGS "-fPIC -DPIC -ansi -Wall -Werror -Wextra -Wmissing-prototypes -Wconversion")
 separate_arguments(CFLAGS UNIX_COMMAND ${CFLAGS})
 target_compile_options(akmos_obj PRIVATE ${CFLAGS})
 

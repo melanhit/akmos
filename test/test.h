@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,8 @@
 #define TEST_PASS   1
 #define TEST_FAIL   0
 
+#include <akmos.h>
+
 typedef struct test_ecb_s {
     uint8_t *key;
     uint8_t *pt;
@@ -41,9 +43,20 @@ typedef struct test_ecb_s {
     uint8_t *ct1;
 } test_ecb_t;
 
+typedef struct test_digest_s {
+    uint8_t *h1;
+    uint8_t *h2;
+    uint8_t *h3;
+    uint8_t *h4;
+} test_digest_t;
+
 int test_mode_ecb(akmos_algo_id, char *);
+int test_digest(akmos_algo_id, char *);
 
 int test_path_cipher(akmos_algo_id, akmos_mode_id, size_t, char *, char *);
+int test_path_digest(akmos_algo_id, char *, char *);
+
+void test_rand(uint8_t *, size_t);
 
 void test_print(char *, size_t);
 void test_total(size_t);

@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -36,83 +36,122 @@
 
 #include "test.h"
 
-static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t blklen, int *res)
+static int digest_calc(test_digest_t *dctx, akmos_algo_id algo, size_t diglen, size_t blklen, int *res)
 {
-    uint8_t buf[1024], *key, *ct;
+    uint8_t *buf, *out, *p;
     int err;
-    size_t i, j;
+    size_t i, j, len;
+    akmos_digest_t *ctx;
 
-    key = buf;
-    ct = key + keylen;
+    buf = out = NULL;
+    err = EXIT_SUCCESS;
 
-    /* test encryption */
-    err = akmos_cipher_ex(algo, AKMOS_MODE_ECB|AKMOS_MODE_ENCRYPT, ectx->key, keylen, NULL, ectx->pt, blklen, ct);
-    if(err)
-        return akmos_perror(err);
+    out = malloc(diglen);
+    if(!out) {
+        err = AKMOS_ERR_ENOMEM;
+        goto out;
+    }
 
-    if(memcmp(ct, ectx->ct0, blklen) != 0) {
+    len = TEST_CNT * blklen;
+    buf = malloc(len + 1);
+    if(!buf) {
+        err = AKMOS_ERR_ENOMEM;
+        goto out;
+    }
+
+    test_rand(buf, len);
+
+    /* test empty input */
+    err = akmos_digest_ex(algo, buf, 0, out);
+    if(err) {
+        akmos_perror(err);
+        goto out;
+    }
+
+    if(memcmp(out, dctx->h1, diglen) != 0) {
         *res = TEST_FAIL;
-        return EXIT_SUCCESS;
+        goto out;
     }
 
-    memcpy(key, ectx->key, keylen);
-
-    for(i = 0; i < TEST_CNT; i++) {
-        for(j = 0; j < keylen; j++)
-            key[j] ^= ct[j % blklen];
-
-        err = akmos_cipher_ex(algo, AKMOS_MODE_ECB|AKMOS_MODE_ENCRYPT, key, keylen, NULL, ct, blklen, ct);
-        if(err)
-            goto out;
+    /* test full input (TEST_CNT * blklen) */
+    err = akmos_digest_ex(algo, buf, len, out);
+    if(err) {
+        akmos_perror(err);
+        goto out;
     }
 
-    if(memcmp(ct, ectx->ct1, blklen) != 0) {
+    if(memcmp(out, dctx->h2, diglen) != 0) {
         *res = TEST_FAIL;
-        return EXIT_SUCCESS;
+        goto out;
     }
 
-    /* test decryption */
-    for(i = 0; i < TEST_CNT; i++) {
-        err = akmos_cipher_ex(algo, AKMOS_MODE_ECB|AKMOS_MODE_DECRYPT, key, keylen, NULL, ct, blklen, ct);
-        if(err)
-            goto out;
-
-        for(j = 0; j < keylen; j++)
-            key[j] ^= ct[j % blklen];
+    err = akmos_digest_init(&ctx, algo);
+    if(err) {
+        akmos_perror(err);
+        goto out;
     }
 
-    if(memcmp(key, ectx->key, keylen) != 0) {
+    p = buf;
+    for(i = 0; i < len; i++, p++) {
+        akmos_digest_update(ctx, p, 1);
+    }
+
+    akmos_digest_done(ctx, out);
+
+    if(memcmp(out, dctx->h2, diglen) != 0) {
         *res = TEST_FAIL;
-        return EXIT_SUCCESS;
+        goto out;
     }
 
-    err = akmos_cipher_ex(algo, AKMOS_MODE_ECB|AKMOS_MODE_DECRYPT, key, keylen, NULL, ct, blklen, ct);
-    if(err)
-        return akmos_perror(err);
+    /* test input not multiple digest block length */
+    len = blklen + 1;
 
-    if(memcmp(ct, ectx->pt, blklen) != 0) {
+    err = akmos_digest_ex(algo, buf, len, out);
+    if(err) {
+        akmos_perror(err);
+        goto out;
+    }
+
+    if(memcmp(out, dctx->h3, diglen) != 0) {
         *res = TEST_FAIL;
-        return EXIT_SUCCESS;
+        goto out;
+    }
+
+    len = blklen - 1;
+
+    err = akmos_digest_ex(algo, buf, len, out);
+    if(err) {
+        akmos_perror(err);
+        goto out;
+    }
+
+    if(memcmp(out, dctx->h4, diglen) != 0) {
+        *res = TEST_FAIL;
+        goto out;
     }
 
 out:
-    if(err)
-        return akmos_perror(err);
+    if(out)
+        free(out);
 
-    return EXIT_SUCCESS;
+    if(buf)
+        free(buf);
+
+    return err;
 }
 
-static int ecb_test(akmos_algo_id algo, size_t keylen, char *argv0, int *res)
+static int digest(akmos_algo_id algo, char *argv0, int *res)
 {
     char path[512];
     uint8_t buf[BUFSIZ];
-    size_t blklen;
+    size_t diglen, blklen;
     ssize_t len;
     int fd, err;
+    const akmos_digest_xdesc_t *desc;
 
-    test_ecb_t ectx;
+    test_digest_t dctx;
 
-    err = test_path_cipher(algo, AKMOS_MODE_ECB, keylen, argv0, path);
+    err = test_path_digest(algo, argv0, path);
     if(err)
         return err;
 
@@ -130,57 +169,44 @@ static int ecb_test(akmos_algo_id algo, size_t keylen, char *argv0, int *res)
 
     close(fd);
 
-    if((!keylen) || ((keylen % 8) != 0)) {
-        printf("Invalid keylen %zd\n", keylen);
-        return EXIT_FAILURE;
-    }
+    desc = akmos_digest_desc(algo);
+    if(!desc)
+        return akmos_perror(AKMOS_ERR_ALGOID);
 
-    keylen /= 8;
-    blklen = akmos_cipher_blklen(algo);
-    if(!blklen) {
-        akmos_perror(AKMOS_ERR_ALGOID);
-        return EXIT_FAILURE;
-    }
-
-    if(len != ((keylen + blklen * 3))) {
+    if(len != (desc->outlen * (sizeof(dctx) / sizeof(dctx.h1)))) {
         printf("Invalid data in \"%s\"\n", path);
         return EXIT_FAILURE;
     }
 
-    ectx.key = buf;
-    ectx.pt  = buf + keylen;
-    ectx.ct0 = ectx.pt + blklen;
-    ectx.ct1 = ectx.ct0 + blklen;
+    dctx.h1 = buf;
+    dctx.h2 = buf + desc->outlen;
+    dctx.h3 = buf + (desc->outlen * 2);
+    dctx.h4 = buf + (desc->outlen * 3);
 
-    err = ecb_crypt(&ectx, algo, keylen, blklen, res);
+    err = digest_calc(&dctx, algo, desc->outlen, desc->blklen, res);
     if(err)
         return err;
 
     return EXIT_SUCCESS;
 }
 
-int test_mode_ecb(akmos_algo_id algo, char *argv0)
+int test_digest(akmos_algo_id algo, char *argv0)
 {
     char pname[128];
     int err, res;
     size_t i, keylen;
-    const akmos_cipher_xdesc_t *desc;
+    const akmos_digest_xdesc_t *desc;
 
-    desc = akmos_cipher_desc(algo);
+    desc = akmos_digest_desc(algo);
     if(!desc)
         return akmos_perror(AKMOS_ERR_ALGOID);
 
     res = TEST_PASS;
-    for(i = desc->keymin; i <= desc->keymax; i += desc->keystep) {
-        err = ecb_test(algo, i*8, argv0, &res);
-        if(err)
-            return err;
+    err = digest(algo, argv0, &res);
+    if(err)
+        return err;
 
-        if(res == TEST_FAIL)
-            break;
-    }
-
-    sprintf(pname, "%s-%s", akmos_mode2str(AKMOS_MODE_ECB), desc->name);
+    sprintf(pname, "Digest-%s", desc->name);
     test_print(pname, res);
     test_total(res);
 

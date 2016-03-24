@@ -33,8 +33,6 @@
 #include <ctype.h>
 #include <libgen.h>
 
-#include <akmos.h>
-
 #include "test.h"
 
 int test_path_cipher(akmos_algo_id algo, akmos_mode_id mode, size_t keylen, char *argv0, char *path)
@@ -59,6 +57,33 @@ int test_path_cipher(akmos_algo_id algo, akmos_mode_id mode, size_t keylen, char
     dir_name = dirname(s);
 
     sprintf(vname, "%s-%s-%zd.bin", mode_name, alg_name, keylen);
+
+    for(i = 0; i < strlen(vname); i++)
+        vname[i] = tolower(vname[i]);
+
+    sprintf(path, "%s/%s", dir_name, vname);
+
+    free(s);
+
+    return EXIT_SUCCESS;
+}
+
+int test_path_digest(akmos_algo_id algo, char *argv0, char *path)
+{
+    char vname[128], *s;
+    const char *alg_name, *dir_name;
+    int i;
+
+    alg_name = akmos_digest_name(algo);
+    if(!alg_name) {
+        akmos_perror(AKMOS_ERR_ALGOID);
+        return EXIT_FAILURE;
+    }
+
+    s = strdup(argv0);
+    dir_name = dirname(s);
+
+    sprintf(vname, "digest-%s.bin", alg_name);
 
     for(i = 0; i < strlen(vname); i++)
         vname[i] = tolower(vname[i]);

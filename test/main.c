@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -31,8 +31,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include <akmos.h>
-
 #include "test.h"
 
 struct {
@@ -44,6 +42,7 @@ struct {
 
 int main(int argc, char **argv)
 {
+    /* cipher ECB-mode */
     if(test_mode_ecb(AKMOS_ALGO_ANUBIS, argv[0]))
         return EXIT_FAILURE;
     if(test_mode_ecb(AKMOS_ALGO_BLOWFISH, argv[0]))
@@ -67,6 +66,36 @@ int main(int argc, char **argv)
     if(test_mode_ecb(AKMOS_ALGO_THREEFISH_1024, argv[0]))
         return EXIT_FAILURE;
     if(test_mode_ecb(AKMOS_ALGO_TWOFISH, argv[0]))
+        return EXIT_FAILURE;
+
+    /* digest */
+    if(test_digest(AKMOS_ALGO_RIPEMD_160, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_RIPEMD_256, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_RIPEMD_320, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SHA1, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SHA2_224, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SHA2_256, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SHA2_384, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SHA2_512, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SHA3_224, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SHA3_256, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SHA3_384, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SHA3_512, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_TIGER, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_WHIRLPOOL, argv[0]))
         return EXIT_FAILURE;
 
     if(total.fail)
