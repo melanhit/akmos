@@ -26,5 +26,25 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef AKMOS_CONFIG_H
+#define AKMOS_CONFIG_H
+
 #cmakedefine HAVE_ERROR_H
 #cmakedefine HAVE_ERR_H
+#cmakedefine HAVE_SIZE_T_MAX
+
+#ifdef HAVE_ERROR_H
+ #include <error.h>
+#else
+ #ifdef HAVE_ERR_H
+  #include <err.h>
+ #endif
+#endif
+
+#ifndef HAVE_SIZE_T_MAX
+ #ifdef HAVE_SIZE_MAX
+  #define SIZE_T_MAX  SIZE_MAX
+ #endif
+#endif
+
+#endif

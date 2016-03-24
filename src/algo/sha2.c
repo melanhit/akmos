@@ -32,6 +32,8 @@
 #include <string.h>
 #include <limits.h>
 
+#include <config.h>
+
 #include "../akmos.h"
 #include "../bits.h"
 

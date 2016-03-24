@@ -29,6 +29,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <limits.h>
+
+#include <config.h>
 
 #include "../akmos.h"
 #include "../bits.h"
@@ -295,7 +298,7 @@ static void ripemd_256_transform(akmos_ripemd_t *ctx, const uint8_t *block)
 
     state = ctx->state;
     x = ctx->x;
-    
+
     for(i = 0; i < (AKMOS_RIPEMD_256_BLKLEN / 4); i++, block += 4)
         x[i] = PACK32BE(block);
 
@@ -473,7 +476,7 @@ static void ripemd_320_transform(akmos_ripemd_t *ctx, const uint8_t *block)
 
     state = ctx->state;
     x = ctx->x;
-    
+
     for(i = 0; i < (AKMOS_RIPEMD_320_BLKLEN / 4); i++, block += 4)
         x[i] = PACK32BE(block);
 
@@ -789,7 +792,7 @@ void akmos_ripemd_done(akmos_ripemd_t *ctx, uint8_t *digest)
 
     UNPACK64BE(size, ctx->count);
 
-    padlen = 64 - ((ctx->count / 8) % 64);
+    padlen = (64 - ((ctx->count / 8) % 64)) & SIZE_T_MAX;
     if(padlen < 1 + 8)
         padlen += 64;
 
@@ -801,4 +804,3 @@ void akmos_ripemd_done(akmos_ripemd_t *ctx, uint8_t *digest)
             UNPACK32BE(digest + (i * 4), ctx->state[i]);
     }
 }
-
