@@ -30,6 +30,8 @@
 #include <string.h>
 #include <limits.h>
 
+#include <config.h>
+
 #include "pxor.h"
 
 #define P8      (  8 & SIZE_T_MAX)
