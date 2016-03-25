@@ -152,7 +152,7 @@ static void cipher_init_tde(akmos_cipher_t *ctx, akmos_algo_id flag)
     }
 }
 
-static int cipher_pxor(akmos_cipher_t *ctx)
+static int cipher_init_pxor(akmos_cipher_t *ctx)
 {
     switch(ctx->xalgo->desc.blklen) {
         case 8:
@@ -217,7 +217,7 @@ int akmos_cipher_init(akmos_cipher_t **ctx, akmos_algo_id algo, akmos_mode_id mo
     cipher_init_tde(ptr, algo & AKMOS_ALGO_FLAG_MASK);
 
     /* set parallel xor routines */
-    err = cipher_pxor(ptr);
+    err = cipher_init_pxor(ptr);
     if(err)
         goto out;
 
