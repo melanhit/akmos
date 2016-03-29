@@ -119,7 +119,7 @@ int akmos_cmac_init(akmos_cmac_t *ctx, akmos_algo_id algo)
 int akmos_cmac_setkey(akmos_cmac_t *ctx, const uint8_t *key, size_t len)
 {
     uint8_t *k0;
-    size_t blklen;
+    size_t l;
     int err;
 
     l = akmos_cipher_blklen(ctx->algo);
