@@ -38,6 +38,7 @@
 
 #include "cmac.h"
 
+static const uint8_t CMAC_RB_64  [1] = {0x8d};
 static const uint8_t CMAC_RB_128 [1] = {0x87};
 static const uint8_t CMAC_RB_256 [2] = {0x04, 0x25};
 static const uint8_t CMAC_RB_512 [2] = {0x01, 0x25};
@@ -61,6 +62,10 @@ static void bitshift(uint8_t *buf, size_t len)
 static void cmac_add_rb(uint8_t *p, size_t l)
 {
     switch(l) {
+        case 8:
+            p[l-1] ^= CMAC_RB_64[0];
+            break;
+
         case 16:
             p[l-1] ^= CMAC_RB_128[0];
             break;
@@ -114,7 +119,7 @@ int akmos_cmac_init(akmos_cmac_t *ctx, akmos_algo_id algo)
 int akmos_cmac_setkey(akmos_cmac_t *ctx, const uint8_t *key, size_t len)
 {
     uint8_t *k0;
-    size_t l;
+    size_t blklen;
     int err;
 
     l = akmos_cipher_blklen(ctx->algo);
