@@ -40,7 +40,7 @@
 
 static uint32_t h_fun(akmos_twofish_t *ctx, const uint32_t x, const uint32_t *key)
 {
-    uint32_t  b0, b1, b2, b3;
+    uint32_t b0, b1, b2, b3;
 
     b0 = EXTBYTE(x, 0);
     b1 = EXTBYTE(x, 1);
@@ -49,20 +49,20 @@ static uint32_t h_fun(akmos_twofish_t *ctx, const uint32_t x, const uint32_t *ke
 
     switch (ctx->k_len) {
         case 4:
-            b0 = Q1[(uint8_t) b0] ^ EXTBYTE(key[3],0);
-            b1 = Q0[(uint8_t) b1] ^ EXTBYTE(key[3],1);
-            b2 = Q0[(uint8_t) b2] ^ EXTBYTE(key[3],2);
-            b3 = Q1[(uint8_t) b3] ^ EXTBYTE(key[3],3);
+            b0 = (uint32_t)(Q1[(uint8_t) b0] ^ EXTBYTE(key[3],0));
+            b1 = (uint32_t)(Q0[(uint8_t) b1] ^ EXTBYTE(key[3],1));
+            b2 = (uint32_t)(Q0[(uint8_t) b2] ^ EXTBYTE(key[3],2));
+            b3 = (uint32_t)(Q1[(uint8_t) b3] ^ EXTBYTE(key[3],3));
         case 3:
-            b0 = Q1[(uint8_t) b0] ^ EXTBYTE(key[2],0);
-            b1 = Q1[(uint8_t) b1] ^ EXTBYTE(key[2],1);
-            b2 = Q0[(uint8_t) b2] ^ EXTBYTE(key[2],2);
-            b3 = Q0[(uint8_t) b3] ^ EXTBYTE(key[2],3);
+            b0 = (uint32_t)(Q1[(uint8_t) b0] ^ EXTBYTE(key[2],0));
+            b1 = (uint32_t)(Q1[(uint8_t) b1] ^ EXTBYTE(key[2],1));
+            b2 = (uint32_t)(Q0[(uint8_t) b2] ^ EXTBYTE(key[2],2));
+            b3 = (uint32_t)(Q0[(uint8_t) b3] ^ EXTBYTE(key[2],3));
         case 2:
-            b0 = Q0[(uint8_t) (Q0[(uint8_t) b0] ^ EXTBYTE(key[1],0))] ^ EXTBYTE(key[0],0);
-            b1 = Q0[(uint8_t) (Q1[(uint8_t) b1] ^ EXTBYTE(key[1],1))] ^ EXTBYTE(key[0],1);
-            b2 = Q1[(uint8_t) (Q0[(uint8_t) b2] ^ EXTBYTE(key[1],2))] ^ EXTBYTE(key[0],2);
-            b3 = Q1[(uint8_t) (Q1[(uint8_t) b3] ^ EXTBYTE(key[1],3))] ^ EXTBYTE(key[0],3);
+            b0 = (uint32_t)(Q0[(uint8_t) (Q0[(uint8_t) b0] ^ EXTBYTE(key[1],0))] ^ EXTBYTE(key[0],0));
+            b1 = (uint32_t)(Q0[(uint8_t) (Q1[(uint8_t) b1] ^ EXTBYTE(key[1],1))] ^ EXTBYTE(key[0],1));
+            b2 = (uint32_t)(Q1[(uint8_t) (Q0[(uint8_t) b2] ^ EXTBYTE(key[1],2))] ^ EXTBYTE(key[0],2));
+            b3 = (uint32_t)(Q1[(uint8_t) (Q1[(uint8_t) b3] ^ EXTBYTE(key[1],3))] ^ EXTBYTE(key[0],3));
     }
 
     return  S0[b0] ^ S1[b1] ^ S2[b2] ^ S3[b3];
