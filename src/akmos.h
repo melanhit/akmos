@@ -37,7 +37,9 @@ typedef enum {
     AKMOS_ERR_KEYLEN,
     AKMOS_ERR_ENOMEM,
     AKMOS_ERR_BLKLEN,
-    AKMOS_ERR_FLAGID
+    AKMOS_ERR_FLAGID,
+    AKMOS_ERR_STMMODE,
+    AKMOS_ERR_STMTDEA
 } akmos_err_id;
 
 typedef enum {
@@ -101,6 +103,7 @@ typedef struct akmos_cipher_xdesc_s {
     akmos_algo_id id;
     char   *name;
     size_t blklen;
+    size_t ivlen;
     size_t keymin;
     size_t keymax;
     size_t keystep;
@@ -118,6 +121,7 @@ int  akmos_cipher_ex     (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t,
 const char *akmos_cipher_name(akmos_algo_id);
 akmos_algo_id akmos_cipher_id(const char *);
 size_t akmos_cipher_blklen   (akmos_algo_id);
+size_t akmos_cipher_ivlen    (akmos_algo_id);
 
 const akmos_cipher_xdesc_t *akmos_cipher_desc(akmos_algo_id);
 

@@ -33,7 +33,7 @@ typedef enum akmos_algo_mask_e {
     AKMOS_ALGO_MASK         = 0x000fffff,
     AKMOS_ALGO_CIPHER_MASK  = 0x00000fff,
     AKMOS_ALGO_BLKCIPH_MASK = 0x000000ff,
-    AKMOS_ALGO_STRMCIPH_MASK= 0x00000f00,
+    AKMOS_ALGO_STMCIPH_MASK = 0x00000f00,
     AKMOS_ALGO_DIGEST_MASK  = 0x000ff000,
     AKMOS_ALGO_FLAG_MASK    = 0x70000000
 } akmos_algo_mask_t;

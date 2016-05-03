@@ -29,7 +29,8 @@
 #ifndef AKMOS_CIPHER_H
 #define AKMOS_CIPHER_H
 
-#define AKMOS_CIPHER_MAX_BLKLEN     128 /* threefish-1024 */
+#define AKMOS_CIPHER_MAX_BLKLEN AKMOS_THREEFISH_1024_BLKLEN
+#define AKMOS_CIPHER_MAX_IVLEN  AKMOS_THREEFISH_1024_BLKLEN
 
 #include "algo/anubis.h"
 #include "algo/cast6.h"
@@ -72,7 +73,16 @@ typedef union {
 
 typedef struct akmos_cipher_xalgo_s {
     akmos_cipher_xdesc_t desc;
+
+    /* stream cipher routines */
+    void (*setcnt)  (void *, const uint8_t *);
+    void (*setiv)   (void *, const uint8_t *);
+    void (*stream)  (void *, uint8_t *);
+
+    /* common cipher routines */
     void (*setkey)  (void *, const uint8_t *, size_t);
+
+    /* block cipher routines */
     void (*encrypt) (void *, const uint8_t *, uint8_t *);
     void (*decrypt) (void *, const uint8_t *, uint8_t *);
 } akmos_cipher_xalgo_t;

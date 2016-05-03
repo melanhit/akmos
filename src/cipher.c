@@ -79,6 +79,12 @@ static int cipher_init_mode(akmos_cipher_t *ctx, akmos_mode_id mode)
     return AKMOS_ERR_SUCCESS;
 }
 
+static void cipher_init_stream(akmos_cipher_t *ctx)
+{
+    ctx->xmode = &akmos_xmode_ctr;
+    ctx->crypt = &akmos_ctr_stream;
+}
+
 static void cipher_setkey(akmos_cipher_t *ctx, const uint8_t *key, size_t len)
 {
     ctx->xalgo->setkey(&ctx->actx, key, len);
@@ -129,9 +135,12 @@ static void cipher_eee_decrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, uint8
     ctx->xalgo->decrypt(&ctx->actx[0], out_blk, out_blk);
 }
 
-static void cipher_init_tde(akmos_cipher_t *ctx, akmos_algo_id flag)
+static int cipher_init_tde(akmos_cipher_t *ctx, akmos_algo_id algo)
 {
-    switch(flag) {
+    if((algo & AKMOS_ALGO_STMCIPH_MASK))
+        return AKMOS_ERR_STMTDEA;
+
+    switch(algo & AKMOS_ALGO_FLAG_MASK) {
         case AKMOS_ALGO_FLAG_EDE:
             ctx->setkey  = &cipher_tde_setkey;
             ctx->encrypt = &cipher_ede_encrypt;
@@ -150,6 +159,8 @@ static void cipher_init_tde(akmos_cipher_t *ctx, akmos_algo_id flag)
             ctx->decrypt = &cipher_decrypt;
             break;
     }
+
+    return AKMOS_ERR_SUCCESS;
 }
 
 static int cipher_init_pxor(akmos_cipher_t *ctx)
@@ -201,9 +212,20 @@ int akmos_cipher_init(akmos_cipher_t **ctx, akmos_algo_id algo, akmos_mode_id mo
         goto out;
     }
 
-    err = cipher_init_mode(ptr, mode);
-    if(err)
-        goto out;
+    /* stream cipher support only CTR mode */
+    if((algo & AKMOS_ALGO_STMCIPH_MASK)) {
+        if((mode & AKMOS_MODE_CIPHER_MASK) != AKMOS_MODE_CTR) {
+            err = AKMOS_ERR_STMMODE;
+            goto out;
+        }
+
+        cipher_init_stream(ptr);
+    /* set mode for block cipher */
+    } else {
+        err = cipher_init_mode(ptr, mode);
+        if(err)
+            goto out;
+    }
 
     /* set iv routines */
     if(ptr->xmode->setiv)
@@ -214,7 +236,9 @@ int akmos_cipher_init(akmos_cipher_t **ctx, akmos_algo_id algo, akmos_mode_id mo
         ptr->setcnt = ptr->xmode->setcnt;
 
     /* TDEA */
-    cipher_init_tde(ptr, algo & AKMOS_ALGO_FLAG_MASK);
+    err = cipher_init_tde(ptr, algo & AKMOS_ALGO_FLAG_MASK);
+    if(err)
+        goto out;
 
     /* set parallel xor routines */
     err = cipher_init_pxor(ptr);

@@ -34,12 +34,12 @@
 #include "../bits.h"
 #include "../cipher.h"
 
-void akmos_ctr_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
+static void ctr_blk_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
 {
     akmos_ctr_t *ptr;
     size_t len;
 
-    len = ctx->xalgo->desc.blklen - sizeof(uint64_t);
+    len = ctx->xalgo->desc.ivlen - sizeof(uint64_t);
 
     ptr = &ctx->mctx.ctr;
 
@@ -54,9 +54,35 @@ void akmos_ctr_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
     memset(ptr->ctr, 0, sizeof(uint64_t));
 }
 
+static void ctr_stm_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
+{
+    akmos_ctr_t *ptr;
+    size_t ivlen;
+
+    ivlen = ctx->xalgo->desc.ivlen;
+
+    ptr = &ctx->mctx.ctr;
+
+    if(!iv)
+        memset(ptr->iv, 0, ivlen);
+    else
+        memcpy(ptr->iv, iv, ivlen);
+
+    ctx->xalgo->setiv(&ctx->actx[0], ptr->iv);
+}
+
+void akmos_ctr_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
+{
+    if(ctx->xalgo->setiv)
+        ctr_stm_setiv(ctx, iv);
+    else
+        ctr_blk_setiv(ctx, iv);
+}
+
 void akmos_ctr_setcnt(akmos_cipher_t *ctx, const uint8_t *cnt)
 {
     akmos_ctr_t *ptr;
+    uint8_t ucnt[8];
 
     ptr = &ctx->mctx.ctr;
 
@@ -64,6 +90,11 @@ void akmos_ctr_setcnt(akmos_cipher_t *ctx, const uint8_t *cnt)
         ptr->cnt = PACK64LE(cnt);
     else
         ptr->cnt = 0;
+
+    if(ctx->xalgo->setcnt) {
+        UNPACK64LE(ucnt, ptr->cnt);
+        ctx->xalgo->setcnt(&ctx->actx[0], ucnt);
+    }
 }
 
 void akmos_ctr_encrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
@@ -111,6 +142,55 @@ void akmos_ctr_encrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len
     ctx->encrypt(ctx, ptr->iv, ptr->tmp);
     ptr->cnt++;
     UNPACK64BE(ptr->ctr, ptr->cnt);
+
+    for(i = 0; i < n; i++)
+        out_blk[i] = ptr->tmp[i] ^ in_blk[i];
+
+    ptr->rem_len = blklen - i;
+    ptr->rem_buf = ptr->tmp + i;
+}
+
+void akmos_ctr_stream(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+{
+    akmos_ctr_t *ptr;
+    size_t i, n, blklen;
+
+    ptr = &ctx->mctx.ctr;
+    if(ptr->rem_len > 0) {
+        for(i = 0; i < ptr->rem_len; i++) {
+            if(i == in_len)
+                break;
+
+            out_blk[i] = ptr->rem_buf[i] ^ in_blk[i];
+        }
+
+        out_blk += i;
+        in_blk  += i;
+
+        in_len -= i;
+        ptr->rem_len -= i;
+
+        if(ptr->rem_len)
+            ptr->rem_buf += i;
+    }
+
+    blklen = ctx->xalgo->desc.blklen;
+    n = in_len / blklen;
+
+    for(i = 0; i < n; i++) {
+        ctx->xalgo->stream(ctx, ptr->tmp);
+
+        ctx->pxor(in_blk, ptr->tmp, out_blk);
+
+        out_blk += blklen;
+        in_blk  += blklen;
+    }
+
+    n = in_len - (n * blklen);
+    if(!n)
+        return;
+
+    ctx->xalgo->stream(&ctx->actx[0], ptr->tmp);
 
     for(i = 0; i < n; i++)
         out_blk[i] = ptr->tmp[i] ^ in_blk[i];

@@ -114,6 +114,18 @@ int akmos_perror(akmos_err_id e)
             printf("Unsupported block length (err = %d)\n", e);
             break;
 
+        case AKMOS_ERR_FLAGID:
+            printf("Invalid flag (err = %d)\n", e);
+            break;
+
+        case AKMOS_ERR_STMMODE:
+            printf("Unsupported mode for stream cipher (err = %d)\n", e);
+            break;
+
+        case AKMOS_ERR_STMTDEA:
+            printf("Stream cipher unsupport TDEA (err = %d)\n", e);
+            break;
+
         default:
             printf("Unknown error (err = %d)\n", e);
             break;
@@ -213,6 +225,17 @@ size_t akmos_cipher_blklen(akmos_algo_id algo)
         return 0;
 
     return desc->blklen;
+}
+
+size_t akmos_cipher_ivlen(akmos_algo_id algo)
+{
+    const akmos_cipher_xdesc_t *desc;
+
+    desc = akmos_cipher_desc(algo);
+    if(!desc)
+        return 0;
+
+    return desc->ivlen;
 }
 
 const akmos_digest_xalgo_t *akmos_digest_xalgo(akmos_algo_id algo)
