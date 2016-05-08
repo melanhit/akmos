@@ -110,7 +110,7 @@ void akmos_salsa_stream20(akmos_salsa_t *ctx, uint8_t *out_blk)
         QROUND( 4,  0, 12,  7); QROUND( 9,  5,  1,  7);
         QROUND(14, 10,  6,  7); QROUND( 3, 15, 11,  7);
         QROUND( 8,  4,  0,  9); QROUND(13,  9,  5,  9);
-        QROUND( 2, 14, 10,  9); QROUND( 7,  3, 15, 79);
+        QROUND( 2, 14, 10,  9); QROUND( 7,  3, 15,  9);
         QROUND(12,  8,  4, 13); QROUND( 1, 13,  9, 13);
         QROUND( 6,  2, 14, 13); QROUND(11,  7,  3, 13);
         QROUND( 0, 12,  8, 18); QROUND( 5,  1, 13, 18);
