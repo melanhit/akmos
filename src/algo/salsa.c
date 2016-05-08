@@ -42,6 +42,9 @@
 #define C4  0x3120646e
 #define C5  0x79622d36
 
+#define QROUND (a, b, c, n)             \
+    s[a] ^= ROTL32((s[b] + s[c]), n);   \
+
 void akmos_salsa_setiv(akmos_salsa_t *ctx, const uint8_t *iv)
 {
     ctx->s[6] = PACK32BE(iv    );
@@ -93,8 +96,6 @@ void akmos_salsa_setkey(akmos_salsa_t *ctx, const uint8_t *in_key, size_t len)
         default:
             return;
     }
-
-
 }
 
 void akmos_salsa_stream20(akmos_salsa_t *ctx, uint8_t *out_blk)
@@ -106,23 +107,23 @@ void akmos_salsa_stream20(akmos_salsa_t *ctx, uint8_t *out_blk)
         s[i] = ctx->s[i];
 
     for(i = 0; i < AKMOS_SALSA20_ROUNDS / 2; i++) {
-        s[ 4] ^= ROTL32((s[ 0] + s[12]),  7); s[ 9] ^= ROTL32((s[ 5] + s[ 1]),  7);
-        s[14] ^= ROTL32((s[10] + s[ 6]),  7); s[ 3] ^= ROTL32((s[15] + s[11]),  7);
-        s[ 8] ^= ROTL32((s[ 4] + s[ 0]),  9); s[13] ^= ROTL32((s[ 9] + s[ 5]),  9);
-        s[ 2] ^= ROTL32((s[14] + s[10]),  9); s[ 7] ^= ROTL32((s[ 3] + s[15]),  9);
-        s[12] ^= ROTL32((s[ 8] + s[ 4]), 13); s[ 1] ^= ROTL32((s[13] + s[ 9]), 13);
-        s[ 6] ^= ROTL32((s[ 2] + s[14]), 13); s[11] ^= ROTL32((s[ 7] + s[ 3]), 13);
-        s[ 0] ^= ROTL32((s[12] + s[ 8]), 18); s[ 5] ^= ROTL32((s[ 1] + s[13]), 18);
-        s[10] ^= ROTL32((s[ 6] + s[ 2]), 18); s[15] ^= ROTL32((s[11] + s[ 7]), 18);
+        QROUND( 4,  0, 12,  7); QROUND( 9,  5,  1,  7);
+        QROUND(14, 10,  6,  7); QROUND( 3, 15, 11,  7);
+        QROUND( 8,  4,  0,  9); QROUND(13,  9,  5,  9);
+        QROUND( 2, 14, 10,  9); QROUND( 7,  3, 15, 79);
+        QROUND(12,  8,  4, 13); QROUND( 1, 13,  9, 13);
+        QROUND( 6,  2, 14, 13); QROUND(11,  7,  3, 13);
+        QROUND( 0, 12,  8, 18); QROUND( 5,  1, 13, 18);
+        QROUND(10,  6,  2, 18); QROUND(15, 11,  7, 18);
 
-        s[ 1] ^= ROTL32((s[ 0] + s[ 3]),  7); s[ 6] ^= ROTL32((s[ 5] + s[ 4]),  7);
-        s[11] ^= ROTL32((s[10] + s[ 9]),  7); s[12] ^= ROTL32((s[15] + s[14]),  7);
-        s[ 2] ^= ROTL32((s[ 1] + s[ 0]),  9); s[ 7] ^= ROTL32((s[ 6] + s[ 5]),  9);
-        s[ 8] ^= ROTL32((s[11] + s[10]),  9); s[13] ^= ROTL32((s[12] + s[15]),  9);
-        s[ 3] ^= ROTL32((s[ 2] + s[ 1]), 13); s[ 4] ^= ROTL32((s[ 7] + s[ 6]), 13);
-        s[ 9] ^= ROTL32((s[ 8] + s[11]), 13); s[14] ^= ROTL32((s[13] + s[12]), 13);
-        s[ 0] ^= ROTL32((s[ 3] + s[ 2]), 18); s[ 5] ^= ROTL32((s[ 4] + s[ 7]), 18);
-        s[10] ^= ROTL32((s[ 9] + s[ 8]), 18); s[15] ^= ROTL32((s[14] + s[13]), 18);
+        QROUND( 1,  0,  3,  7); QROUND( 6,  5,  4,  7);
+        QROUND(11, 10,  9,  7); QROUND(12, 15, 14,  7);
+        QROUND( 2,  1,  0,  9); QROUND( 7,  6,  5,  9);
+        QROUND( 8, 11, 10,  9); QROUND(13, 12, 15,  9);
+        QROUND( 3,  2,  1, 13); QROUND( 4,  7,  6, 13);
+        QROUND( 9,  8, 11, 13); QROUND(14, 13, 12, 13);
+        QROUND( 0,  3,  2, 18); QROUND( 5,  4,  7, 18);
+        QROUND(10,  9,  8, 18); QROUND(15, 14, 13, 18);
     }
 
     for(i = 0; i < 16; i++)
