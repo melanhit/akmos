@@ -178,7 +178,7 @@ void akmos_ctr_stream(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len,
     n = in_len / blklen;
 
     for(i = 0; i < n; i++) {
-        ctx->xalgo->stream(ctx, ptr->tmp);
+        ctx->xalgo->stream(&ctx->actx[0], ptr->tmp);
 
         ctx->pxor(in_blk, ptr->tmp, out_blk);
 

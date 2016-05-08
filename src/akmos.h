@@ -57,6 +57,9 @@ typedef enum {
     AKMOS_ALGO_THREEFISH_1024   = 0x0000000b,
     AKMOS_ALGO_TWOFISH          = 0x0000000c,
 
+    /* stream cipher algo */
+    AKMOS_ALGO_SALSA20          = 0x00000100,
+
     /* digest algo */
     AKMOS_ALGO_RIPEMD_160       = 0x00001000,
     AKMOS_ALGO_RIPEMD_256       = 0x00002000,

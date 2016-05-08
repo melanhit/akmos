@@ -47,7 +47,8 @@
 #include "secur.h"
 
 #define DEFAULT_EALGO   AKMOS_ALGO_TWOFISH
-#define DEFAULT_EMODE   AKMOS_MODE_CBC
+#define DEFAULT_BMODE   AKMOS_MODE_CBC
+#define DEFAULT_SMODE   AKMOS_MODE_CTR
 #define DEFAULT_DALGO   AKMOS_ALGO_SHA2_512
 #define DEFAULT_KEYLEN  128
 #define DEFAULT_ITER    4096
@@ -217,7 +218,15 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
 
     /* set mode */
     if(!opt->set.mode) {
-        opt->mode = DEFAULT_EMODE;
+        switch(opt->algo) {
+            case AKMOS_ALGO_SALSA20:
+                opt->mode = DEFAULT_SMODE;
+                break;
+
+            default:
+                opt->mode = DEFAULT_BMODE;
+                break;
+        }
     } else {
         if(mode_str) {
             opt->mode = akmos_str2mode(mode_str);

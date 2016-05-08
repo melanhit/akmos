@@ -203,6 +203,21 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
         (void *)&akmos_twofish_decrypt
     },
     {
+        {
+            AKMOS_ALGO_SALSA20, "Salsa20",
+            AKMOS_SALSA_BLKLEN,
+            AKMOS_SALSA_IVLEN,
+            AKMOS_SALSA_KEYMIN,
+            AKMOS_SALSA_KEYMAX,
+            AKMOS_SALSA_KEYSTEP
+        },
+        (void *)&akmos_salsa_setcnt,
+        (void *)&akmos_salsa_setiv,
+        (void *)&akmos_salsa_stream20,
+        (void *)&akmos_salsa_setkey,
+        NULL, NULL
+    },
+    {
         { 0 , NULL, 0, 0, 0, 0, 0 },
         NULL, NULL, NULL,
         NULL, NULL, NULL

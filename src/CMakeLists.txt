@@ -65,6 +65,7 @@ set(src_lib
     algo/whirlpool.c
     algo/blowfish.c
     algo/seed.c
+    algo/salsa.c
     kdf/kdf2.c
     mode/ecb.c
     mode/cbc.c
@@ -140,7 +141,7 @@ else()
     add_library(akmos_static STATIC $<TARGET_OBJECTS:akmos_obj>)
 endif()
 
-set_target_properties(akmos_shared PROPERTIES VERSION 0.5 SOVERSION 5 OUTPUT_NAME akmos)
+set_target_properties(akmos_shared PROPERTIES VERSION 0.5.1 SOVERSION 5 OUTPUT_NAME akmos)
 set_target_properties(akmos_static PROPERTIES OUTPUT_NAME akmos)
 
 add_executable(akmos ${src_cli})

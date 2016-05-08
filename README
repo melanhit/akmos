@@ -10,6 +10,7 @@ Depends only on the standard C library. Primary develop for the x86_64 architect
 === Feauters ===
 
 List of supported algorithms:
+
 block ciphers:
  * Anubis
  * Blowfish
@@ -21,6 +22,9 @@ block ciphers:
  * Serpent
  * Threefish
  * Twofish
+
+stream ciphers:
+ * Salsa
 
 digests:
  * Ripemd (160/256/320)

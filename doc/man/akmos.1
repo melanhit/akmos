@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: akmos
 .\"    Author: Andrew Romanenko <melanhit@gmail.com>
-.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: March, 2016
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: May, 2016
 .\"    Manual: AKMOS CLI REFERENCE
 .\"    Source: akmos 0.5.1
 .\"  Language: English
 .\"
-.TH "AKMOS" "1" "March, 2016" "akmos 0.5.1" "AKMOS CLI REFERENCE"
+.TH "AKMOS" "1" "May, 2016" "akmos 0.5.1" "AKMOS CLI REFERENCE"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -78,12 +78,17 @@ flag put cipher into Encrypt\-Decrypt\-Encrypt mode (like 3DES)
 .sp
 \fB:eee\fR
 flag put cipher into Encrypt\-Encrypt\-Encrypt mode
+.sp
+NOTE: TDEA not available with stream ciphers
 .RE
 .PP
 \-m\ mode
 .RS 4
 Crypto mode to use\&. By default is
 \fBCBC\fR
+for block ciphers, and
+\fBCTR\fR
+for stream ciphers\&.
 .RE
 .PP
 \-k\ keyfile
@@ -124,11 +129,30 @@ Print short help
 .SS "Algorithms"
 .PP
 Supported symmetric crypto algorithms:
-\fIAnubis\fR, \fIBlowfish\fR, \fICamellia\fR, \fICAST6\fR, \fIRC6\fR, \fIRijndael\fR, \fISEED\fR, \fISerpent\fR, \fITwofish\fR, \fIThreefish\-256\fR, \fIThreefish\-512\fR, \fIThreefish\-1024\fR
+\fIAnubis\fR, \fIBlowfish\fR, \fICamellia\fR, \fICAST6\fR, \fIRC6\fR, \fIRijndael\fR, \fISalsa\fR, \fISEED\fR, \fISerpent\fR, \fITwofish\fR, \fIThreefish\-256\fR, \fIThreefish\-512\fR, \fIThreefish\-1024\fR
 .SS "Modes"
 .PP
-Supported crypto modes:
-\fIECB\fR, \fICBC\fR, \fIOFB\fR, \fICTR\fR, \fICFB\fR
+Supported cipher modes:
+.PP
+\fBCBC\fR \- Cipher Block Chaining
+.RS 4
+.RE
+.PP
+\fBCFB\fR \- Cipher Feedback
+.RS 4
+.RE
+.PP
+\fBCTR\fR \- Counter
+.RS 4
+.RE
+.PP
+\fBECB\fR \- Electronic Codebook
+.RS 4
+.RE
+.PP
+\fBOFB\fR \- Output Feedback
+.RS 4
+.RE
 .SS "Key length"
 .PP
 \fBAnubis\fR
@@ -159,6 +183,11 @@ Supported crypto modes:
 \fBRijndael\fR
 .RS 4
 \fI128\fR, \fI192\fR, \fI256\fR
+.RE
+.PP
+\fBSalsa\fR
+.RS 4
+\fI128\fR, \fI256\fR
 .RE
 .PP
 \fBSEED\fR
@@ -272,7 +301,18 @@ Print short help
 .SS "Modes"
 .PP
 Supported MAC modes:
-\fIHMAC\fR, \fICBC\-MAC\fR, \fICMAC\fR
+.PP
+\fBHMAC\fR \- keyed\-Hash Message Authentication Code
+.RS 4
+.RE
+.PP
+\fBCBC\-MAC\fR \- Cipher Block Chaining Message Authentication Code
+.RS 4
+.RE
+.PP
+\fBCMAC\fR \- Cipher\-based Message Authentication Code
+.RS 4
+.RE
 .SH "EXIT STATUS"
 .PP
 The

@@ -9,7 +9,7 @@
                 <email>melanhit@gmail.com</email>
                 <contrib></contrib>
             </author>
-            <date>March, 2016</date>
+            <date>May, 2016</date>
             <productname>akmos 0.5.1</productname>
         </info>
 
@@ -97,12 +97,16 @@
                                 <para>Supported FLAGS</para>
                                 <para><constant>:ede</constant> flag put cipher into Encrypt-Decrypt-Encrypt mode (like 3DES)</para>
                                 <para><constant>:eee</constant> flag put cipher into Encrypt-Encrypt-Encrypt mode</para>
+                                <para>NOTE: TDEA not available with stream ciphers</para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
                             <term><arg choice="plain">-m mode</arg></term>
                             <listitem>
-                                <para>Crypto mode to use. By default is <constant>CBC</constant></para>
+                                <para>
+                                    Crypto mode to use. By default is <constant>CBC</constant> for block ciphers,
+                                    and <constant>CTR</constant> for stream ciphers.
+                                </para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
@@ -163,6 +167,7 @@
                         <member><parameter class='option'>CAST6</parameter></member>
                         <member><parameter class='option'>RC6</parameter></member>
                         <member><parameter class='option'>Rijndael</parameter></member>
+                        <member><parameter class='option'>Salsa</parameter></member>
                         <member><parameter class='option'>SEED</parameter></member>
                         <member><parameter class='option'>Serpent</parameter></member>
                         <member><parameter class='option'>Twofish</parameter></member>
@@ -175,16 +180,24 @@
 
             <refsect2>
                 <title>Modes</title>
-                <para>
-                    Supported crypto modes:
-                    <simplelist type='inline'>
-                        <member><parameter class='option'>ECB</parameter></member>
-                        <member><parameter class='option'>CBC</parameter></member>
-                        <member><parameter class='option'>OFB</parameter></member>
-                        <member><parameter class='option'>CTR</parameter></member>
-                        <member><parameter class='option'>CFB</parameter></member>
-                    </simplelist>
-                </para>
+                <para>Supported cipher modes:</para>
+                <variablelist spacing='compact'>
+                    <varlistentry>
+                        <term><constant>CBC</constant> - Cipher Block Chaining</term>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>CFB</constant> - Cipher Feedback</term>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>CTR</constant> - Counter</term>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>ECB</constant> - Electronic Codebook</term>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>OFB</constant> - Output Feedback</term>
+                    </varlistentry>
+                </variablelist>
             </refsect2>
 
             <refsect2>
@@ -255,6 +268,15 @@
                             <simplelist type='inline'>
                                 <member><parameter class='option'>128</parameter></member>
                                 <member><parameter class='option'>192</parameter></member>
+                                <member><parameter class='option'>256</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>Salsa</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>128</parameter></member>
                                 <member><parameter class='option'>256</parameter></member>
                             </simplelist>
                         </listitem>
@@ -447,14 +469,18 @@
 
             <refsect2>
                 <title>Modes</title>
-                <para>
-                    Supported MAC modes:
-                    <simplelist type='inline'>
-                        <member><parameter class='option'>HMAC</parameter></member>
-                        <member><parameter class='option'>CBC-MAC</parameter></member>
-                        <member><parameter class='option'>CMAC</parameter></member>
-                    </simplelist>
-                </para>
+                <para>Supported MAC modes:</para>
+                <variablelist spacing='compact'>
+                    <varlistentry>
+                        <term><constant>HMAC</constant>   - keyed-Hash Message Authentication Code</term>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>CBC-MAC</constant> - Cipher Block Chaining Message Authentication Code</term>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>CMAC</constant>   - Cipher-based Message Authentication Code</term>
+                    </varlistentry>
+                </variablelist>
             </refsect2>
         </refsect1>
 
