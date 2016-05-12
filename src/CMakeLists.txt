@@ -66,6 +66,7 @@ set(src_lib
     algo/blowfish.c
     algo/seed.c
     algo/salsa.c
+    algo/chacha.c
     kdf/kdf2.c
     mode/ecb.c
     mode/cbc.c

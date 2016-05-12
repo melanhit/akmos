@@ -218,6 +218,21 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
         NULL, NULL
     },
     {
+        {
+            AKMOS_ALGO_CHACHA, "Chacha",
+            AKMOS_CHACHA_BLKLEN,
+            AKMOS_CHACHA_IVLEN,
+            AKMOS_CHACHA_KEYMIN,
+            AKMOS_CHACHA_KEYMAX,
+            AKMOS_CHACHA_KEYSTEP
+        },
+        (void *)&akmos_chacha_setcnt,
+        (void *)&akmos_chacha_setiv,
+        (void *)&akmos_chacha_stream,
+        (void *)&akmos_chacha_setkey,
+        NULL, NULL
+    },
+    {
         { 0 , NULL, 0, 0, 0, 0, 0 },
         NULL, NULL, NULL,
         NULL, NULL, NULL

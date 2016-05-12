@@ -163,6 +163,7 @@
                     <simplelist type='inline'>
                         <member><parameter class='option'>Anubis</parameter></member>
                         <member><parameter class='option'>Blowfish</parameter></member>
+                        <member><parameter class='option'>Chacha</parameter></member>
                         <member><parameter class='option'>Camellia</parameter></member>
                         <member><parameter class='option'>CAST6</parameter></member>
                         <member><parameter class='option'>RC6</parameter></member>
@@ -229,6 +230,14 @@
                                 <member><parameter class='option'>384</parameter></member>
                                 <member><parameter class='option'>416</parameter></member>
                                 <member><parameter class='option'>448</parameter></member>
+                            </simplelist>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><constant>Chacha</constant></term>
+                        <listitem>
+                            <simplelist type='inline'>
+                                <member><parameter class='option'>256</parameter></member>
                             </simplelist>
                         </listitem>
                     </varlistentry>

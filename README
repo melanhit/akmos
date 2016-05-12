@@ -25,6 +25,7 @@ block ciphers:
 
 stream ciphers:
  * Salsa
+ * Chacha
 
 digests:
  * Ripemd (160/256/320)

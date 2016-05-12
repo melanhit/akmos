@@ -220,6 +220,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     if(!opt->set.mode) {
         switch(opt->algo) {
             case AKMOS_ALGO_SALSA20:
+            case AKMOS_ALGO_CHACHA:
                 opt->mode = DEFAULT_SMODE;
                 break;
 
@@ -251,6 +252,10 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
 
             case AKMOS_ALGO_THREEFISH_1024:
                 opt->keylen = 1024;
+                break;
+
+            case AKMOS_ALGO_CHACHA:
+                opt->keylen = 256;
                 break;
 
             default:

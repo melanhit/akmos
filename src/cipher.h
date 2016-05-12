@@ -43,6 +43,7 @@
 #include "algo/blowfish.h"
 #include "algo/seed.h"
 #include "algo/salsa.h"
+#include "algo/chacha.h"
 
 #include "mode/ecb.h"
 #include "mode/cbc.h"
@@ -58,6 +59,7 @@ typedef union {
     akmos_rc6_t             rc6;
     akmos_rijndael_t        rijndael;
     akmos_salsa_t           salsa;
+    akmos_chacha_t          chacha;
     akmos_serpent_t         serpent;
     akmos_seed_t            seed;
     akmos_threefish_256_t   tf_256;
