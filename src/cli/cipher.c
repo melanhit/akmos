@@ -219,7 +219,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     /* set mode */
     if(!opt->set.mode) {
         switch(opt->algo) {
-            case AKMOS_ALGO_SALSA20:
+            case AKMOS_ALGO_SALSA:
             case AKMOS_ALGO_CHACHA:
                 opt->mode = DEFAULT_SMODE;
                 break;

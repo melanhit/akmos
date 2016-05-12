@@ -58,7 +58,7 @@ typedef enum {
     AKMOS_ALGO_TWOFISH          = 0x0000000c,
 
     /* stream cipher algo */
-    AKMOS_ALGO_SALSA20          = 0x00000100,
+    AKMOS_ALGO_SALSA            = 0x00000100,
     AKMOS_ALGO_CHACHA           = 0x00000200,
 
     /* digest algo */

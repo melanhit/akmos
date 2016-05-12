@@ -98,7 +98,7 @@ void akmos_salsa_setkey(akmos_salsa_t *ctx, const uint8_t *in_key, size_t len)
     }
 }
 
-void akmos_salsa_stream20(akmos_salsa_t *ctx, uint8_t *out_blk)
+void akmos_salsa_stream(akmos_salsa_t *ctx, uint8_t *out_blk)
 {
     size_t i;
     uint32_t s[16];
@@ -106,7 +106,7 @@ void akmos_salsa_stream20(akmos_salsa_t *ctx, uint8_t *out_blk)
     for(i = 0; i < 16; i++)
         s[i] = ctx->s[i];
 
-    for(i = 0; i < AKMOS_SALSA20_ROUNDS / 2; i++) {
+    for(i = 0; i < AKMOS_SALSA_ROUNDS / 2; i++) {
         QROUND( 4,  0, 12,  7); QROUND( 9,  5,  1,  7);
         QROUND(14, 10,  6,  7); QROUND( 3, 15, 11,  7);
         QROUND( 8,  4,  0,  9); QROUND(13,  9,  5,  9);

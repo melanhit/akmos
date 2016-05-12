@@ -35,15 +35,15 @@
 #define AKMOS_SALSA_KEYMAX      32
 #define AKMOS_SALSA_KEYSTEP     16
 
-#define AKMOS_SALSA20_ROUNDS    20
+#define AKMOS_SALSA_ROUNDS      20
 
 typedef struct {
     uint32_t s[16];
 } akmos_salsa_t;
 
-void akmos_salsa_setiv   (akmos_salsa_t *, const uint8_t *);
-void akmos_salsa_setcnt  (akmos_salsa_t *, const uint8_t *);
-void akmos_salsa_setkey  (akmos_salsa_t *, const uint8_t *, size_t);
-void akmos_salsa_stream20(akmos_salsa_t *, uint8_t *);
+void akmos_salsa_setiv (akmos_salsa_t *, const uint8_t *);
+void akmos_salsa_setcnt(akmos_salsa_t *, const uint8_t *);
+void akmos_salsa_setkey(akmos_salsa_t *, const uint8_t *, size_t);
+void akmos_salsa_stream(akmos_salsa_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_SALSA_H */

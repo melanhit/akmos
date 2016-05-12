@@ -204,7 +204,7 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
     },
     {
         {
-            AKMOS_ALGO_SALSA20, "Salsa20",
+            AKMOS_ALGO_SALSA, "Salsa",
             AKMOS_SALSA_BLKLEN,
             AKMOS_SALSA_IVLEN,
             AKMOS_SALSA_KEYMIN,
@@ -213,7 +213,7 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
         },
         (void *)&akmos_salsa_setcnt,
         (void *)&akmos_salsa_setiv,
-        (void *)&akmos_salsa_stream20,
+        (void *)&akmos_salsa_stream,
         (void *)&akmos_salsa_setkey,
         NULL, NULL
     },
