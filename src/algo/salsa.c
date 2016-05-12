@@ -42,8 +42,8 @@
 #define C4  0x3120646e
 #define C5  0x79622d36
 
-#define QROUND (a, b, c, n)             \
-    s[a] ^= ROTL32((s[b] + s[c]), n);   \
+#define QROUND(a, b, c, n)             \
+    s[a] ^= ROTL32((s[b] + s[c]), n);
 
 void akmos_salsa_setiv(akmos_salsa_t *ctx, const uint8_t *iv)
 {
