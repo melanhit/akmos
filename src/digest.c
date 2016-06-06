@@ -33,15 +33,15 @@
 #include "akmos.h"
 #include "digest.h"
 
-int akmos_digest_init(akmos_digest_t **ctx, akmos_algo_id algo)
+int akmos_digest_init(akmos_digest_t *ctx, akmos_algo_id algo)
 {
-    akmos_digest_t *ptr;
+    akmos_digest_t ptr;
 
-    ptr = *ctx = malloc(sizeof(akmos_digest_t));
+    ptr = *ctx = malloc(sizeof(struct akmos_digest_s));
     if(!ptr)
         return AKMOS_ERR_ENOMEM;
 
-    memset(ptr, 0, sizeof(akmos_digest_t));
+    memset(ptr, 0, sizeof(struct akmos_digest_s));
 
     ptr->xalgo = akmos_digest_xalgo(algo);
     if(!ptr->xalgo) {
@@ -54,25 +54,25 @@ int akmos_digest_init(akmos_digest_t **ctx, akmos_algo_id algo)
     return AKMOS_ERR_SUCCESS;
 }
 
-void akmos_digest_update(akmos_digest_t *ctx, const uint8_t *blk, size_t len)
+void akmos_digest_update(akmos_digest_t ctx, const uint8_t *blk, size_t len)
 {
     ctx->xalgo->update(&ctx->actx, blk, len);
 }
 
-void akmos_digest_done(akmos_digest_t *ctx, uint8_t *dgst)
+void akmos_digest_done(akmos_digest_t ctx, uint8_t *dgst)
 {
     if(!ctx)
         return;
 
     ctx->xalgo->done(&ctx->actx, dgst);
 
-    akmos_memzero(ctx, sizeof(akmos_digest_t));
+    akmos_memzero(ctx, sizeof(struct akmos_digest_s));
     free(ctx);
 }
 
 int akmos_digest_ex(akmos_algo_id algo, const uint8_t *blk, size_t len, uint8_t *out)
 {
-    akmos_digest_t *ctx;
+    akmos_digest_t ctx;
     int err;
 
     if(!blk || !out)

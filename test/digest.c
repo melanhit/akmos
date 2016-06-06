@@ -41,7 +41,7 @@ static int digest_calc(test_digest_t *dctx, akmos_algo_id algo, size_t diglen, s
     uint8_t *buf, *out, *p;
     int err;
     size_t i, j, len;
-    akmos_digest_t *ctx;
+    akmos_digest_t ctx;
 
     buf = out = NULL;
     err = EXIT_SUCCESS;

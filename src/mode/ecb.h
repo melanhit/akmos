@@ -29,7 +29,7 @@
 #ifndef AKMOS_MODE_ECB_H
 #define AKMOS_MODE_ECB_H
 
-void akmos_ecb_encrypt(akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
-void akmos_ecb_decrypt(akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
+void akmos_ecb_encrypt(akmos_cipher_t, const uint8_t *, size_t, uint8_t *);
+void akmos_ecb_decrypt(akmos_cipher_t, const uint8_t *, size_t, uint8_t *);
 
 #endif  /* AKMOS_MODE_ECB_H */

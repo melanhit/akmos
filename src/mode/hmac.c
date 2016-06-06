@@ -37,7 +37,7 @@
 
 static int hmac_expkey(akmos_algo_id algo, const uint8_t *key, size_t len, uint8_t *ekey)
 {
-    akmos_digest_t *ctx;
+    akmos_digest_t ctx;
     int err;
 
     err = akmos_digest_init(&ctx, algo);

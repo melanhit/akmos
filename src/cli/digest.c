@@ -119,7 +119,7 @@ static void digest_print_raw(uint8_t *md, size_t len)
 
 int akmos_cli_digest(int argc, char **argv)
 {
-    akmos_digest_t *ctx;
+    akmos_digest_t ctx;
     const akmos_digest_xdesc_t *desc;
     struct opt_digest_s opt;
     int i, err;

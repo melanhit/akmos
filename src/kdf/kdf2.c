@@ -38,7 +38,7 @@ int akmos_kdf_kdf2(uint8_t *key, size_t keylen,
                    const uint8_t *pass, size_t passlen,
                    uint32_t iter, akmos_algo_id algo)
 {
-    akmos_mac_t *ctx;
+    akmos_mac_t ctx;
     uint32_t i, y;
     size_t j, l, r, mdlen, tlen;
     uint8_t *md, *tbuf, *pkey;
@@ -112,7 +112,7 @@ out:
         free(md);
     }
 
-    memset(cnt, 0, sizeof(uint32_t));    
+    memset(cnt, 0, sizeof(uint32_t));
 
     return err;
 }

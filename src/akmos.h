@@ -101,7 +101,7 @@ typedef enum {
 } akmos_mode_id;
 
 /* Cipher */
-typedef struct akmos_cipher_s akmos_cipher_t;
+typedef struct akmos_cipher_s *akmos_cipher_t;
 
 typedef struct akmos_cipher_xdesc_s {
     akmos_algo_id id;
@@ -113,12 +113,12 @@ typedef struct akmos_cipher_xdesc_s {
     size_t keystep;
 } akmos_cipher_xdesc_t;
 
-int  akmos_cipher_init   (akmos_cipher_t **, akmos_algo_id, akmos_mode_id);
-int  akmos_cipher_setkey (akmos_cipher_t *, const uint8_t *, size_t);
-void akmos_cipher_setiv  (akmos_cipher_t *, const uint8_t *);
-void akmos_cipher_setcnt (akmos_cipher_t *, const uint8_t *);
-void akmos_cipher_crypt  (akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
-void akmos_cipher_free   (akmos_cipher_t *);
+int  akmos_cipher_init   (akmos_cipher_t *, akmos_algo_id, akmos_mode_id);
+int  akmos_cipher_setkey (akmos_cipher_t, const uint8_t *, size_t);
+void akmos_cipher_setiv  (akmos_cipher_t, const uint8_t *);
+void akmos_cipher_setcnt (akmos_cipher_t, const uint8_t *);
+void akmos_cipher_crypt  (akmos_cipher_t, const uint8_t *, size_t, uint8_t *);
+void akmos_cipher_free   (akmos_cipher_t);
 int  akmos_cipher_ex     (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t,
                           const uint8_t *, const uint8_t *, size_t, uint8_t *);
 
@@ -130,7 +130,7 @@ size_t akmos_cipher_ivlen    (akmos_algo_id);
 const akmos_cipher_xdesc_t *akmos_cipher_desc(akmos_algo_id);
 
 /* Hashing */
-typedef struct akmos_digest_s akmos_digest_t;
+typedef struct akmos_digest_s *akmos_digest_t;
 
 typedef struct akmos_digest_xdesc_s {
     akmos_algo_id id;
@@ -139,9 +139,9 @@ typedef struct akmos_digest_xdesc_s {
     size_t outlen;
 } akmos_digest_xdesc_t;
 
-int  akmos_digest_init  (akmos_digest_t **, akmos_algo_id);
-void akmos_digest_update(akmos_digest_t *, const uint8_t *, size_t);
-void akmos_digest_done  (akmos_digest_t *, uint8_t *);
+int  akmos_digest_init  (akmos_digest_t *, akmos_algo_id);
+void akmos_digest_update(akmos_digest_t, const uint8_t *, size_t);
+void akmos_digest_done  (akmos_digest_t, uint8_t *);
 int  akmos_digest_ex    (akmos_algo_id, const uint8_t *, size_t, uint8_t *);
 
 const char *akmos_digest_name(akmos_algo_id);
@@ -152,12 +152,12 @@ size_t akmos_digest_outlen   (akmos_algo_id);
 const akmos_digest_xdesc_t *akmos_digest_desc(akmos_algo_id);
 
 /* Message authentication code (MAC) */
-typedef struct akmos_mac_s akmos_mac_t;
+typedef struct akmos_mac_s *akmos_mac_t;
 
-int  akmos_mac_init  (akmos_mac_t **, akmos_algo_id, akmos_mode_id);
-int  akmos_mac_setkey(akmos_mac_t *, const uint8_t *, size_t);
-void akmos_mac_update(akmos_mac_t *, const uint8_t *, size_t);
-int  akmos_mac_done  (akmos_mac_t *, uint8_t *);
+int  akmos_mac_init  (akmos_mac_t *, akmos_algo_id, akmos_mode_id);
+int  akmos_mac_setkey(akmos_mac_t, const uint8_t *, size_t);
+void akmos_mac_update(akmos_mac_t, const uint8_t *, size_t);
+int  akmos_mac_done  (akmos_mac_t, uint8_t *);
 int  akmos_mac_ex    (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t, const uint8_t *, size_t, uint8_t *);
 
 /* Key derivation function */

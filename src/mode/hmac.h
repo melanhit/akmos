@@ -38,7 +38,7 @@ typedef struct {
     uint8_t *o_key;
     size_t outlen;
     size_t blklen;
-    akmos_digest_t *dctx;
+    akmos_digest_t dctx;
 } akmos_hmac_t;
 
 int  akmos_hmac_init  (akmos_hmac_t *, akmos_algo_id);

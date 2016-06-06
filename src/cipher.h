@@ -94,10 +94,10 @@ typedef struct akmos_cipher_xalgo_s {
 typedef struct {
     akmos_mode_id   id;
     char            *name;
-    void (*setiv)   (akmos_cipher_t *, const uint8_t *);
-    void (*setcnt)  (akmos_cipher_t *, const uint8_t *);
-    void (*encrypt) (akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
-    void (*decrypt) (akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
+    void (*setiv)   (akmos_cipher_t, const uint8_t *);
+    void (*setcnt)  (akmos_cipher_t, const uint8_t *);
+    void (*encrypt) (akmos_cipher_t, const uint8_t *, size_t, uint8_t *);
+    void (*decrypt) (akmos_cipher_t, const uint8_t *, size_t, uint8_t *);
 } akmos_cipher_xmode_t;
 
 struct akmos_cipher_s {
@@ -108,12 +108,12 @@ struct akmos_cipher_s {
     /* mode */
     const akmos_cipher_xmode_t  *xmode;
     akmos_cipher_mode_t         mctx;
-    void (*setkey)              (akmos_cipher_t *, const uint8_t *, size_t);
-    void (*setiv)               (akmos_cipher_t *, const uint8_t *);
-    void (*setcnt)              (akmos_cipher_t *, const uint8_t *);
-    void (*encrypt)             (akmos_cipher_t *, const uint8_t *, uint8_t *);
-    void (*decrypt)             (akmos_cipher_t *, const uint8_t *, uint8_t *);
-    void (*crypt)               (akmos_cipher_t *, const uint8_t *, size_t, uint8_t *);
+    void (*setkey)              (akmos_cipher_t, const uint8_t *, size_t);
+    void (*setiv)               (akmos_cipher_t, const uint8_t *);
+    void (*setcnt)              (akmos_cipher_t, const uint8_t *);
+    void (*encrypt)             (akmos_cipher_t, const uint8_t *, uint8_t *);
+    void (*decrypt)             (akmos_cipher_t, const uint8_t *, uint8_t *);
+    void (*crypt)               (akmos_cipher_t, const uint8_t *, size_t, uint8_t *);
     void (*pxor)                (const uint8_t *, const uint8_t *, uint8_t *);
 };
 

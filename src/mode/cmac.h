@@ -31,7 +31,7 @@
 
 typedef struct {
     akmos_algo_id   algo;
-    akmos_cipher_t *actx;
+    akmos_cipher_t  actx;
     uint8_t buf[AKMOS_BUFSZ];
     uint8_t *key;
     uint8_t *key1;

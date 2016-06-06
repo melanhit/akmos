@@ -34,7 +34,7 @@
 #include "../bits.h"
 #include "../cipher.h"
 
-static void ctr_blk_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
+static void ctr_blk_setiv(akmos_cipher_t ctx, const uint8_t *iv)
 {
     akmos_ctr_t *ptr;
     size_t len;
@@ -54,7 +54,7 @@ static void ctr_blk_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
     memset(ptr->ctr, 0, sizeof(uint64_t));
 }
 
-static void ctr_stm_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
+static void ctr_stm_setiv(akmos_cipher_t ctx, const uint8_t *iv)
 {
     akmos_ctr_t *ptr;
     size_t ivlen;
@@ -71,7 +71,7 @@ static void ctr_stm_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
     ctx->xalgo->setiv(&ctx->actx[0], ptr->iv);
 }
 
-void akmos_ctr_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
+void akmos_ctr_setiv(akmos_cipher_t ctx, const uint8_t *iv)
 {
     if(ctx->xalgo->setiv)
         ctr_stm_setiv(ctx, iv);
@@ -79,7 +79,7 @@ void akmos_ctr_setiv(akmos_cipher_t *ctx, const uint8_t *iv)
         ctr_blk_setiv(ctx, iv);
 }
 
-void akmos_ctr_setcnt(akmos_cipher_t *ctx, const uint8_t *cnt)
+void akmos_ctr_setcnt(akmos_cipher_t ctx, const uint8_t *cnt)
 {
     akmos_ctr_t *ptr;
     uint8_t ucnt[8];
@@ -97,7 +97,7 @@ void akmos_ctr_setcnt(akmos_cipher_t *ctx, const uint8_t *cnt)
     }
 }
 
-void akmos_ctr_encrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+void akmos_ctr_encrypt(akmos_cipher_t ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     akmos_ctr_t *ptr;
     size_t i, n, blklen;
@@ -150,7 +150,7 @@ void akmos_ctr_encrypt(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len
     ptr->rem_buf = ptr->tmp + i;
 }
 
-void akmos_ctr_stream(akmos_cipher_t *ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+void akmos_ctr_stream(akmos_cipher_t ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     akmos_ctr_t *ptr;
     size_t i, n, blklen;
