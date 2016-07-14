@@ -65,7 +65,6 @@ set(src_lib
     algo/whirlpool.c
     algo/blowfish.c
     algo/seed.c
-    algo/salsa.c
     algo/chacha.c
     kdf/kdf2.c
     mode/ecb.c
@@ -88,12 +87,14 @@ set(src_amd64
     algo/amd64/threefish_256.s
     algo/amd64/threefish_512.s
     algo/amd64/sha3_transform.s
+    algo/amd64/salsa_sse2.s
     amd64/pxor.s)
 
 set(src_orig
     algo/threefish_256.c
     algo/threefish_512.c
     algo/sha3_transform.c
+    algo/salsa.c
     pxor.c)
 
 set(src_cli
@@ -116,7 +117,7 @@ if(AKMOS_USE_ASM AND AMD64)
     if(CMAKE_ASM-ATT_COMPILER_WORKS)
         list(SORT src_amd64)
         add_library(akmos_obj_asm OBJECT ${src_amd64})
-        add_definitions(-DAKMOS_ASM)
+        add_definitions(-DAKMOS_ASM -DAKMOS_ASM_SSE2)
     endif()
 else()
     set(src_lib ${src_lib} ${src_orig})

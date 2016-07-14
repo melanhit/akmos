@@ -39,7 +39,11 @@
 
 typedef struct {
     uint32_t s[16];
+#ifndef AKMOS_ASM_SSE2
 } akmos_salsa_t;
+#else
+} akmos_salsa_t __attribute__((aligned (16)));
+#endif
 
 void akmos_salsa_setiv (akmos_salsa_t *, const uint8_t *);
 void akmos_salsa_setcnt(akmos_salsa_t *, const uint8_t *);
