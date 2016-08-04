@@ -29,20 +29,17 @@
 #ifndef AKMOS_ALGO_RIPEMD_H
 #define AKMOS_ALGO_RIPEMD_H
 
-#define AKMOS_RIPEMD_160_DIGLEN     20
-#define AKMOS_RIPEMD_160_BLKLEN     64
+#define AKMOS_RIPEMD_160_DIGLEN 20
+#define AKMOS_RIPEMD_256_DIGLEN 32
+#define AKMOS_RIPEMD_320_DIGLEN 40
 
-#define AKMOS_RIPEMD_256_DIGLEN     32
-#define AKMOS_RIPEMD_256_BLKLEN     64
-
-#define AKMOS_RIPEMD_320_DIGLEN     40
-#define AKMOS_RIPEMD_320_BLKLEN     64
+#define AKMOS_RIPEMD_BLKLEN     64
 
 typedef struct {
     uint32_t state[10];
-    uint32_t x[16];
+    uint32_t x[AKMOS_RIPEMD_BLKLEN / sizeof(uint32_t)];
     uint64_t count;
-    uint8_t  buffer[64];
+    uint8_t  buffer[AKMOS_RIPEMD_BLKLEN];
     size_t   diglen;
 } akmos_ripemd_t;
 

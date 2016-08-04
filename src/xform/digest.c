@@ -36,7 +36,7 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
     {
         {
             AKMOS_ALGO_RIPEMD_160, "RIPEMD-160",
-            AKMOS_RIPEMD_160_BLKLEN, AKMOS_RIPEMD_160_DIGLEN
+            AKMOS_RIPEMD_BLKLEN, AKMOS_RIPEMD_160_DIGLEN
         },
         (void *)akmos_ripemd_160_init,
         (void *)akmos_ripemd_update,
@@ -45,7 +45,7 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
     {
         {
             AKMOS_ALGO_RIPEMD_256, "RIPEMD-256",
-            AKMOS_RIPEMD_256_BLKLEN, AKMOS_RIPEMD_256_DIGLEN
+            AKMOS_RIPEMD_BLKLEN, AKMOS_RIPEMD_256_DIGLEN
         },
         (void *)akmos_ripemd_256_init,
         (void *)akmos_ripemd_update,
@@ -54,7 +54,7 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
     {
         {
             AKMOS_ALGO_RIPEMD_320, "RIPEMD-320",
-            AKMOS_RIPEMD_320_BLKLEN, AKMOS_RIPEMD_320_DIGLEN
+            AKMOS_RIPEMD_BLKLEN, AKMOS_RIPEMD_320_DIGLEN
         },
         (void *)akmos_ripemd_320_init,
         (void *)akmos_ripemd_update,
@@ -160,7 +160,7 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
         (void *)akmos_whirlpool_done
     },
     {
-        { 0, NULL, 0, 0 }, 
+        { 0, NULL, 0, 0 },
         NULL, NULL, NULL
     }
 };
