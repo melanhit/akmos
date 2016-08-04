@@ -34,12 +34,14 @@
 #include "../akmos.h"
 #include "cli.h"
 
-#define AKMOS_CLI_DIGEST    1
-#define AKMOS_CLI_CIPHER_E  2
-#define AKMOS_CLI_CIPHER_D  3
-#define AKMOS_CLI_MAC       4
-#define AKMOS_CLI_HELP      5
-#define AKMOS_CLI_UNKNOWN   6
+typedef enum {
+    AKMOS_CLI_DIGEST,
+    AKMOS_CLI_CIPHER_ENC,
+    AKMOS_CLI_CIPHER_DEC,
+    AKMOS_CLI_MAC,
+    AKMOS_CLI_HELP,
+    AKMOS_CLI_UNKNOWN
+} akmos_cli_id;
 
 int akmos_cli_help() {
     printf("Usage: akmos <command> <options>\n"
@@ -63,9 +65,9 @@ int main(int argc, char **argv)
     if(strcmp(argv[1], "dgst") == 0)
         opt = AKMOS_CLI_DIGEST;
     else if(strcmp(argv[1], "enc") == 0)
-        opt = AKMOS_CLI_CIPHER_E;
+        opt = AKMOS_CLI_CIPHER_ENC;
     else if(strcmp(argv[1], "dec") == 0)
-        opt = AKMOS_CLI_CIPHER_D;
+        opt = AKMOS_CLI_CIPHER_DEC;
     else if(strcmp(argv[1], "mac") == 0)
         opt = AKMOS_CLI_MAC;
     else if(strcmp(argv[1], "help") == 0)
@@ -77,10 +79,10 @@ int main(int argc, char **argv)
         case AKMOS_CLI_DIGEST:
             return akmos_cli_digest(--argc, ++argv);
 
-        case AKMOS_CLI_CIPHER_E:
+        case AKMOS_CLI_CIPHER_ENC:
             return akmos_cli_cipher(--argc, ++argv, AKMOS_MODE_ENCRYPT);
 
-        case AKMOS_CLI_CIPHER_D:
+        case AKMOS_CLI_CIPHER_DEC:
             return akmos_cli_cipher(--argc, ++argv, AKMOS_MODE_DECRYPT);
 
         case AKMOS_CLI_MAC:

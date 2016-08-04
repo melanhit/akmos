@@ -188,6 +188,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
                 break;
 
             case AKMOS_ALGO_ANUBIS:
+            case AKMOS_ALGO_BLOWFISH:
             case AKMOS_ALGO_CAMELLIA:
             case AKMOS_ALGO_CAST6:
             case AKMOS_ALGO_RC6:

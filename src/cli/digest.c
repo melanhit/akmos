@@ -58,8 +58,6 @@ struct opt_digest_s {
     } set;
 };
 
-static char *ch = "-";
-
 static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
 {
     int c;
@@ -93,7 +91,7 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
 
     if(opt->count == 0) {
         opt->count = 1;
-        opt->input[0] = ch;
+        opt->input[0] = NULL;
     }
 
     return EXIT_SUCCESS;
@@ -102,9 +100,13 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
 static void digest_print_hex(const char *path, const char *stralg, uint8_t *md, size_t len)
 {
     size_t i;
+    const char *s = "-";
 
     for(i = 0; i < len; i++)
         printf("%.2x", md[i]);
+
+    if(!path)
+        path = s;
 
     printf(" = %s(%s)\n", stralg, path);
 }
@@ -143,7 +145,7 @@ int akmos_cli_digest(int argc, char **argv)
         return err;
 
     for(i = 0; i < opt.count; i++) {
-        if(strcmp(opt.input[i], "-") == 0)
+        if(!opt.input[i])
             fd = stdin;
         else
             fd = fopen(opt.input[i], "r");
