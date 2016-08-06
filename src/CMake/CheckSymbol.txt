@@ -1,0 +1,20 @@
+INCLUDE(CheckSymbolExists)
+
+CHECK_SYMBOL_EXISTS(SIZE_T_MAX "limits.h" HAVE_SIZE_T_MAX)
+CHECK_SYMBOL_EXISTS(SIZE_MAX "stdint.h" HAVE_SIZE_MAX)
+CHECK_SYMBOL_EXISTS(INT_MAX "limits.h" HAVE_INT_MAX)
+
+if(NOT HAVE_INT_MAX)
+    unset(HAVE_INT_MAX)
+    message(FATAL_ERROR "INT_MAX is not found")
+endif()
+
+if(NOT HAVE_SIZE_T_MAX)
+    if(NOT HAVE_SIZE_MAX)
+        unset(HAVE_SIZE_T_MAX)
+        unset(HAVE_SIZE_MAX)
+        message(FATAL_ERROR "SIZE_T_MAX or SIZE_MAX is not found")
+    endif()
+endif()
+
+# vim: syn=cmake

@@ -33,16 +33,9 @@
 #include <unistd.h>
 #include <errno.h>
 
-#ifdef HAVE_ERROR_H
-#include <error.h>
-#else
-#ifdef HAVE_ERR_H
-#include <err.h>
-#endif
-#endif
+#include <config.h>
 
 #include <fcntl.h>
-
 #include <termios.h>
 
 #include "../akmos.h"

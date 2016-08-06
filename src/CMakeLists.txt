@@ -1,52 +1,8 @@
-INCLUDE(CheckIncludeFiles)
-INCLUDE(CheckTypeSize)
-INCLUDE(CheckSymbolExists)
+include(CMake/CheckHeader.txt)
+include(CMake/CheckSize.txt)
+include(CMake/CheckSymbol.txt)
 
-CHECK_INCLUDE_FILES(error.h HAVE_ERROR_H)
-CHECK_INCLUDE_FILES(err.h HAVE_ERR_H)
-CHECK_INCLUDE_FILES(limits.h HAVE_LIMITS_H)
-
-CHECK_TYPE_SIZE(uint8_t UINT8_T)
-CHECK_TYPE_SIZE(uint32_t UINT32_T)
-CHECK_TYPE_SIZE(uint64_t UINT64_T)
-CHECK_TYPE_SIZE(size_t SIZE_T)
-CHECK_TYPE_SIZE(ssize_t SSIZE_T)
-
-CHECK_SYMBOL_EXISTS(SIZE_T_MAX "limits.h" HAVE_SIZE_T_MAX)
-CHECK_SYMBOL_EXISTS(SIZE_MAX "stdint.h" HAVE_SIZE_MAX)
-CHECK_SYMBOL_EXISTS(INT_MAX "limits.h" HAVE_INT_MAX)
-
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/inc/config.h)
-
-if(NOT HAVE_UINT8_T)
-    unset(HAVE_UINT8_T)
-    message(FATAL_ERROR "uint8_t is not found")
-endif()
-
-if(NOT HAVE_UINT32_T)
-    unset(HAVE_UINT32_T)
-    message(FATAL_ERROR "uint32_t is not found")
-endif()
-
-if(NOT HAVE_UINT64_T)
-    unset(HAVE_UINT64_T)
-    message(FATAL_ERROR "uint64_t is not found")
-endif()
-
-if(NOT HAVE_SIZE_T)
-    unset(HAVE_SIZE_T)
-    message(FATAL_ERROR "size_t is not found")
-endif()
-
-if(NOT HAVE_SSIZE_T)
-    unset(HAVE_SSIZE_T)
-    message(FATAL_ERROR "ssize_t is not found")
-endif()
-
-if(NOT HAVE_INT_MAX)
-    unset(HAVE_INT_MAX)
-    message(FATAL_ERROR "INT_MAX is not found")
-endif()
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/inc/config.h)
 
 set(src_lib
     algo/anubis.c
