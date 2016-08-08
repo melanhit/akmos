@@ -37,6 +37,7 @@
 #include "../bits.h"
 
 #include "sha3.h"
+#include "sha3_transform.h"
 
 #ifdef AKMOS_ASM
 #define sha3_transform(ctx, blk, nb)            \

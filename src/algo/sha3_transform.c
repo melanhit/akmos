@@ -32,6 +32,7 @@
 #include "../bits.h"
 
 #include "sha3.h"
+#include "sha3_transform.h"
 
 static const uint64_t RC[24] = {
     UINT64_C(0x0000000000000001), UINT64_C(0x0000000000008082),
