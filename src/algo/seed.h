@@ -34,6 +34,9 @@
 #define AKMOS_SEED_KEYMAX   AKMOS_SEED_KEYMIN
 #define AKMOS_SEED_KEYSTEP  AKMOS_SEED_KEYMIN
 
+const uint32_t akmos_seed_sbox[4][256];
+const uint32_t akmos_seed_kc[16];
+
 typedef struct {
     uint32_t key[32];
 } akmos_seed_t;

@@ -37,14 +37,18 @@
 #include "../bits.h"
 
 #include "tiger.h"
-#include "tiger_sb64.h"
+
+#define S0(x)   (akmos_tiger_sbox[0][x])
+#define S1(x)   (akmos_tiger_sbox[1][x])
+#define S2(x)   (akmos_tiger_sbox[2][x])
+#define S3(x)   (akmos_tiger_sbox[3][x])
 
 #define tiger_round(a, b, c, x, mul)                    \
 {                                                       \
     c ^= x;                                             \
     UNPACK64BE(t, c);                                   \
-    a -= SB0[t[0]] ^ SB1[t[2]] ^ SB2[t[4]] ^ SB3[t[6]]; \
-    b += SB3[t[1]] ^ SB2[t[3]] ^ SB1[t[5]] ^ SB0[t[7]]; \
+    a -= S0(t[0]) ^ S1(t[2]) ^ S2(t[4]) ^ S3(t[6]);     \
+    b += S3(t[1]) ^ S2(t[3]) ^ S1(t[5]) ^ S0(t[7]);     \
     b *= mul;                                           \
 }
 

@@ -34,9 +34,15 @@
 #define AKMOS_BLOWFISH_KEYMAX   56
 #define AKMOS_BLOWFISH_KEYSTEP  4
 
+const uint32_t akmos_blowfish_p[18];
+const uint32_t akmos_blowfish_sbox[4][256];
+
 typedef struct {
     uint32_t p[18];
-    uint32_t s[4*256];
+    uint32_t s0[256];
+    uint32_t s1[256];
+    uint32_t s2[256];
+    uint32_t s3[256];
     uint8_t  b[AKMOS_BLOWFISH_BLKLEN];
 } akmos_blowfish_t;
 

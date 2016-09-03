@@ -32,6 +32,8 @@
 #define AKMOS_TIGER_DIGLEN      24
 #define AKMOS_TIGER_BLKLEN      64
 
+const uint64_t akmos_tiger_sbox[4][256];
+
 typedef struct {
     uint64_t h[3];
     uint64_t w[8];

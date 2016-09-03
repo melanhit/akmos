@@ -34,14 +34,18 @@
 #include "../bits.h"
 
 #include "blowfish.h"
-#include "blowfish_sb32.h"
 
 #define U0(x)       ((uint8_t)((x) >> 24))
 #define U1(x)       ((uint8_t)((x) >> 16))
 #define U2(x)       ((uint8_t)((x) >>  8))
 #define U3(x)       ((uint8_t)((x)      ))
 
-#define F(in, S)    (((S[U0(in)] + S[U1(in) + 256]) ^ S[U2(in) + 512]) + S[U3(in) + 768])
+#define S0(x)       (ctx->s0[x])
+#define S1(x)       (ctx->s1[x])
+#define S2(x)       (ctx->s2[x])
+#define S3(x)       (ctx->s3[x])
+
+#define F(x)        (((S0(U0(x)) + S1(U1(x))) ^ S2(U2(x))) + S3(U3(x)))
 
 void akmos_blowfish_setkey(akmos_blowfish_t *ctx, const uint8_t *in_key, size_t len)
 {
@@ -56,12 +60,15 @@ void akmos_blowfish_setkey(akmos_blowfish_t *ctx, const uint8_t *in_key, size_t 
         if((i % j) == 0) {
             key = in_key;
         }
-        ctx->p[i] = PACK32LE(key) ^ P[i];
+        ctx->p[i] = PACK32LE(key) ^ akmos_blowfish_p[i];
     }
 
     /* copy sbox */
-    for(i = 0; i < 4*256; i++) {
-        ctx->s[i] = S[i];
+    for(i = 0; i < 256; i++) {
+        S0(i) = akmos_blowfish_sbox[0][i];
+        S1(i) = akmos_blowfish_sbox[1][i];
+        S2(i) = akmos_blowfish_sbox[2][i];
+        S3(i) = akmos_blowfish_sbox[3][i];
     }
 
     for(i = 0; i < AKMOS_BLOWFISH_BLKLEN; i++)
@@ -73,10 +80,25 @@ void akmos_blowfish_setkey(akmos_blowfish_t *ctx, const uint8_t *in_key, size_t 
         ctx->p[i+1] = PACK32LE(buf + 4);
     }
 
-    for(i = 0; i < 4*256; i += 2) {
+    for(i = 0; i < 256; i += 2) {
         akmos_blowfish_encrypt(ctx, buf, buf);
-        ctx->s[i] = PACK32LE(buf);
-        ctx->s[i+1] = PACK32LE(buf + 4);
+        ctx->s0[i] = PACK32LE(buf);
+        ctx->s0[i+1] = PACK32LE(buf + 4);
+    }
+    for(i = 0; i < 256; i += 2) {
+        akmos_blowfish_encrypt(ctx, buf, buf);
+        ctx->s1[i] = PACK32LE(buf);
+        ctx->s1[i+1] = PACK32LE(buf + 4);
+    }
+    for(i = 0; i < 256; i += 2) {
+        akmos_blowfish_encrypt(ctx, buf, buf);
+        ctx->s2[i] = PACK32LE(buf);
+        ctx->s2[i+1] = PACK32LE(buf + 4);
+    }
+    for(i = 0; i < 256; i += 2) {
+        akmos_blowfish_encrypt(ctx, buf, buf);
+        ctx->s3[i] = PACK32LE(buf);
+        ctx->s3[i+1] = PACK32LE(buf + 4);
     }
 }
 
@@ -89,10 +111,10 @@ void akmos_blowfish_encrypt(akmos_blowfish_t *ctx, const uint8_t *in_blk, uint8_
 
     for(i = 0; i < 16; i += 2) {
         l ^= ctx->p[i];
-        r ^= F(l, ctx->s);
+        r ^= F(l);
 
         r ^= ctx->p[i+1];
-        l ^= F(r, ctx->s);
+        l ^= F(r);
     }
 
     l ^= ctx->p[16];
@@ -112,10 +134,10 @@ void akmos_blowfish_decrypt(akmos_blowfish_t *ctx, const uint8_t *in_blk, uint8_
     r ^= ctx->p[17];
 
     for(i = 15; i > 0; i -= 2) {
-        l ^= F(r, ctx->s);
+        l ^= F(r);
         r ^= ctx->p[i];
 
-        r ^= F(l, ctx->s);
+        r ^= F(l);
         l ^= ctx->p[i-1];
     }
 

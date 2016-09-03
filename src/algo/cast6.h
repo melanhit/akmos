@@ -34,6 +34,8 @@
 #define AKMOS_CAST6_KEYMAX  32
 #define AKMOS_CAST6_KEYSTEP 8
 
+const uint32_t akmos_cast6_sbox[4][256];
+
 typedef struct {
     uint32_t l_key[96];
     uint32_t lk[24];

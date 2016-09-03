@@ -34,12 +34,16 @@
 #include "../bits.h"
 
 #include "cast6.h"
-#include "cast6_sb32.h"
 
-#define U0(t)  (S0[EXTBYTE(t,3)])
-#define U1(t)  (S1[EXTBYTE(t,2)])
-#define U2(t)  (S2[EXTBYTE(t,1)])
-#define U3(t)  (S3[EXTBYTE(t,0)])
+#define S0(x)   (akmos_cast6_sbox[0][x])
+#define S1(x)   (akmos_cast6_sbox[1][x])
+#define S2(x)   (akmos_cast6_sbox[2][x])
+#define S3(x)   (akmos_cast6_sbox[3][x])
+
+#define U0(t)  (S0(EXTBYTE(t,3)))
+#define U1(t)  (S1(EXTBYTE(t,2)))
+#define U2(t)  (S2(EXTBYTE(t,1)))
+#define U3(t)  (S3(EXTBYTE(t,0)))
 
 #define f1(y, x, kr, km)                    \
     t  = ROTL32(km + x, kr);                \

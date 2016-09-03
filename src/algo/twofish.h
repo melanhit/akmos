@@ -35,6 +35,10 @@
 #define AKMOS_TWOFISH_KEYMAX    32
 #define AKMOS_TWOFISH_KEYSTEP   8
 
+const uint8_t  akmos_twofish_q0[256];
+const uint8_t  akmos_twofish_q1[256];
+const uint32_t akmos_twofish_sbox[4][256];
+
 typedef struct {
     uint32_t l_key[40];
     uint32_t s_key[AKMOS_TWOFISH_BLKLEN];

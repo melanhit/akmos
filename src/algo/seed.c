@@ -33,7 +33,6 @@
 #include "../bits.h"
 
 #include "seed.h"
-#include "seed_sb32.h"
 
 #define PROTR8(a, b)            \
 {                               \
@@ -54,7 +53,14 @@
 #define U2(x)   ((uint8_t)((x) >> 16))
 #define U3(x)   ((uint8_t)((x) >> 24))
 
-#define G(x)    (S0[U0(x)] ^ S1[U1(x)] ^ S2[U2(x)] ^ S3[U3(x)])
+#define S0(x)   (akmos_seed_sbox[0][x])
+#define S1(x)   (akmos_seed_sbox[1][x])
+#define S2(x)   (akmos_seed_sbox[2][x])
+#define S3(x)   (akmos_seed_sbox[3][x])
+
+#define KC(x)   (akmos_seed_kc[x])
+
+#define G(x)    (S0(U0(x)) ^ S1(U1(x)) ^ S2(U2(x)) ^ S3(U3(x)))
 
 #define F(x, k0, k1, t, c, d)   \
 {                               \
@@ -81,10 +87,10 @@ void akmos_seed_setkey(akmos_seed_t *ctx, const uint8_t *in_key, size_t len)
     k2 = PACK32LE(in_key + 8); k3 = PACK32LE(in_key + 12);
 
     for(i = 0, y = 0; i < len; i++, y += 2) {
-        ctx->key[y] = k0 + k2 - KC[i];
+        ctx->key[y] = k0 + k2 - KC(i);
         ctx->key[y] = G(ctx->key[y]);
 
-        ctx->key[y + 1] = k1 - k3 + KC[i];
+        ctx->key[y + 1] = k1 - k3 + KC(i);
         ctx->key[y + 1] = G(ctx->key[y + 1]);
 
         if((i % 2) == 0) {

@@ -34,6 +34,8 @@
 #define AKMOS_CAMELLIA_KEYMAX   32
 #define AKMOS_CAMELLIA_KEYSTEP  8
 
+const uint64_t akmos_camellia_sbox[8][256];
+
 typedef struct {
     uint64_t k[24];
     uint64_t ke[6];

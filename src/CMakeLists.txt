@@ -6,21 +6,30 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/inc/c
 
 set(src_lib
     algo/anubis.c
+    algo/anubis_sbox.c
     algo/cast6.c
+    algo/cast6_sbox.c
     algo/rc6.c
     algo/ripemd.c
     algo/twofish.c
+    algo/twofish_sbox.c
     algo/serpent.c
     algo/sha1.c
     algo/sha2.c
     algo/sha3.c
     algo/threefish_1024.c
     algo/camellia.c
+    algo/camellia_sbox.c
     algo/rijndael.c
+    algo/rijndael_sbox.c
     algo/tiger.c
+    algo/tiger_sbox.c
     algo/whirlpool.c
+    algo/whirlpool_sbox.c
     algo/blowfish.c
+    algo/blowfish_sbox.c
     algo/seed.c
+    algo/seed_sbox.c
     algo/chacha.c
     kdf/kdf2.c
     mode/ecb.c

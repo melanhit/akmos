@@ -34,7 +34,14 @@
 #include "../bits.h"
 
 #include "twofish.h"
-#include "twofish_sb32.h"
+
+#define Q0(x)   (akmos_twofish_q0[x])
+#define Q1(x)   (akmos_twofish_q1[x])
+
+#define S0(x)   (akmos_twofish_sbox[0][x])
+#define S1(x)   (akmos_twofish_sbox[1][x])
+#define S2(x)   (akmos_twofish_sbox[2][x])
+#define S3(x)   (akmos_twofish_sbox[3][x])
 
 #define q(n,x)  q_tab[n][x]
 
@@ -49,40 +56,40 @@ static uint32_t h_fun(akmos_twofish_t *ctx, const uint32_t x, const uint32_t *ke
 
     switch (ctx->k_len) {
         case 4:
-            b0 = (uint32_t)(Q1[(uint8_t) b0] ^ EXTBYTE(key[3],0));
-            b1 = (uint32_t)(Q0[(uint8_t) b1] ^ EXTBYTE(key[3],1));
-            b2 = (uint32_t)(Q0[(uint8_t) b2] ^ EXTBYTE(key[3],2));
-            b3 = (uint32_t)(Q1[(uint8_t) b3] ^ EXTBYTE(key[3],3));
+            b0 = (uint32_t)(Q1((uint8_t) b0) ^ EXTBYTE(key[3],0));
+            b1 = (uint32_t)(Q0((uint8_t) b1) ^ EXTBYTE(key[3],1));
+            b2 = (uint32_t)(Q0((uint8_t) b2) ^ EXTBYTE(key[3],2));
+            b3 = (uint32_t)(Q1((uint8_t) b3) ^ EXTBYTE(key[3],3));
         case 3:
-            b0 = (uint32_t)(Q1[(uint8_t) b0] ^ EXTBYTE(key[2],0));
-            b1 = (uint32_t)(Q1[(uint8_t) b1] ^ EXTBYTE(key[2],1));
-            b2 = (uint32_t)(Q0[(uint8_t) b2] ^ EXTBYTE(key[2],2));
-            b3 = (uint32_t)(Q0[(uint8_t) b3] ^ EXTBYTE(key[2],3));
+            b0 = (uint32_t)(Q1((uint8_t) b0) ^ EXTBYTE(key[2],0));
+            b1 = (uint32_t)(Q1((uint8_t) b1) ^ EXTBYTE(key[2],1));
+            b2 = (uint32_t)(Q0((uint8_t) b2) ^ EXTBYTE(key[2],2));
+            b3 = (uint32_t)(Q0((uint8_t) b3) ^ EXTBYTE(key[2],3));
         case 2:
-            b0 = (uint32_t)(Q0[(uint8_t) (Q0[(uint8_t) b0] ^ EXTBYTE(key[1],0))] ^ EXTBYTE(key[0],0));
-            b1 = (uint32_t)(Q0[(uint8_t) (Q1[(uint8_t) b1] ^ EXTBYTE(key[1],1))] ^ EXTBYTE(key[0],1));
-            b2 = (uint32_t)(Q1[(uint8_t) (Q0[(uint8_t) b2] ^ EXTBYTE(key[1],2))] ^ EXTBYTE(key[0],2));
-            b3 = (uint32_t)(Q1[(uint8_t) (Q1[(uint8_t) b3] ^ EXTBYTE(key[1],3))] ^ EXTBYTE(key[0],3));
+            b0 = (uint32_t)(Q0((uint8_t) (Q0((uint8_t) b0) ^ EXTBYTE(key[1],0))) ^ EXTBYTE(key[0],0));
+            b1 = (uint32_t)(Q0((uint8_t) (Q1((uint8_t) b1) ^ EXTBYTE(key[1],1))) ^ EXTBYTE(key[0],1));
+            b2 = (uint32_t)(Q1((uint8_t) (Q0((uint8_t) b2) ^ EXTBYTE(key[1],2))) ^ EXTBYTE(key[0],2));
+            b3 = (uint32_t)(Q1((uint8_t) (Q1((uint8_t) b3) ^ EXTBYTE(key[1],3))) ^ EXTBYTE(key[0],3));
     }
 
-    return  S0[b0] ^ S1[b1] ^ S2[b2] ^ S3[b3];
+    return  S0(b0) ^ S1(b1) ^ S2(b2) ^ S3(b3);
 
 }
 
-#define q20(x)  Q0[Q0[x] ^ EXTBYTE(key[1],0)] ^ EXTBYTE(key[0],0)
-#define q21(x)  Q0[Q1[x] ^ EXTBYTE(key[1],1)] ^ EXTBYTE(key[0],1)
-#define q22(x)  Q1[Q0[x] ^ EXTBYTE(key[1],2)] ^ EXTBYTE(key[0],2)
-#define q23(x)  Q1[Q1[x] ^ EXTBYTE(key[1],3)] ^ EXTBYTE(key[0],3)
+#define q20(x)  Q0(Q0(x) ^ EXTBYTE(key[1],0)) ^ EXTBYTE(key[0],0)
+#define q21(x)  Q0(Q1(x) ^ EXTBYTE(key[1],1)) ^ EXTBYTE(key[0],1)
+#define q22(x)  Q1(Q0(x) ^ EXTBYTE(key[1],2)) ^ EXTBYTE(key[0],2)
+#define q23(x)  Q1(Q1(x) ^ EXTBYTE(key[1],3)) ^ EXTBYTE(key[0],3)
 
-#define q30(x)  Q0[Q0[Q1[x] ^ EXTBYTE(key[2],0)] ^ EXTBYTE(key[1],0)] ^ EXTBYTE(key[0],0)
-#define q31(x)  Q0[Q1[Q1[x] ^ EXTBYTE(key[2],1)] ^ EXTBYTE(key[1],1)] ^ EXTBYTE(key[0],1)
-#define q32(x)  Q1[Q0[Q0[x] ^ EXTBYTE(key[2],2)] ^ EXTBYTE(key[1],2)] ^ EXTBYTE(key[0],2)
-#define q33(x)  Q1[Q1[Q0[x] ^ EXTBYTE(key[2],3)] ^ EXTBYTE(key[1],3)] ^ EXTBYTE(key[0],3)
+#define q30(x)  Q0(Q0(Q1(x) ^ EXTBYTE(key[2],0)) ^ EXTBYTE(key[1],0)) ^ EXTBYTE(key[0],0)
+#define q31(x)  Q0(Q1(Q1(x) ^ EXTBYTE(key[2],1)) ^ EXTBYTE(key[1],1)) ^ EXTBYTE(key[0],1)
+#define q32(x)  Q1(Q0(Q0(x) ^ EXTBYTE(key[2],2)) ^ EXTBYTE(key[1],2)) ^ EXTBYTE(key[0],2)
+#define q33(x)  Q1(Q1(Q0(x) ^ EXTBYTE(key[2],3)) ^ EXTBYTE(key[1],3)) ^ EXTBYTE(key[0],3)
 
-#define q40(x)  Q0[Q0[Q1[Q1[x] ^ EXTBYTE(key[3],0)] ^ EXTBYTE(key[2],0)] ^ EXTBYTE(key[1],0)] ^ EXTBYTE(key[0],0)
-#define q41(x)  Q0[Q1[Q1[Q0[x] ^ EXTBYTE(key[3],1)] ^ EXTBYTE(key[2],1)] ^ EXTBYTE(key[1],1)] ^ EXTBYTE(key[0],1)
-#define q42(x)  Q1[Q0[Q0[Q0[x] ^ EXTBYTE(key[3],2)] ^ EXTBYTE(key[2],2)] ^ EXTBYTE(key[1],2)] ^ EXTBYTE(key[0],2)
-#define q43(x)  Q1[Q1[Q0[Q1[x] ^ EXTBYTE(key[3],3)] ^ EXTBYTE(key[2],3)] ^ EXTBYTE(key[1],3)] ^ EXTBYTE(key[0],3)
+#define q40(x)  Q0(Q0(Q1(Q1(x) ^ EXTBYTE(key[3],0)) ^ EXTBYTE(key[2],0)) ^ EXTBYTE(key[1],0)) ^ EXTBYTE(key[0],0)
+#define q41(x)  Q0(Q1(Q1(Q0(x) ^ EXTBYTE(key[3],1)) ^ EXTBYTE(key[2],1)) ^ EXTBYTE(key[1],1)) ^ EXTBYTE(key[0],1)
+#define q42(x)  Q1(Q0(Q0(Q0(x) ^ EXTBYTE(key[3],2)) ^ EXTBYTE(key[2],2)) ^ EXTBYTE(key[1],2)) ^ EXTBYTE(key[0],2)
+#define q43(x)  Q1(Q1(Q0(Q1(x) ^ EXTBYTE(key[3],3)) ^ EXTBYTE(key[2],3)) ^ EXTBYTE(key[1],3)) ^ EXTBYTE(key[0],3)
 
 static void gen_mk_tab(akmos_twofish_t *ctx, uint32_t *key)
 {
@@ -95,30 +102,30 @@ static void gen_mk_tab(akmos_twofish_t *ctx, uint32_t *key)
         case 2:
             for (i = 0; i < 256; ++i) {
                 by = (uint8_t)i;
-                mk_tab[0 + 4*i] = S0[q20(by)];
-                mk_tab[1 + 4*i] = S1[q21(by)];
-                mk_tab[2 + 4*i] = S2[q22(by)];
-                mk_tab[3 + 4*i] = S3[q23(by)];
+                mk_tab[0 + 4*i] = S0(q20(by));
+                mk_tab[1 + 4*i] = S1(q21(by));
+                mk_tab[2 + 4*i] = S2(q22(by));
+                mk_tab[3 + 4*i] = S3(q23(by));
             }
             break;
 
         case 3:
             for (i = 0; i < 256; ++i) {
                 by = (uint8_t)i;
-                mk_tab[0 + 4*i] = S0[q30(by)];
-                mk_tab[1 + 4*i] = S1[q31(by)];
-                mk_tab[2 + 4*i] = S2[q32(by)];
-                mk_tab[3 + 4*i] = S3[q33(by)];
+                mk_tab[0 + 4*i] = S0(q30(by));
+                mk_tab[1 + 4*i] = S1(q31(by));
+                mk_tab[2 + 4*i] = S2(q32(by));
+                mk_tab[3 + 4*i] = S3(q33(by));
             }
             break;
 
         case 4:
             for (i = 0; i < 256; ++i) {
                 by = (uint8_t)i;
-                mk_tab[0 + 4*i] = S0[q40(by)];
-                mk_tab[1 + 4*i] = S1[q41(by)];
-                mk_tab[2 + 4*i] = S2[q42(by)];
-                mk_tab[3 + 4*i] = S3[q43(by)];
+                mk_tab[0 + 4*i] = S0(q40(by));
+                mk_tab[1 + 4*i] = S1(q41(by));
+                mk_tab[2 + 4*i] = S2(q42(by));
+                mk_tab[3 + 4*i] = S3(q43(by));
             }
     }
 }

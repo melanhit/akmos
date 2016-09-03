@@ -34,6 +34,8 @@
 
 #define AKMOS_WHIRLPOOL_ROUNDS  10
 
+const uint64_t akmos_whirlpool_sbox[8][256];
+
 typedef struct {
     uint64_t h[8];
     uint64_t w[24];

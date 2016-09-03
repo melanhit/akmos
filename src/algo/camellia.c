@@ -33,7 +33,6 @@
 #include "../bits.h"
 
 #include "camellia.h"
-#include "camellia_sb64.h"
 
 #define C0  UINT64_C(0xa09e667f3bcc908b)
 #define C1  UINT64_C(0xb67ae8584caa73b2)
@@ -57,7 +56,16 @@
 #define U6(x)   ((uint8_t)((x) >>  8))
 #define U7(x)   ((uint8_t)((x)      ))
 
-#define F(x) (SB0[U0(x)] ^ SB1[U1(x)] ^ SB2[U2(x)] ^ SB3[U3(x)] ^ SB4[U4(x)] ^ SB5[U5(x)] ^ SB6[U6(x)] ^ SB7[U7(x)])
+#define S0(x)   (akmos_camellia_sbox[0][x])
+#define S1(x)   (akmos_camellia_sbox[1][x])
+#define S2(x)   (akmos_camellia_sbox[2][x])
+#define S3(x)   (akmos_camellia_sbox[3][x])
+#define S4(x)   (akmos_camellia_sbox[4][x])
+#define S5(x)   (akmos_camellia_sbox[5][x])
+#define S6(x)   (akmos_camellia_sbox[6][x])
+#define S7(x)   (akmos_camellia_sbox[7][x])
+
+#define F(x) (S0(U0(x)) ^ S1(U1(x)) ^ S2(U2(x)) ^ S3(U3(x)) ^ S4(U4(x)) ^ S5(U5(x)) ^ S6(U6(x)) ^ S7(U7(x)))
 
 #define KEY_KA_SCHED(d1, d2, k, ka) \
 {                                   \

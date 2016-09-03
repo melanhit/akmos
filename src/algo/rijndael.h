@@ -34,6 +34,11 @@
 #define AKMOS_RIJNDAEL_KEYMAX   32
 #define AKMOS_RIJNDAEL_KEYSTEP  8
 
+const uint32_t akmos_rijndael_s   [256];
+const uint32_t akmos_rijndael_sbox[5][256];
+const uint32_t akmos_rijndael_si  [5][256];
+
+void akmos_rijndael_setkey (akmos_rijndael_t *, const uint8_t *, size_t);
 typedef struct {
     uint32_t ke[4*(14+1)];
     uint32_t kd[4*(14+1)];
@@ -41,7 +46,6 @@ typedef struct {
     size_t   r;
 } akmos_rijndael_t;
 
-void akmos_rijndael_setkey (akmos_rijndael_t *, const uint8_t *, size_t);
 void akmos_rijndael_encrypt(akmos_rijndael_t *, const uint8_t *, uint8_t *);
 void akmos_rijndael_decrypt(akmos_rijndael_t *, const uint8_t *, uint8_t *);
 

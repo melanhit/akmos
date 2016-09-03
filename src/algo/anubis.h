@@ -37,6 +37,8 @@
 #define AKMOS_ANUBIS_MAX_N      10
 #define AKMOS_ANUBIS_MAX_R      (AKMOS_ANUBIS_MAX_N + 8)
 
+const uint32_t akmos_anubis_sbox[6][256];
+
 typedef struct {
     int r;
     uint32_t e_key[(AKMOS_ANUBIS_MAX_R + 1) * 4];
