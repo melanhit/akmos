@@ -47,8 +47,8 @@ struct opt_digest_s {
     int count;
     char **input;
     struct {
-        char algo;
-        char bin;
+        int algo;
+        int bin;
     } set;
 };
 
@@ -119,7 +119,7 @@ int akmos_cli_digest(int argc, char **argv)
     const akmos_digest_xdesc_t *desc;
     struct opt_digest_s opt;
     int i, err;
-    ssize_t len;
+    size_t len;
     uint8_t buf[BUFSIZ], *md;
     FILE *fd;
 
@@ -156,14 +156,13 @@ int akmos_cli_digest(int argc, char **argv)
             return akmos_perror(err);
         }
 
-        while((len = fread(buf, 1, BUFSIZ, fd)) != 0) {
-            if(len == -1) {
-                printf("%s: %s\n", opt.input[i], strerror(errno));
-                free(md);
-                return EXIT_FAILURE;
-            }
-
+        while((len = fread(buf, 1, BUFSIZ, fd)) != 0)
             akmos_digest_update(ctx, buf, len);
+
+        if(ferror(fd)) {
+            printf("%s: %s\n", opt.input[i], strerror(errno));
+            free(md);
+            return EXIT_FAILURE;
         }
 
         akmos_digest_done(ctx, md);

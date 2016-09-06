@@ -59,12 +59,12 @@ struct opt_mac_s {
     int  count;
     char **input;
     struct {
-        char algo;
-        char mode;
-        char pass;
-        char key;
-        char keylen;
-        char bin;
+        int algo;
+        int mode;
+        int pass;
+        int key;
+        int keylen;
+        int bin;
     } set;
 };
 
@@ -296,13 +296,14 @@ static int mac_proc(struct opt_mac_s *opt, char *path, uint8_t *buf, uint8_t *ke
 {
     akmos_mac_t ctx;
     size_t len;
-    int fd_in, err;
+    int err;
+    FILE *fd;
 
     ctx = NULL;
     err = EXIT_SUCCESS;
 
-    fd_in = open(path, O_RDONLY|O_NONBLOCK);
-    if(fd_in == -1) {
+    fd = fopen(path, "r");
+    if(!fd) {
         err = EXIT_FAILURE;
         printf("%s: %s\n", path, strerror(errno));
         goto out;
@@ -320,8 +321,14 @@ static int mac_proc(struct opt_mac_s *opt, char *path, uint8_t *buf, uint8_t *ke
         goto out;
     }
 
-    while((len = read(fd_in, buf, BUFSIZ)) > 0)
+    while((len = fread(buf, 1, BUFSIZ, fd)) > 0)
         akmos_mac_update(ctx, buf, len);
+
+    if(ferror(fd)) {
+        err = EXIT_FAILURE;
+        printf("%s: %s\n", path, strerror(errno));
+        goto out;
+    }
 
     err = akmos_mac_done(ctx, macbuf);
     if(err) {
@@ -337,8 +344,8 @@ static int mac_proc(struct opt_mac_s *opt, char *path, uint8_t *buf, uint8_t *ke
     }
 
 out:
-    if(fd_in > 0)
-        close(fd_in);
+    if(fd)
+        fclose(fd);
 
     return err;
 }

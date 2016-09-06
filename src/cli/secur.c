@@ -51,7 +51,7 @@ int secur_read_passw(char *pass)
 
     tcgetattr(STDIN_FILENO, &t_old);
     t_new = t_old;
-    t_new.c_lflag &= ~ECHO;
+    t_new.c_lflag &= (unsigned)~ECHO;
     tcsetattr(STDIN_FILENO, TCSANOW, &t_new);
 
     printf("Enter password: ");
@@ -67,7 +67,7 @@ int secur_read_passw(char *pass)
 int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *salt, size_t saltlen)
 {
     int fd, err;
-    size_t klen;
+    ssize_t klen;
     uint8_t *kbuf, *kbuf1, *kbuf2;
 
     kbuf1 = kbuf2 = NULL;
@@ -109,7 +109,7 @@ int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *sal
         goto out;
     }
 
-    err = akmos_kdf_kdf2(key, keylen, salt, saltlen, kbuf, klen, 0, SECUR_ALGO);
+    err = akmos_kdf_kdf2(key, keylen, salt, saltlen, kbuf, (size_t)klen, 0, SECUR_ALGO);
     if(err)
         goto out;
 
@@ -132,8 +132,9 @@ out:
 
 int secur_rand_buf(uint8_t *buf, size_t len)
 {
-    int i, j, l, err, fd;
-    size_t tmplen, diglen;
+    size_t i, j, l, tmplen, diglen;
+    ssize_t t;
+    int err, fd;
     uint8_t tbuf[BUFSIZ], *sbuf, *md, *key, *pbuf;
 
     err = EXIT_SUCCESS;
@@ -157,8 +158,9 @@ int secur_rand_buf(uint8_t *buf, size_t len)
     memset(buf, 0, len);
 
     pbuf = buf;
+    t = (ssize_t)diglen;
     for(i = 0, tmplen = diglen; i <= l; i++) {
-        if(read(fd, key, diglen) != diglen) {
+        if(read(fd, key, diglen) != t) {
             printf("%s: %s\n", SECUR_RNDFILE, strerror(errno));
             return EXIT_FAILURE;
         }

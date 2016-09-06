@@ -68,13 +68,13 @@ struct opt_cipher_s {
     char *input;
     char *output;
     struct {
-        char algo;
-        char mode;
-        char pass;
-        char key;
-        char keylen;
-        char iter;
-        char over;
+        int algo;
+        int mode;
+        int pass;
+        int key;
+        int keylen;
+        int iter;
+        int over;
         int flag;
     } set;
 };
@@ -331,7 +331,7 @@ static int lb_padbuf(akmos_cipher_t ctx, uint8_t *buf, size_t *rlen, size_t blkl
     return EXIT_SUCCESS;
 }
 
-int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
+int akmos_cli_cipher(int argc, char **argv, int enc)
 {
     akmos_cipher_t ctx;
     struct opt_cipher_s opt;
@@ -492,7 +492,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     rlen = fread(rbuf, 1, BUFSIZ, fd_in);
     while(1) {
         wlen = fread(wbuf, 1, BUFSIZ, fd_in);
-        if(rlen == -1 || wlen == -1) {
+        if(ferror(fd_in)) {
             err = EXIT_FAILURE;
             printf("%s: %s\n", opt.input, strerror(errno));
             goto out;
