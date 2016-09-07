@@ -34,6 +34,7 @@
 #include <config.h>
 
 #include "../akmos.h"
+#include "../error.h"
 #include "../cipher.h"
 
 #include "cbc-mac.h"

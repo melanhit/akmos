@@ -31,6 +31,7 @@
 #include <string.h>
 
 #include "../akmos.h"
+#include "../error.h"
 #include "../bits.h"
 
 int akmos_kdf_kdf2(uint8_t *key, size_t keylen,

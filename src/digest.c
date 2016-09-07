@@ -31,6 +31,7 @@
 #include <string.h>
 
 #include "akmos.h"
+#include "error.h"
 #include "digest.h"
 
 int akmos_digest_init(akmos_digest_t *ctx, akmos_algo_id algo)

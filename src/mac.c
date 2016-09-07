@@ -31,6 +31,7 @@
 #include <string.h>
 
 #include "akmos.h"
+#include "error.h"
 #include "mac.h"
 
 int akmos_mac_init(akmos_mac_t *ctx, akmos_algo_id algo, akmos_mode_id mode)

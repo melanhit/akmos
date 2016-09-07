@@ -31,6 +31,7 @@
 #include <string.h>
 
 #include "akmos.h"
+#include "error.h"
 #include "cipher.h"
 #include "pxor.h"
 

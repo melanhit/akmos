@@ -33,6 +33,7 @@
 #include <strings.h>
 
 #include "akmos.h"
+#include "error.h"
 #include "cipher.h"
 #include "digest.h"
 #include "mac.h"
@@ -95,43 +96,43 @@ const char *akmos_mode2str(akmos_mode_id mode)
     }
 }
 
-int akmos_perror(akmos_err_id e)
+int akmos_perror(int err)
 {
-    switch(e) {
+    switch(err) {
         case AKMOS_ERR_ALGOID:
-            printf("Invalid algorithm (err = %d)\n", e);
+            printf("Invalid algorithm (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_MODEID:
-            printf("Invalid mode (err = %d)\n", e);
+            printf("Invalid mode (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_KEYLEN:
-            printf("Invalid key length (err = %d)\n", e);
+            printf("Invalid key length (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_BLKLEN:
-            printf("Unsupported block length (err = %d)\n", e);
+            printf("Unsupported block length (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_FLAGID:
-            printf("Invalid flag (err = %d)\n", e);
+            printf("Invalid flag (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_STMMODE:
-            printf("Unsupported mode for stream cipher (err = %d)\n", e);
+            printf("Unsupported mode for stream cipher (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_STMTDEA:
-            printf("Stream cipher unsupport TDEA (err = %d)\n", e);
+            printf("Stream cipher unsupport TDEA (err = %d)\n", err);
             break;
 
         default:
-            printf("Unknown error (err = %d)\n", e);
+            printf("Unknown error (err = %d)\n", err);
             break;
     }
 
-    return e;
+    return err;
 }
 
 void akmos_padadd(const uint8_t *in, size_t in_len, uint8_t *out, size_t out_len)

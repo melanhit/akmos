@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,40 +26,22 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_TEST_H
-#define AKMOS_TEST_H
+#ifndef AKMOS_ERROR_H
+#define AKMOS_ERROR_H
 
-#define TEST_CNT    1024
+#define AKMOS_ERR_SUCCESS      0
+#define AKMOS_ERR_FAILED      -1
 
-#define TEST_PASS   1
-#define TEST_FAIL   0
+#define AKMOS_ERR_ALGOID    -100
+#define AKMOS_ERR_MODEID    -101
+#define AKMOS_ERR_FLAGID    -102
 
-#include "../src/akmos.h"
-#include "../src/error.h"
+#define AKMOS_ERR_KEYLEN    -200
+#define AKMOS_ERR_BLKLEN    -201
 
-typedef struct test_ecb_s {
-    uint8_t *key;
-    uint8_t *pt;
-    uint8_t *ct0;
-    uint8_t *ct1;
-} test_ecb_t;
+#define AKMOS_ERR_STMMODE   -300
+#define AKMOS_ERR_STMTDEA   -301
 
-typedef struct test_digest_s {
-    uint8_t *h1;
-    uint8_t *h2;
-    uint8_t *h3;
-    uint8_t *h4;
-} test_digest_t;
+#define AKMOS_ERR_ENOMEM    -400
 
-int test_mode_ecb(akmos_algo_id, char *);
-int test_digest(akmos_algo_id, char *);
-
-int test_path_cipher(akmos_algo_id, akmos_mode_id, size_t, char *, char *);
-int test_path_digest(akmos_algo_id, char *, char *);
-
-void test_rand(uint8_t *, size_t);
-
-void test_print(char *, size_t);
-void test_total(size_t);
-
-#endif  /* AKMOS_TEST_H */
+#endif  /* AKMOS_ERROR_H */

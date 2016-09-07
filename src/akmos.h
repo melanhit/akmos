@@ -30,19 +30,6 @@
 #define AKMOS_H
 
 typedef enum {
-    AKMOS_ERR_SUCCESS,
-    AKMOS_ERR_FAILED,
-    AKMOS_ERR_ALGOID,
-    AKMOS_ERR_MODEID,
-    AKMOS_ERR_KEYLEN,
-    AKMOS_ERR_ENOMEM,
-    AKMOS_ERR_BLKLEN,
-    AKMOS_ERR_FLAGID,
-    AKMOS_ERR_STMMODE,
-    AKMOS_ERR_STMTDEA
-} akmos_err_id;
-
-typedef enum {
     /* block cipher algo */
     AKMOS_ALGO_ANUBIS           = 0x00000001,
     AKMOS_ALGO_BLOWFISH         = 0x00000002,
@@ -173,6 +160,6 @@ void  akmos_memzero(volatile void *, size_t);
 void   akmos_padadd(const uint8_t *, size_t, uint8_t *, size_t);
 size_t akmos_padrem(uint8_t *, size_t);
 
-int akmos_perror(akmos_err_id);
+int akmos_perror(int);
 
 #endif  /* AKMOS_H */
