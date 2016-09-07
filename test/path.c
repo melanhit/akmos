@@ -39,7 +39,7 @@ int test_path_cipher(akmos_algo_id algo, akmos_mode_id mode, size_t keylen, char
 {
     char vname[128], *s;
     const char *alg_name, *mode_name, *dir_name;
-    int i;
+    size_t i;
 
     alg_name = akmos_cipher_name(algo);
     if(!alg_name) {
@@ -47,7 +47,7 @@ int test_path_cipher(akmos_algo_id algo, akmos_mode_id mode, size_t keylen, char
         return EXIT_FAILURE;
     }
 
-    mode_name = akmos_mode2str(AKMOS_MODE_ECB);
+    mode_name = akmos_mode2str(mode);
     if(!mode_name) {
         akmos_perror(AKMOS_ERR_MODEID);
         return EXIT_FAILURE;
@@ -59,7 +59,7 @@ int test_path_cipher(akmos_algo_id algo, akmos_mode_id mode, size_t keylen, char
     sprintf(vname, "%s-%s-%zd.bin", mode_name, alg_name, keylen);
 
     for(i = 0; i < strlen(vname); i++)
-        vname[i] = tolower(vname[i]);
+        vname[i] = (char)tolower(vname[i]);
 
     sprintf(path, "%s/%s", dir_name, vname);
 
@@ -72,7 +72,7 @@ int test_path_digest(akmos_algo_id algo, char *argv0, char *path)
 {
     char vname[128], *s;
     const char *alg_name, *dir_name;
-    int i;
+    size_t i;
 
     alg_name = akmos_digest_name(algo);
     if(!alg_name) {
@@ -86,7 +86,7 @@ int test_path_digest(akmos_algo_id algo, char *argv0, char *path)
     sprintf(vname, "digest-%s.bin", alg_name);
 
     for(i = 0; i < strlen(vname); i++)
-        vname[i] = tolower(vname[i]);
+        vname[i] = (char)tolower(vname[i]);
 
     sprintf(path, "%s/%s", dir_name, vname);
 

@@ -86,9 +86,9 @@ static void treyfer_crypt(uint8_t *pt, uint8_t *ct)
     t = ct[0];
 
     for(i = 0; i < 8*32; i++) {
-        t += RANDKEY[i%8];
-        t = RANDSBOX[t] + ct[(i+1)%8];
-        ct[(i+1) % 8] = t = (t << 1) | (t >> 7);
+        t = (uint8_t)(t + RANDKEY[i%8]);
+        t = (uint8_t)(RANDSBOX[t] + ct[(i+1)%8]);
+        ct[(i+1) % 8] = t = (uint8_t)((t << 1) | (t >> 7));
     }
 }
 

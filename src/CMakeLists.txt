@@ -96,7 +96,7 @@ add_library(akmos_obj OBJECT ${src_lib})
 add_definitions(-D_BSD_SOURCE -D_POSIX_C_SOURCE=199309L -D_XOPEN_SOURCE=500)
 add_definitions(-DAKMOS_BUFSZ=8192)
 include_directories("${PROJECT_BINARY_DIR}/inc")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -DPIC -ansi -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion -Qunused-arguments")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -DPIC -std=c90 -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion")
 separate_arguments(CFLAGS UNIX_COMMAND ${CFLAGS})
 target_compile_options(akmos_obj PRIVATE ${CFLAGS})
 

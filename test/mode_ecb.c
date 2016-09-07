@@ -36,7 +36,7 @@
 
 #include "test.h"
 
-static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t blklen, int *res)
+static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t blklen, size_t *res)
 {
     uint8_t buf[1024], *key, *ct;
     int err;
@@ -102,13 +102,13 @@ out:
     return EXIT_SUCCESS;
 }
 
-static int ecb_test(akmos_algo_id algo, size_t keylen, char *argv0, int *res)
+static int ecb_test(akmos_algo_id algo, size_t keylen, char *argv0, size_t *res)
 {
     char path[512];
     uint8_t buf[BUFSIZ];
-    size_t blklen;
-    ssize_t len;
-    int fd, err;
+    size_t len, blklen;
+    int err;
+    FILE *fd;
 
     test_ecb_t ectx;
 
@@ -116,19 +116,19 @@ static int ecb_test(akmos_algo_id algo, size_t keylen, char *argv0, int *res)
     if(err)
         return err;
 
-    fd = open(path, O_RDONLY);
-    if(fd == -1) {
+    fd = fopen(path, "r");
+    if(!fd) {
         printf("%s: %s\n", path, strerror(errno));
         return EXIT_FAILURE;
     }
 
-    len = read(fd, buf, BUFSIZ);
-    if(len == -1) {
+    len = fread(buf, 1, BUFSIZ, fd);
+    if(ferror(fd)) {
         printf("%s: %s\n", path, strerror(errno));
         return EXIT_FAILURE;
     }
 
-    close(fd);
+    fclose(fd);
 
     if((!keylen) || ((keylen % 8) != 0)) {
         printf("Invalid keylen %zd\n", keylen);
@@ -162,8 +162,8 @@ static int ecb_test(akmos_algo_id algo, size_t keylen, char *argv0, int *res)
 int test_mode_ecb(akmos_algo_id algo, char *argv0)
 {
     char pname[128];
-    int err, res;
-    size_t i, keylen;
+    int err;
+    size_t i, res;
     const akmos_cipher_xdesc_t *desc;
 
     desc = akmos_cipher_desc(algo);

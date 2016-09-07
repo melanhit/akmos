@@ -40,7 +40,7 @@ struct {
     0, 0
 };
 
-int main(int argc, char **argv)
+int main(int __attribute__((unused)) argc, char **argv)
 {
     /* cipher ECB-mode */
     if(test_mode_ecb(AKMOS_ALGO_ANUBIS, argv[0]))

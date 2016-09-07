@@ -36,11 +36,11 @@
 
 #include "test.h"
 
-static int digest_calc(test_digest_t *dctx, akmos_algo_id algo, size_t diglen, size_t blklen, int *res)
+static int digest_calc(test_digest_t *dctx, akmos_algo_id algo, size_t diglen, size_t blklen, size_t *res)
 {
     uint8_t *buf, *out, *p;
     int err;
-    size_t i, j, len;
+    size_t i, len;
     akmos_digest_t ctx;
 
     buf = out = NULL;
@@ -140,13 +140,13 @@ out:
     return err;
 }
 
-static int digest(akmos_algo_id algo, char *argv0, int *res)
+static int digest(akmos_algo_id algo, char *argv0, size_t *res)
 {
     char path[512];
     uint8_t buf[BUFSIZ];
-    size_t diglen, blklen;
-    ssize_t len;
-    int fd, err;
+    size_t len;
+    int err;
+    FILE *fd;
     const akmos_digest_xdesc_t *desc;
 
     test_digest_t dctx;
@@ -155,19 +155,19 @@ static int digest(akmos_algo_id algo, char *argv0, int *res)
     if(err)
         return err;
 
-    fd = open(path, O_RDONLY);
-    if(fd == -1) {
+    fd = fopen(path, "r");
+    if(!fd) {
         printf("%s: %s\n", path, strerror(errno));
         return EXIT_FAILURE;
     }
 
-    len = read(fd, buf, BUFSIZ);
-    if(len == -1) {
+    len = fread(buf, 1, BUFSIZ, fd);
+    if(ferror(fd)) {
         printf("%s: %s\n", path, strerror(errno));
         return EXIT_FAILURE;
     }
 
-    close(fd);
+    fclose(fd);
 
     desc = akmos_digest_desc(algo);
     if(!desc)
@@ -193,8 +193,8 @@ static int digest(akmos_algo_id algo, char *argv0, int *res)
 int test_digest(akmos_algo_id algo, char *argv0)
 {
     char pname[128];
-    int err, res;
-    size_t i, keylen;
+    size_t res;
+    int err;
     const akmos_digest_xdesc_t *desc;
 
     desc = akmos_digest_desc(algo);
