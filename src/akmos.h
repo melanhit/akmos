@@ -152,7 +152,7 @@ int akmos_kdf_pbkdf2(uint8_t *, size_t, const uint8_t *, size_t, const char *, u
 int akmos_kdf_kdf2(uint8_t *, size_t, const uint8_t *, size_t, const uint8_t *, size_t, uint32_t, akmos_algo_id);
 
 /* Misc */
-int   akmos_str2mode(const char *);
+akmos_mode_id akmos_str2mode(const char *);
 const char *akmos_mode2str(akmos_mode_id);
 
 void  akmos_memzero(volatile void *, size_t);

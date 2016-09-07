@@ -50,8 +50,8 @@
 #define MAX_PASSLEN     128
 
 struct opt_mac_s {
-    int algo;
-    int mode;
+    akmos_algo_id algo;
+    akmos_mode_id mode;
     size_t keylen;
     size_t maclen;
     char *key;
@@ -129,7 +129,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
     } else {
         if(mode_str) {
             opt->mode = akmos_str2mode(mode_str);
-            if(opt->mode == -1)
+            if(!opt->mode)
                 return akmos_perror(AKMOS_ERR_MODEID);
         }
     }

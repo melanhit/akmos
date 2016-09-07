@@ -40,10 +40,10 @@
 
 #include "mask.h"
 
-int akmos_str2mode(const char *name)
+akmos_mode_id akmos_str2mode(const char *name)
 {
     if(name == NULL)
-        return -1;
+        return 0;
     else if(strcasecmp(name, akmos_xmode_ecb.name) == 0)
         return AKMOS_MODE_ECB;
     else if(strcasecmp(name, akmos_xmode_cbc.name) == 0)
@@ -61,7 +61,7 @@ int akmos_str2mode(const char *name)
     else if(strcasecmp(name, akmos_xmode_cmac.name) == 0)
         return AKMOS_MODE_CMAC;
     else
-        return -1;
+        return 0;
 }
 
 const char *akmos_mode2str(akmos_mode_id mode)

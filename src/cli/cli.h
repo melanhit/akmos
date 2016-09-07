@@ -52,7 +52,7 @@ typedef struct __attribute__((__packed__)) akmos_cipher_header_s {
 
 int akmos_cli_help(void);
 int akmos_cli_digest(int, char **);
-int akmos_cli_cipher(int, char **, int);
+int akmos_cli_cipher(int, char **, akmos_mode_id);
 int akmos_cli_mac(int, char **);
 
 #endif  /* AKMOS_CLI_H */

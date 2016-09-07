@@ -58,8 +58,9 @@
 #define BUFLEN          (BUFSIZ*2)
 
 struct opt_cipher_s {
-    int algo;
-    int mode;
+    akmos_algo_id algo;
+    akmos_algo_id flag;
+    akmos_mode_id mode;
     size_t blklen;
     size_t keylen;
     uint32_t iter;
@@ -75,7 +76,6 @@ struct opt_cipher_s {
         int keylen;
         int iter;
         int over;
-        int flag;
     } set;
 };
 
@@ -125,12 +125,12 @@ static int parse_algo(struct opt_cipher_s *opt, char *algo_str)
             akmos_perror(AKMOS_ERR_ALGOID);
             return EXIT_FAILURE;
         }
-        opt->set.flag = 0;
+        opt->flag = 0;
     } else {
         if(strcasecmp(s2, "ede") == 0)
-            opt->set.flag = AKMOS_ALGO_FLAG_EDE;
+            opt->flag = AKMOS_ALGO_FLAG_EDE;
         else if(strcasecmp(s2, "eee") == 0)
-            opt->set.flag = AKMOS_ALGO_FLAG_EEE;
+            opt->flag = AKMOS_ALGO_FLAG_EEE;
         else {
             printf("Unknown cipher flag \'%s\'\n", s2);
             return EXIT_FAILURE;
@@ -231,7 +231,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     } else {
         if(mode_str) {
             opt->mode = akmos_str2mode(mode_str);
-            if(opt->mode == -1)
+            if(!opt->mode)
                 return akmos_perror(AKMOS_ERR_MODEID);
         }
     }
@@ -299,8 +299,8 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
         opt->iter = DEFAULT_ITER;
     }
 
-    if(opt->set.flag)
-        opt->algo |= opt->set.flag;
+    if(opt->flag)
+        opt->algo |= opt->flag;
 
     return EXIT_SUCCESS;
 }
@@ -331,7 +331,7 @@ static int lb_padbuf(akmos_cipher_t ctx, uint8_t *buf, size_t *rlen, size_t blkl
     return EXIT_SUCCESS;
 }
 
-int akmos_cli_cipher(int argc, char **argv, int enc)
+int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 {
     akmos_cipher_t ctx;
     struct opt_cipher_s opt;
@@ -355,7 +355,7 @@ int akmos_cli_cipher(int argc, char **argv, int enc)
 
     /* Setup master keys */
     keylen = opt.keylen * 2;
-    if(opt.set.flag)
+    if(opt.flag)
         keylen *= 3;
 
     AMALLOC(keybuf, keylen, err);
@@ -555,7 +555,7 @@ out:
         free(hbuf);
     }
 
-    akmos_memzero(&hd, hlen);
+    akmos_memzero(&hd, sizeof(struct akmos_cipher_header_s));
 
     if(ctx)
         akmos_cipher_free(ctx);

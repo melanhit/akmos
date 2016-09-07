@@ -43,7 +43,7 @@
 #include "cli.h"
 
 struct opt_digest_s {
-    int algo;
+    akmos_algo_id algo;
     int count;
     char **input;
     struct {
