@@ -29,8 +29,7 @@
 #ifndef AKMOS_CLI_SECUR_H
 #define AKMOS_CLI_SECUR_H
 
-#define SECUR_MAX_KEYBUF    ((1024*1024) + 1)
-#define SECUR_MIN_KEYBUF    (BUFSIZ + 1)
+#define SECUR_MAX_KEYBUF    (1024*1024)
 #define SECUR_ALGO          AKMOS_ALGO_SHA2_512
 #define SECUR_RNDFILE       "/dev/urandom"
 

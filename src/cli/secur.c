@@ -66,11 +66,11 @@ int secur_read_passw(char *pass)
 
 int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *salt, size_t saltlen)
 {
-    int fd, err;
-    ssize_t klen;
-    uint8_t *kbuf, *kbuf1, *kbuf2;
+    int fd, i, err;
+    ssize_t klen, len;
+    uint8_t *kbuf, *buf;
 
-    kbuf1 = kbuf2 = NULL;
+    kbuf = NULL;
     err = EXIT_SUCCESS;
 
     fd = open(path, O_RDONLY);
@@ -80,31 +80,29 @@ int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *sal
         goto out;
     }
 
-    AMALLOC(kbuf1, SECUR_MIN_KEYBUF, err);
+    AMALLOC(kbuf, (SECUR_MAX_KEYBUF + BUFSIZ), err);
     if(err)
         goto out;
 
-    kbuf = kbuf1;
-    klen = read(fd, kbuf1, SECUR_MIN_KEYBUF);
-    if(klen == SECUR_MIN_KEYBUF) {
-        AMALLOC(kbuf2, SECUR_MAX_KEYBUF, err);
-        if(err)
+    buf = kbuf;
+    klen = 0;
+    for(i = 0; i <= (SECUR_MAX_KEYBUF / BUFSIZ); i++) {
+        len = read(fd, buf, BUFSIZ);
+        if(len == -1) {
+            err = EXIT_FAILURE;
+            printf("%s: %s\n", path, strerror(errno));
             goto out;
+        }
 
-        kbuf = kbuf2;
-        memcpy(kbuf2, kbuf1, SECUR_MIN_KEYBUF);
+        if(!len)
+            break;
 
-        klen += read(fd, kbuf2 + SECUR_MIN_KEYBUF, SECUR_MAX_KEYBUF - SECUR_MIN_KEYBUF);
+        klen += len;
+        buf += BUFSIZ;
     }
 
-    if(klen == -1) {
-        err = EXIT_FAILURE;
-        printf("%s: %s\n", path, strerror(errno));
-        goto out;
-    }
-
-    if(klen == SECUR_MAX_KEYBUF) {
-        printf("Keyfile \"%s\" is too big (maximum %d KiB)\n", path, ((SECUR_MAX_KEYBUF - 1) / 1024));
+    if(klen > SECUR_MAX_KEYBUF) {
+        printf("Keyfile \"%s\" is too big (maximum %d KiB)\n", path, (SECUR_MAX_KEYBUF / 1024));
         err = EXIT_FAILURE;
         goto out;
     }
@@ -117,14 +115,9 @@ out:
     if(fd > 0)
         close(fd);
 
-    if(kbuf1) {
-        akmos_memzero(kbuf1, SECUR_MIN_KEYBUF);
-        free(kbuf1);
-    }
-
-    if(kbuf2) {
-        akmos_memzero(kbuf, SECUR_MAX_KEYBUF);
-        free(kbuf2);
+    if(kbuf) {
+        akmos_memzero(kbuf, (SECUR_MAX_KEYBUF + BUFSIZ));
+        free(kbuf);
     }
 
     return err;
