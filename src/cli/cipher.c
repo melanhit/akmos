@@ -337,7 +337,6 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     akmos_cipher_t ctx;
     struct opt_cipher_s opt;
     akmos_cipher_header_t hd;
-    struct stat sb;
     uint8_t *keybuf, *keypass;
     uint8_t *buf, *tbuf, *hbuf, *hdp, *rbuf, *wbuf;
     size_t keylen, rlen, wlen, hlen, tmplen;
@@ -397,22 +396,11 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     mask = umask(0);
     umask(mask);
 
-    /* skip fifo and device */
-    if(stat(opt.output, &sb) == 0) {
-        switch(sb.st_mode & S_IFMT) {
-            case S_IFBLK:
-            case S_IFCHR:
-            case S_IFIFO:
-                break;
-
-            default:
-                if(!opt.set.over) {
-                    if(!prompt_over(opt.output, opt.set.pass)) {
-                        err = EXIT_SUCCESS;
-                        printf("Not overwriting - exiting\n");
-                        goto out;
-                    }
-                }
+    if(!opt.set.over) {
+        if(!prompt_over(opt.output, opt.set.pass)) {
+            err = EXIT_SUCCESS;
+            printf("Not overwriting - exiting\n");
+            goto out;
         }
     }
 
