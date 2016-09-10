@@ -69,10 +69,12 @@ struct opt_mac_s {
     } set;
 };
 
+static char *path_stdin = "-";
+
 static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
 {
     char *algo_str, *mode_str, *keylen_str;
-    int err, c;
+    int err, c, len;
 
     algo_str = mode_str = keylen_str = NULL;
 
@@ -113,13 +115,18 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
         }
     }
 
-    if((argc - optind) == 0) {
-        fprintf(stderr, "Missing <input>\n");
-        return EXIT_FAILURE;
-    }
+    len = argc - optind;
+    switch(len) {
+        case 0:
+            opt->count = 1;
+            opt->input = NULL;
+            break;
 
-    opt->count = argc - optind;
-    opt->input = argv + optind;
+        default:
+            opt->count = argc - optind;
+            opt->input = argv + optind;
+            break;
+    }
 
     if(!opt->set.mode) {
         opt->mode = DEFAULT_MODE;
@@ -247,7 +254,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
 static void mac_print_hex(struct opt_mac_s *opt, char *path, uint8_t *mac)
 {
     const char *algostr, *modestr;
-    char str[32];
+    char str[32], *p;
     size_t i;
 
     modestr = akmos_mode2str(opt->mode);
@@ -255,10 +262,15 @@ static void mac_print_hex(struct opt_mac_s *opt, char *path, uint8_t *mac)
     for(i = 0; i < opt->maclen; i++)
         printf("%.2x", mac[i]);
 
+    if(path)
+        p = path;
+    else
+        p = path_stdin;
+
     switch(opt->mode) {
         case AKMOS_MODE_HMAC:
             algostr = akmos_digest_name(opt->algo);
-            printf(" = %s/%s(%s)\n", modestr, algostr, path);
+            printf(" = %s/%s(%s)\n", modestr, algostr, p);
             break;
 
         case AKMOS_MODE_CBCMAC:
@@ -271,11 +283,11 @@ static void mac_print_hex(struct opt_mac_s *opt, char *path, uint8_t *mac)
                     case AKMOS_ALGO_THREEFISH_256:
                     case AKMOS_ALGO_THREEFISH_512:
                     case AKMOS_ALGO_THREEFISH_1024:
-                        printf(" = %s/%s(%s)\n", modestr, algostr, path);
+                        printf(" = %s/%s(%s)\n", modestr, algostr, p);
                         break;
 
                     default:
-                        printf(" = %s/%s-%s(%s)\n", modestr, algostr, str, path);
+                        printf(" = %s/%s-%s(%s)\n", modestr, algostr, str, p);
                         break;
                 }
             break;
@@ -303,7 +315,11 @@ static int mac_proc(struct opt_mac_s *opt, char *path, uint8_t *buf, uint8_t *ke
     ctx = NULL;
     err = EXIT_SUCCESS;
 
-    fd = fopen(path, "r");
+    if(path)
+        fd = fopen(path, "r");
+    else
+        fd = stdin;
+
     if(!fd) {
         err = EXIT_FAILURE;
         fprintf(stderr, "%s: %s\n", path, strerror(errno));
@@ -398,7 +414,11 @@ int akmos_cli_mac(int argc, char **argv)
         goto out;
 
     for(i = 0; i < opt.count; i++) {
-        err = mac_proc(&opt, opt.input[i], buf, keybuf, macbuf);
+        if(opt.input)
+            err = mac_proc(&opt, opt.input[i], buf, keybuf, macbuf);
+        else
+            err = mac_proc(&opt, NULL, buf, keybuf, macbuf);
+
         if(err)
             goto out;
     }
