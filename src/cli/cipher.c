@@ -148,7 +148,7 @@ static int parse_algo(struct opt_cipher_s *opt, char *algo_str)
 static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
 {
     char *algo_str, *mode_str, *keylen_str;
-    int c, err;
+    int c, err, len;
 
     algo_str = mode_str = keylen_str = NULL;
 
@@ -200,13 +200,22 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     }
 
     /* check input/output */
-    if((argc - optind) != 2) {
-        printf("Missing <input> or <output>\n");
-        return EXIT_FAILURE;
-    }
+    len = argc - optind;
+    switch(len) {
+        case 0:
+            opt->input = NULL;
+            opt->output = NULL;
+            break;
 
-    opt->input = argv[optind];
-    opt->output = argv[optind + 1];
+        case 2:
+            opt->input = argv[optind];
+            opt->output = argv[optind + 1];
+            break;
+
+        default:
+            printf("Missing <input> or <output>\n");
+            return EXIT_FAILURE;
+    }
 
     /* set algo */
     if(!opt->set.algo) {
@@ -386,17 +395,18 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     }
 
     /* Open source and destination */
-    fd_in = fopen(opt.input, "r");
+    if(opt.input)
+        fd_in = fopen(opt.input, "r");
+    else
+        fd_in = stdin;
+
     if(!fd_in) {
         err = EXIT_FAILURE;
         printf("%s: %s\n", opt.input, strerror(errno));
         goto out;
     }
 
-    mask = umask(0);
-    umask(mask);
-
-    if(!opt.set.over) {
+    if(!opt.set.over && opt.output) {
         if(!prompt_over(opt.output, opt.set.pass)) {
             err = EXIT_SUCCESS;
             printf("Not overwriting - exiting\n");
@@ -404,7 +414,14 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
         }
     }
 
-    fd_out = fopen(opt.output, "w");
+    mask = umask(0);
+    umask(mask);
+
+    if(opt.output)
+        fd_out = fopen(opt.output, "w");
+    else
+        fd_out = stdout;
+
     if(!fd_out) {
         err = EXIT_FAILURE;
         printf("%s: %s\n", opt.output, strerror(errno));
