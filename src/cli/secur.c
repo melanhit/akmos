@@ -75,7 +75,7 @@ int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *sal
 
     fd = open(path, O_RDONLY);
     if(fd == -1) {
-        printf("%s: %s\n", path, strerror(errno));
+        fprintf(stderr, "%s: %s\n", path, strerror(errno));
         err = EXIT_FAILURE;
         goto out;
     }
@@ -90,7 +90,7 @@ int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *sal
         len = read(fd, buf, BUFSIZ);
         if(len == -1) {
             err = EXIT_FAILURE;
-            printf("%s: %s\n", path, strerror(errno));
+            fprintf(stderr, "%s: %s\n", path, strerror(errno));
             goto out;
         }
 
@@ -102,7 +102,7 @@ int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *sal
     }
 
     if(klen > SECUR_MAX_KEYBUF) {
-        printf("Keyfile \"%s\" is too big (maximum %d KiB)\n", path, (SECUR_MAX_KEYBUF / 1024));
+        fprintf(stderr, "Keyfile \"%s\" is too big (maximum %d KiB)\n", path, (SECUR_MAX_KEYBUF / 1024));
         err = EXIT_FAILURE;
         goto out;
     }
@@ -142,7 +142,7 @@ int secur_rand_buf(uint8_t *buf, size_t len)
 
     fd = open(SECUR_RNDFILE, O_RDONLY);
     if(fd == -1) {
-        printf("%s: %s\n", SECUR_RNDFILE, strerror(errno));
+        fprintf(stderr, "%s: %s\n", SECUR_RNDFILE, strerror(errno));
         return EXIT_FAILURE;
     }
 
@@ -154,12 +154,12 @@ int secur_rand_buf(uint8_t *buf, size_t len)
     t = (ssize_t)diglen;
     for(i = 0, tmplen = diglen; i <= l; i++) {
         if(read(fd, key, diglen) != t) {
-            printf("%s: %s\n", SECUR_RNDFILE, strerror(errno));
+            fprintf(stderr, "%s: %s\n", SECUR_RNDFILE, strerror(errno));
             return EXIT_FAILURE;
         }
 
         if(read(fd, tbuf, BUFSIZ) != BUFSIZ) {
-            printf("%s: %s\n", SECUR_RNDFILE, strerror(errno));
+            fprintf(stderr, "%s: %s\n", SECUR_RNDFILE, strerror(errno));
             return EXIT_FAILURE;
         }
 

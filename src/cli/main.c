@@ -92,7 +92,7 @@ int main(int argc, char **argv)
             return akmos_cli_help();
 
         case AKMOS_CLI_UNKNOWN:
-            printf("Unknown action '%s'\n", argv[1]);
+            fprintf(stderr, "Unknown action '%s'\n", argv[1]);
             return EXIT_FAILURE;
     }
 

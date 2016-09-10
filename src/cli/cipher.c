@@ -114,7 +114,7 @@ static int parse_algo(struct opt_cipher_s *opt, char *algo_str)
     char *s1, *s2, *sv;
 
     if(!algo_str) {
-        printf("Missing cipher algorithm\n");
+        fprintf(stderr, "Missing cipher algorithm\n");
         return EXIT_FAILURE;
     }
 
@@ -133,7 +133,7 @@ static int parse_algo(struct opt_cipher_s *opt, char *algo_str)
         else if(strcasecmp(s2, "eee") == 0)
             opt->flag = AKMOS_ALGO_FLAG_EEE;
         else {
-            printf("Unknown cipher flag \'%s\'\n", s2);
+            fprintf(stderr, "Unknown cipher flag \'%s\'\n", s2);
             return EXIT_FAILURE;
         }
     }
@@ -181,7 +181,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
             case 'i':
                 err = sscanf(optarg, "%5u", &opt->iter);
                 if(err == EOF || !err) {
-                    printf("Invalid number iterations\n");
+                    fprintf(stderr, "Invalid number iterations\n");
                     return EXIT_FAILURE;
                 }
 
@@ -213,7 +213,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
             break;
 
         default:
-            printf("Missing <input> or <output>\n");
+            fprintf(stderr, "Missing <input> or <output>\n");
             return EXIT_FAILURE;
     }
 
@@ -281,13 +281,13 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     }
 
     if(opt->keylen > (CIPHER_MAX_KEYLEN*8) || opt->keylen == 0 || (opt->keylen % 8) != 0) {
-        printf("Invalid key length (err = %d)\n", AKMOS_ERR_KEYLEN);
+        fprintf(stderr, "Invalid key length (err = %d)\n", AKMOS_ERR_KEYLEN);
         return EXIT_FAILURE;
     }
     opt->keylen /= 8;
 
     if((opt->blklen = akmos_cipher_blklen(opt->algo)) == 0) {
-        printf("Invalid algo\n");
+        fprintf(stderr, "Invalid cipher algorithm\n");
         return EXIT_FAILURE;
     }
 
@@ -295,14 +295,14 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     if(opt->set.pass) {
         err = secur_read_passw(opt->pass);
         if(err) {
-            printf("Could not read password\n");
+            fprintf(stderr, "Could not read password\n");
             return EXIT_FAILURE;
         }
     }
 
     if(opt->set.iter && opt->set.pass) {
         if(opt->iter > UINT16_MAX) {
-            printf("Maximum number of iterations - %u\n", UINT32_MAX);
+            fprintf(stderr, "Maximum number of iterations - %u\n", UINT32_MAX);
             return EXIT_FAILURE;
         }
     } else {
@@ -402,14 +402,14 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
     if(!fd_in) {
         err = EXIT_FAILURE;
-        printf("%s: %s\n", opt.input, strerror(errno));
+        fprintf(stderr, "%s: %s\n", opt.input, strerror(errno));
         goto out;
     }
 
     if(!opt.set.over && opt.output) {
         if(!prompt_over(opt.output, opt.set.pass)) {
             err = EXIT_SUCCESS;
-            printf("Not overwriting - exiting\n");
+            fprintf(stderr, "Not overwriting - exiting\n");
             goto out;
         }
     }
@@ -424,7 +424,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
     if(!fd_out) {
         err = EXIT_FAILURE;
-        printf("%s: %s\n", opt.output, strerror(errno));
+        fprintf(stderr, "%s: %s\n", opt.output, strerror(errno));
         goto out;
     }
 
@@ -438,7 +438,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     if(enc == AKMOS_MODE_DECRYPT) {
         if(fread(hdp, 1, hlen, fd_in) != hlen) {
             err = EXIT_FAILURE;
-            printf("%s: %s\n", opt.input, strerror(errno));
+            fprintf(stderr, "%s: %s\n", opt.input, strerror(errno));
             goto out;
         }
     } else {
@@ -459,7 +459,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     if(enc == AKMOS_MODE_ENCRYPT) {
         if(fwrite(hbuf, 1, hlen, fd_out) != hlen) {
             err = EXIT_FAILURE;
-            printf("%s: %s\n", opt.output, strerror(errno));
+            fprintf(stderr, "%s: %s\n", opt.output, strerror(errno));
             goto out;
         }
     } else {
@@ -500,7 +500,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
         wlen = fread(wbuf, 1, BUFSIZ, fd_in);
         if(ferror(fd_in)) {
             err = EXIT_FAILURE;
-            printf("%s: %s\n", opt.input, strerror(errno));
+            fprintf(stderr, "%s: %s\n", opt.input, strerror(errno));
             goto out;
         }
 
@@ -511,7 +511,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
         if(fwrite(rbuf, 1, rlen, fd_out) != rlen) {
             err = EXIT_FAILURE;
-            printf("%s: %s\n", opt.output, strerror(errno));
+            fprintf(stderr, "%s: %s\n", opt.output, strerror(errno));
             goto out;
         }
 
@@ -535,7 +535,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
     if(fwrite(rbuf, 1, rlen, fd_out) != rlen) {
         err = EXIT_FAILURE;
-        printf("%s: %s\n", opt.output, strerror(errno));
+        fprintf(stderr, "%s: %s\n", opt.output, strerror(errno));
         goto out;
     }
 

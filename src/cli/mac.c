@@ -114,7 +114,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
     }
 
     if((argc - optind) == 0) {
-        printf("Missing <input>\n");
+        fprintf(stderr, "Missing <input>\n");
         return EXIT_FAILURE;
     }
 
@@ -124,7 +124,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
     if(!opt->set.mode) {
         opt->mode = DEFAULT_MODE;
         if(opt->set.algo) {
-            printf("Missing mac mode\n");
+            fprintf(stderr, "Missing mac mode\n");
             return EXIT_FAILURE;
         }
     } else {
@@ -163,7 +163,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
     if(opt->set.pass) {
         err = secur_read_passw(opt->pass);
         if(err) {
-            printf("Could not read password\n");
+            fprintf(stderr, "Could not read password\n");
             return EXIT_FAILURE;
         }
     }
@@ -306,7 +306,7 @@ static int mac_proc(struct opt_mac_s *opt, char *path, uint8_t *buf, uint8_t *ke
     fd = fopen(path, "r");
     if(!fd) {
         err = EXIT_FAILURE;
-        printf("%s: %s\n", path, strerror(errno));
+        fprintf(stderr, "%s: %s\n", path, strerror(errno));
         goto out;
     }
 
@@ -327,7 +327,7 @@ static int mac_proc(struct opt_mac_s *opt, char *path, uint8_t *buf, uint8_t *ke
 
     if(ferror(fd)) {
         err = EXIT_FAILURE;
-        printf("%s: %s\n", path, strerror(errno));
+        fprintf(stderr, "%s: %s\n", path, strerror(errno));
         goto out;
     }
 

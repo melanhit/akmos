@@ -157,13 +157,13 @@ static int digest(akmos_algo_id algo, char *argv0, size_t *res)
 
     fd = fopen(path, "r");
     if(!fd) {
-        printf("%s: %s\n", path, strerror(errno));
+        fprintf(stderr, "%s: %s\n", path, strerror(errno));
         return EXIT_FAILURE;
     }
 
     len = fread(buf, 1, BUFSIZ, fd);
     if(ferror(fd)) {
-        printf("%s: %s\n", path, strerror(errno));
+        fprintf(stderr, "%s: %s\n", path, strerror(errno));
         return EXIT_FAILURE;
     }
 
@@ -174,7 +174,7 @@ static int digest(akmos_algo_id algo, char *argv0, size_t *res)
         return akmos_perror(AKMOS_ERR_ALGOID);
 
     if(len != (desc->outlen * (sizeof(dctx) / sizeof(dctx.h1)))) {
-        printf("Invalid data in \"%s\"\n", path);
+        fprintf(stderr, "Invalid data in \"%s\"\n", path);
         return EXIT_FAILURE;
     }
 

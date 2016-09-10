@@ -146,7 +146,7 @@ int akmos_cli_digest(int argc, char **argv)
             fd = fopen(opt.input[i], "r");
 
         if(!fd) {
-            printf("%s: %s\n", opt.input[i], strerror(errno));
+            fprintf(stderr, "%s: %s\n", opt.input[i], strerror(errno));
             free(md);
             return EXIT_FAILURE;
         }
@@ -161,7 +161,7 @@ int akmos_cli_digest(int argc, char **argv)
             akmos_digest_update(ctx, buf, len);
 
         if(ferror(fd)) {
-            printf("%s: %s\n", opt.input[i], strerror(errno));
+            fprintf(stderr, "%s: %s\n", opt.input[i], strerror(errno));
             free(md);
             return EXIT_FAILURE;
         }

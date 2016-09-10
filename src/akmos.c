@@ -100,35 +100,35 @@ int akmos_perror(int err)
 {
     switch(err) {
         case AKMOS_ERR_ALGOID:
-            printf("Invalid algorithm (err = %d)\n", err);
+            fprintf(stderr, "Invalid algorithm (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_MODEID:
-            printf("Invalid mode (err = %d)\n", err);
+            fprintf(stderr, "Invalid mode (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_KEYLEN:
-            printf("Invalid key length (err = %d)\n", err);
+            fprintf(stderr, "Invalid key length (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_BLKLEN:
-            printf("Unsupported block length (err = %d)\n", err);
+            fprintf(stderr, "Unsupported block length (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_FLAGID:
-            printf("Invalid flag (err = %d)\n", err);
+            fprintf(stderr, "Invalid flag (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_STMMODE:
-            printf("Unsupported mode for stream cipher (err = %d)\n", err);
+            fprintf(stderr, "Unsupported mode for stream cipher (err = %d)\n", err);
             break;
 
         case AKMOS_ERR_STMTDEA:
-            printf("Stream cipher unsupport TDEA (err = %d)\n", err);
+            fprintf(stderr, "Stream cipher unsupport TDEA (err = %d)\n", err);
             break;
 
         default:
-            printf("Unknown error (err = %d)\n", err);
+            fprintf(stderr, "Unknown error (err = %d)\n", err);
             break;
     }
 

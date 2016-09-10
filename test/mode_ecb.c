@@ -118,20 +118,20 @@ static int ecb_test(akmos_algo_id algo, size_t keylen, char *argv0, size_t *res)
 
     fd = fopen(path, "r");
     if(!fd) {
-        printf("%s: %s\n", path, strerror(errno));
+        fprintf(stderr, "%s: %s\n", path, strerror(errno));
         return EXIT_FAILURE;
     }
 
     len = fread(buf, 1, BUFSIZ, fd);
     if(ferror(fd)) {
-        printf("%s: %s\n", path, strerror(errno));
+        fprintf(stderr, "%s: %s\n", path, strerror(errno));
         return EXIT_FAILURE;
     }
 
     fclose(fd);
 
     if((!keylen) || ((keylen % 8) != 0)) {
-        printf("Invalid keylen %zd\n", keylen);
+        fprintf(stderr, "Invalid keylen %zd\n", keylen);
         return EXIT_FAILURE;
     }
 
@@ -143,7 +143,7 @@ static int ecb_test(akmos_algo_id algo, size_t keylen, char *argv0, size_t *res)
     }
 
     if(len != ((keylen + blklen * 3))) {
-        printf("Invalid data in \"%s\"\n", path);
+        fprintf(stderr, "Invalid data in \"%s\"\n", path);
         return EXIT_FAILURE;
     }
 
