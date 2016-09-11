@@ -77,7 +77,7 @@ static void sha1_transform(akmos_sha1_t *ctx, const uint8_t *block, size_t nb)
         C = ctx->h[2]; D = ctx->h[3];
         E = ctx->h[4];
 
-        sub = block + (i << 6);
+        sub = block + (i * 64);
 
         w[ 0] = PACK32LE(sub     ); w[ 1] = PACK32LE(sub +  4);
         w[ 2] = PACK32LE(sub +  8); w[ 3] = PACK32LE(sub + 12);
@@ -217,10 +217,10 @@ void akmos_sha1_update(akmos_sha1_t *ctx, const uint8_t *input, size_t len)
     rem_len = new_len % AKMOS_SHA1_BLKLEN;
 
     if(rem_len > 0)
-        memcpy(ctx->block, sfi + (nb << 6), rem_len);
+        memcpy(ctx->block, sfi + (nb * 64), rem_len);
 
     ctx->len = rem_len;
-    ctx->total += (nb + 1) << 6;
+    ctx->total += (nb + 1);
 }
 
 void akmos_sha1_done(akmos_sha1_t *ctx, uint8_t *digest)
@@ -230,8 +230,8 @@ void akmos_sha1_done(akmos_sha1_t *ctx, uint8_t *digest)
 
     nb = (1 + ((AKMOS_SHA1_BLKLEN - 9) < (ctx->len % AKMOS_SHA1_BLKLEN)));
 
-    len_bit = (ctx->total + ctx->len) << 3;
-    pm_len = nb << 6;
+    len_bit = ((ctx->total * 64) + ctx->len) * 8;
+    pm_len = nb * 64;
 
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x80;

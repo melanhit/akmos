@@ -221,7 +221,7 @@ void akmos_whirlpool_update(akmos_whirlpool_t *ctx, const uint8_t *input, size_t
         memcpy(ctx->block, sfi + (nb * 64), rem_len);
 
     ctx->len = rem_len;
-    ctx->total += ((nb + 1) * 64);
+    ctx->total += (nb + 1);
 }
 
 void akmos_whirlpool_done(akmos_whirlpool_t *ctx, uint8_t *digest)
@@ -231,7 +231,7 @@ void akmos_whirlpool_done(akmos_whirlpool_t *ctx, uint8_t *digest)
 
     nb = (1 + ((AKMOS_WHIRLPOOL_BLKLEN - 33) < (ctx->len % AKMOS_WHIRLPOOL_BLKLEN)));
 
-    len_bit = (ctx->total + ctx->len) * 8;
+    len_bit = ((ctx->total * 64) + ctx->len) * 8;
     pm_len = nb * 64;
 
     memset(ctx->block + ctx->len, 0, pm_len);

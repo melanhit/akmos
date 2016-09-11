@@ -184,7 +184,7 @@ static void sha256_transform(uint32_t *h, uint32_t *w, const uint8_t *m, size_t 
     wv = w + 64;
 
     for(i = 0; i < nb; i++) {
-        sub = m + (i << 6);
+        sub = m + (i * 64);
 
         w[ 0] = PACK32LE(sub     ); w[ 1] = PACK32LE(sub +  4);
         w[ 2] = PACK32LE(sub +  8); w[ 3] = PACK32LE(sub + 12);
@@ -234,7 +234,7 @@ static void sha512_transform(uint64_t *h, uint64_t *w, const uint8_t *m, size_t 
     wv = w + 80;
 
     for(i = 0; i <  nb; i++) {
-        sub = m + (i << 7);
+        sub = m + (i * 128);
 
         w[ 0] = PACK64LE(sub      ); w[ 1] = PACK64LE(sub +  8);
         w[ 2] = PACK64LE(sub +  16); w[ 3] = PACK64LE(sub +  24);
@@ -335,10 +335,10 @@ void akmos_sha2_256_update(akmos_sha2_256_t *ctx, const uint8_t *input, size_t l
 
     rem_len = new_len % AKMOS_SHA2_256_BLKLEN;
 
-    memcpy(ctx->block, &sfi[nb << 6], rem_len);
+    memcpy(ctx->block, &sfi[nb * 64], rem_len);
 
     ctx->len = rem_len;
-    ctx->total += (nb + 1) << 6;
+    ctx->total += (nb + 1);
 }
 
 void akmos_sha2_256_done(akmos_sha2_256_t *ctx, uint8_t *digest)
@@ -348,8 +348,8 @@ void akmos_sha2_256_done(akmos_sha2_256_t *ctx, uint8_t *digest)
 
     nb = (1 + ((AKMOS_SHA2_256_BLKLEN - 9) < (ctx->len % AKMOS_SHA2_256_BLKLEN)));
 
-    len_b = (ctx->total + ctx->len) << 3;
-    pm_len = nb << 6;
+    len_b = ((ctx->total * 64) + ctx->len) * 8;
+    pm_len = nb * 64;
 
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x80;
@@ -421,10 +421,10 @@ void akmos_sha2_512_update(akmos_sha2_512_t *ctx, const uint8_t *input, size_t l
 
     rem_len = new_len % AKMOS_SHA2_512_BLKLEN;
 
-    memcpy(ctx->block, &sfi[nb << 7], rem_len);
+    memcpy(ctx->block, &sfi[nb * 128], rem_len);
 
     ctx->len = rem_len;
-    ctx->total += (nb + 1) << 7;
+    ctx->total += (nb + 1);
 }
 
 void akmos_sha2_512_done(akmos_sha2_512_t *ctx, uint8_t *digest)
@@ -434,8 +434,8 @@ void akmos_sha2_512_done(akmos_sha2_512_t *ctx, uint8_t *digest)
 
     nb = (1 + ((AKMOS_SHA2_512_BLKLEN - 17) < (ctx->len % AKMOS_SHA2_512_BLKLEN)));
 
-    len_b = (ctx->total + ctx->len) << 3;
-    pm_len = nb << 7;
+    len_b = ((ctx->total * 128) + ctx->len) * 8;
+    pm_len = nb * 128;
 
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x80;
