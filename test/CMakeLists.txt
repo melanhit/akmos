@@ -68,9 +68,8 @@ list(SORT src)
 add_definitions(-D_BSD_SOURCE -D_POSIX_C_SOURCE=199309L -D_XOPEN_SOURCE=500)
 add_definitions(-DAKMOS_BUFSZ=8192)
 
-set(CMAKE_C_FLAGS "-fPIC -DPIC -std=c90 -Wall -Werror -Wextra -Wmissing-prototypes -Wconversion")
-
 add_executable(akmos_test ${src})
+target_compile_options(akmos_test PUBLIC -fPIC -ansi -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion)
 target_link_libraries(akmos_test akmos_shared)
 
 add_custom_target(akmos_test_copy)

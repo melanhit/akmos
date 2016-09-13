@@ -96,7 +96,7 @@ add_library(akmos_obj OBJECT ${src_lib})
 add_definitions(-D_BSD_SOURCE -D_POSIX_C_SOURCE=199309L -D_XOPEN_SOURCE=500)
 add_definitions(-DAKMOS_BUFSZ=8192)
 include_directories("${PROJECT_BINARY_DIR}/inc")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -DPIC -std=c90 -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion")
+target_compile_options(akmos_obj PUBLIC -fPIC -ansi -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion)
 
 if(TARGET akmos_obj_asm)
     add_library(akmos_shared SHARED $<TARGET_OBJECTS:akmos_obj> $<TARGET_OBJECTS:akmos_obj_asm>)
@@ -110,6 +110,7 @@ set_target_properties(akmos_shared PROPERTIES VERSION 0.6 SOVERSION 6 OUTPUT_NAM
 set_target_properties(akmos_static PROPERTIES OUTPUT_NAME akmos)
 
 add_executable(akmos ${src_cli})
+target_compile_options(akmos PUBLIC -fPIC -ansi -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion)
 target_link_libraries(akmos akmos_shared)
 
 set(BINDIR bin)
