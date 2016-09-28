@@ -152,12 +152,15 @@ size_t akmos_padrem(uint8_t *in, size_t len)
     if(!len)
         return len;
 
-    for(i = len - 1; i != 0; i--) {
-        if(!in[i])
+    for(i = len - 1; ; i--) {
+        if((!in[i]) && (i != 0))
             continue;
 
         if(in[i] == 0x80)
             return i;
+
+        if(!i)
+            return 0;
     }
 
     return len;
