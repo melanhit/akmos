@@ -406,11 +406,14 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
         goto out;
     }
 
+    /* check for overwrite */
     if(!opt.set.over && opt.output) {
-        if(!prompt_over(opt.output, opt.set.pass)) {
-            err = EXIT_SUCCESS;
-            fprintf(stderr, "Not overwriting - exiting\n");
-            goto out;
+        if(!access(opt.output, F_OK)) {
+            if(!prompt_over(opt.output, opt.set.pass)) {
+                err = EXIT_SUCCESS;
+                fprintf(stderr, "%s: not overwrited - exiting\n", opt.output);
+                goto out;
+            }
         }
     }
 
