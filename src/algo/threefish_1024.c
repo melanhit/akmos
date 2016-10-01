@@ -36,8 +36,8 @@
 #include "threefish_mix.h"
 
 #define WORDS_1024  AKMOS_THREEFISH_WORDS_1024
-#define ROUNDS_1024 80
-#define SKEYS_1024  ((ROUNDS_1024 / 4) + 1)
+#define ROUNDS_1024 (80 / 8)
+#define SKEYS_1024  ((ROUNDS_1024 * 2) + 1)
 
 #define CONST_240   UINT64_C(0x1bd11bdaa9fc1a22)
 
@@ -46,7 +46,7 @@ void akmos_threefish_1024_setkey(akmos_threefish_1024_t *ctx,
                                  size_t __attribute__((unused)) len)
 {
     uint64_t *k, *S;
-    size_t i, y;
+    size_t i, j;
 
     k = ctx->k;
 
@@ -57,11 +57,9 @@ void akmos_threefish_1024_setkey(akmos_threefish_1024_t *ctx,
     for(i = 0; i < WORDS_1024; i++)
         k[WORDS_1024] ^= k[i];
 
-    for(i = 0; i < SKEYS_1024; i++) {
-        S = ctx->S + (WORDS_1024 * i);
-
-        for(y = 0; y < WORDS_1024; y++)
-            S[y] = k[(i+y)%(WORDS_1024+1)];
+    for(i = 0, S = ctx->S; i < SKEYS_1024; i++, S += WORDS_1024) {
+        for(j = 0; j < WORDS_1024; j++)
+            S[j] = k[(i+j)%(WORDS_1024+1)];
 
         S[WORDS_1024-1] += i;
     }
@@ -72,22 +70,22 @@ void akmos_threefish_1024_encrypt(akmos_threefish_1024_t *ctx,
                                   uint8_t *out_blk)
 {
     uint64_t s[WORDS_1024], *S;
-    int i, y;
+    int i, j;
 
     for(i = 0; i < WORDS_1024; i++, in_blk += 8)
         s[i] = PACK64BE(in_blk);
 
-    for(i = 0, S = ctx->S; i < ROUNDS_1024 / 8; i++, S += WORDS_1024) {
-        for(y = 0; y < WORDS_1024; y++)
-            s[y] += S[y];
+    for(i = 0, S = ctx->S; i < ROUNDS_1024; i++, S += WORDS_1024) {
+        for(j = 0; j < WORDS_1024; j++)
+            s[j] += S[j];
 
         threefish_1024_emix1(s, 24, 13,  8, 47,  8, 17, 22, 37);
         threefish_1024_emix2(s, 38, 19, 10, 55, 49, 18, 23, 52);
         threefish_1024_emix3(s, 33,  4, 51, 13, 34, 41, 59, 17);
         threefish_1024_emix4(s,  5, 20, 48, 41, 47, 28, 16, 25);
 
-        for(y = 0, S += WORDS_1024; y < WORDS_1024; y++)
-            s[y] += S[y];
+        for(j = 0, S += WORDS_1024; j < WORDS_1024; j++)
+            s[j] += S[j];
 
         threefish_1024_emix1(s, 41,  9, 37, 31, 12, 47, 44, 30);
         threefish_1024_emix2(s, 16, 34, 56, 51,  4, 53, 42, 41);
@@ -104,7 +102,7 @@ void akmos_threefish_1024_decrypt(akmos_threefish_1024_t *ctx,
                                   uint8_t *out_blk)
 {
     uint64_t s[WORDS_1024], *S;
-    int i, y;
+    int i, j;
 
     for(i = 0; i < WORDS_1024; i++, in_blk += 8)
         s[i] = PACK64BE(in_blk);
@@ -113,22 +111,22 @@ void akmos_threefish_1024_decrypt(akmos_threefish_1024_t *ctx,
     for(i = 0; i < WORDS_1024; i++)
         s[i] -= S[i];
 
-    for(i = ROUNDS_1024 / 8; i > 0; i--) {
+    for(i = ROUNDS_1024; i > 0; i--) {
         threefish_1024_dmix1(s, 20, 37, 31, 23, 52, 35, 48,  9);
         threefish_1024_dmix2(s, 25, 44, 42, 19, 46, 47, 44, 31);
         threefish_1024_dmix3(s, 41, 42, 53,  4, 51, 56, 34, 16);
         threefish_1024_dmix4(s, 30, 44, 47, 12, 31, 37,  9, 41);
 
-        for(y = 0, S -= WORDS_1024; y < WORDS_1024; y++)
-            s[y] -= S[y];
+        for(j = 0, S -= WORDS_1024; j < WORDS_1024; j++)
+            s[j] -= S[j];
 
         threefish_1024_dmix1(s, 25, 16, 28, 47, 41, 48, 20,  5);
         threefish_1024_dmix2(s, 17, 59, 41, 34, 13, 51,  4, 33);
         threefish_1024_dmix3(s, 52, 23, 18, 49, 55, 10, 19, 38);
         threefish_1024_dmix4(s, 37, 22, 17,  8, 47,  8, 13, 24);
 
-        for(y = 0, S -= WORDS_1024; y < WORDS_1024; y++)
-            s[y] -= S[y];
+        for(j = 0, S -= WORDS_1024; j < WORDS_1024; j++)
+            s[j] -= S[j];
     }
 
     for(i = 0; i < WORDS_1024; i++, out_blk += 8)

@@ -36,8 +36,8 @@
 #include "threefish_mix.h"
 
 #define WORDS_256   AKMOS_THREEFISH_WORDS_256
-#define ROUNDS_256  72
-#define SKEYS_256   ((ROUNDS_256 / 4) + 1)
+#define ROUNDS_256  (72 / 8)
+#define SKEYS_256   ((ROUNDS_256 * 2) + 1)
 
 #define CONST_240   UINT64_C(0x1bd11bdaa9fc1a22)
 
@@ -46,7 +46,7 @@ void akmos_threefish_256_setkey(akmos_threefish_256_t *ctx,
                                 size_t __attribute__((unused)) len)
 {
     uint64_t *k, *S;
-    size_t i, y;
+    size_t i, j;
 
     k = ctx->k;
 
@@ -58,11 +58,9 @@ void akmos_threefish_256_setkey(akmos_threefish_256_t *ctx,
     for(i = 0; i < WORDS_256; i++)
         k[WORDS_256] ^= k[i];
 
-    for(i = 0; i < SKEYS_256; i++) {
-        S = ctx->S + (WORDS_256*i);
-
-        for(y = 0; y < WORDS_256; y++)
-            S[y] = k[(i+y)%(WORDS_256+1)];
+    for(i = 0, S = ctx->S; i < SKEYS_256; i++, S += WORDS_256) {
+        for(j = 0; j < WORDS_256; j++)
+            S[j] = k[(i+j)%(WORDS_256+1)];
 
         S[WORDS_256-1] += i;
     }
@@ -73,20 +71,20 @@ void akmos_threefish_256_encrypt(akmos_threefish_256_t *ctx,
                                  uint8_t *out_blk)
 {
     uint64_t s[WORDS_256], *S;
-    int i, y;
+    int i, j;
 
     for(i = 0; i < WORDS_256; i++, in_blk += 8)
         s[i] = PACK64BE(in_blk);
 
-    for(i = 0, S = ctx->S; i < 9; i++, S += WORDS_256) {
-        for(y = 0; y < WORDS_256; y++)
-            s[y] += S[y];
+    for(i = 0, S = ctx->S; i < ROUNDS_256; i++, S += WORDS_256) {
+        for(j = 0; j < WORDS_256; j++)
+            s[j] += S[j];
 
         threefish_256_emix(s, 14, 16, 52, 57);
         threefish_256_emix(s, 23, 40,  5, 37);
 
-        for(y = 0, S += WORDS_256; y < WORDS_256; y++)
-            s[y] += S[y];
+        for(j = 0, S += WORDS_256; j < WORDS_256; j++)
+            s[j] += S[j];
 
         threefish_256_emix(s, 25, 33, 46, 12);
         threefish_256_emix(s, 58, 22, 32, 32);
@@ -101,7 +99,7 @@ void akmos_threefish_256_decrypt(akmos_threefish_256_t *ctx,
                                  uint8_t *out_blk)
 {
     uint64_t s[WORDS_256], *S;
-    int i, y;
+    int i, j;
 
     for(i = 0; i < WORDS_256; i++, in_blk += 8)
         s[i] = PACK64BE(in_blk);
@@ -110,18 +108,18 @@ void akmos_threefish_256_decrypt(akmos_threefish_256_t *ctx,
     for(i = 0; i < WORDS_256; i++)
         s[i] -= S[i];
 
-    for(i = ROUNDS_256 / 8; i > 0; i--) {
+    for(i = ROUNDS_256; i > 0; i--) {
         threefish_256_dmix(s, 32, 32, 58, 22);
         threefish_256_dmix(s, 46, 12, 25, 33);
 
-        for(y = 0, S -= WORDS_256; y < WORDS_256; y++)
-            s[y] -= S[y];
+        for(j = 0, S -= WORDS_256; j < WORDS_256; j++)
+            s[j] -= S[j];
 
         threefish_256_dmix(s,  5, 37, 23, 40);
         threefish_256_dmix(s, 52, 57, 14, 16);
 
-        for(y = 0, S -= WORDS_256; y < WORDS_256; y++)
-            s[y] -= S[y];
+        for(j = 0, S -= WORDS_256; j < WORDS_256; j++)
+            s[j] -= S[j];
     }
 
     for(i = 0; i < WORDS_256; i++, out_blk += 8)
