@@ -25,9 +25,11 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "../akmos.h"
 #include "../bits.h"
@@ -49,9 +51,7 @@
 
 void akmos_chacha_setiv(akmos_chacha_t *ctx, const uint8_t *iv)
 {
-    ctx->s[13] = PACK32BE(iv    );
-    ctx->s[14] = PACK32BE(iv + 4);
-    ctx->s[15] = PACK32BE(iv + 8);
+    memcpy(ctx->s + 13, iv, 12);
 }
 
 void akmos_chacha_setcnt(akmos_chacha_t *ctx, const uint8_t *cnt)
@@ -61,17 +61,12 @@ void akmos_chacha_setcnt(akmos_chacha_t *ctx, const uint8_t *cnt)
 
 void akmos_chacha_setkey(akmos_chacha_t *ctx, const uint8_t *in_key, size_t __attribute__((unused)) len)
 {
-    size_t i;
-    uint32_t *s;
-
     ctx->s[0] = C0;
     ctx->s[1] = C1;
     ctx->s[2] = C2;
     ctx->s[3] = C3;
 
-    s = ctx->s + 4;
-    for(i = 0; i < AKMOS_CHACHA_KEYMAX / 4; i++, in_key += 4)
-        s[i] = PACK32BE(in_key);
+    memcpy(ctx->s + 4, in_key, AKMOS_CHACHA_KEYMAX);
 }
 
 void akmos_chacha_stream(akmos_chacha_t *ctx, uint8_t *out_blk)
@@ -94,6 +89,5 @@ void akmos_chacha_stream(akmos_chacha_t *ctx, uint8_t *out_blk)
 
     ctx->s[12]++;
 
-    for(i = 0; i < AKMOS_CHACHA_BLKLEN / 4; i++, out_blk += 4)
-        UNPACK32BE(out_blk, s[i]);
+    memcpy(out_blk, s, AKMOS_CHACHA_BLKLEN);
 }

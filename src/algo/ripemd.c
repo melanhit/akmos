@@ -89,14 +89,13 @@ static uint8_t PADDING[64] = {
 static void ripemd_160_transform(akmos_ripemd_t *ctx, const uint8_t *block, size_t nb)
 {
     uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, *x, *state;
-    size_t i, j;
+    size_t i;
 
     state = ctx->state;
     x = ctx->x;
 
-    for(i = 0; i < nb; i++) {
-        for(j = 0; j < (AKMOS_RIPEMD_BLKLEN / 4); j++, block += 4)
-            x[j] = PACK32BE(block);
+    for(i = 0; i < nb; i++, block += AKMOS_RIPEMD_BLKLEN) {
+        memcpy(x, block, AKMOS_RIPEMD_BLKLEN);
 
         a = state[0];
         b = state[1];
@@ -296,14 +295,13 @@ static void ripemd_160_transform(akmos_ripemd_t *ctx, const uint8_t *block, size
 static void ripemd_256_transform(akmos_ripemd_t *ctx, const uint8_t *block, size_t nb)
 {
     uint32_t a, b, c, d, aa, bb, cc, dd, t, *x, *state;
-    size_t i, j;
+    size_t i;
 
     state = ctx->state;
     x = ctx->x;
 
-    for(i = 0; i < nb; i++) {
-        for(j = 0; j < (AKMOS_RIPEMD_BLKLEN / 4); j++, block += 4)
-            x[j] = PACK32BE(block);
+    for(i = 0; i < nb; i++, block += AKMOS_RIPEMD_BLKLEN) {
+        memcpy(x, block, AKMOS_RIPEMD_BLKLEN);
 
         a = state[0];
         b = state[1];
@@ -476,14 +474,13 @@ static void ripemd_256_transform(akmos_ripemd_t *ctx, const uint8_t *block, size
 static void ripemd_320_transform(akmos_ripemd_t *ctx, const uint8_t *block, size_t nb)
 {
     uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, *x, *state;
-    size_t i, j;
+    size_t i;
 
     state = ctx->state;
     x = ctx->x;
 
-    for(i = 0; i < nb; i++) {
-        for(j = 0; j < (AKMOS_RIPEMD_BLKLEN / 4); j++, block += 4)
-            x[j] = PACK32BE(block);
+    for(i = 0; i < nb; i++, block += AKMOS_RIPEMD_BLKLEN) {
+        memcpy(x, block, AKMOS_RIPEMD_BLKLEN);
 
         a = state[0];
         b = state[1];

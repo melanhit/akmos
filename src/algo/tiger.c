@@ -80,7 +80,6 @@ static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, size_t nb)
 {
     uint64_t a, b, c, aa, bb, cc, *w;
     uint8_t *t;
-    const uint8_t *sub;
     size_t i;
 
     w = ctx->w;
@@ -90,13 +89,8 @@ static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, size_t nb)
     b = bb = ctx->h[1];
     c = cc = ctx->h[2];
 
-    for(i = 0; i < nb; i++) {
-        sub = block + (i * 64);
-
-        w[0] = PACK64BE(sub     ); w[1] = PACK64BE(sub +  8);
-        w[2] = PACK64BE(sub + 16); w[3] = PACK64BE(sub + 24);
-        w[4] = PACK64BE(sub + 32); w[5] = PACK64BE(sub + 40);
-        w[6] = PACK64BE(sub + 48); w[7] = PACK64BE(sub + 56);
+    for(i = 0; i < nb; i++, block += AKMOS_TIGER_BLKLEN) {
+        memcpy(w, block, AKMOS_TIGER_BLKLEN);
 
         aa = a; bb = b; cc = c;
 
