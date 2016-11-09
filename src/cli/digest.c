@@ -135,7 +135,7 @@ int akmos_cli_digest(int argc, char **argv)
     if(!desc)
         return akmos_perror(AKMOS_ERR_ALGOID);
 
-    AMALLOC(md, desc->outlen, err);
+    err = amalloc(&md, desc->outlen);
     if(err)
         return err;
 

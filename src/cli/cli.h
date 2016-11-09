@@ -29,15 +29,6 @@
 #ifndef AKMOS_CLI_H
 #define AKMOS_CLI_H
 
-#define AMALLOC(buf, len, err)          \
-{                                       \
-    buf = malloc(len);                  \
-    if(!buf) {                          \
-        printf("%s\n", strerror(errno));\
-        err = errno;                    \
-    }                                   \
-}
-
 #define CIPHER_MAX_KEYLEN   128
 #define CIPHER_MAX_BLKLEN   128
 
@@ -49,6 +40,8 @@ typedef struct __attribute__((__packed__)) akmos_cipher_header_s {
     uint8_t version;
     uint8_t pad[255];
 } akmos_cipher_header_t; /* 1024 bytes */
+
+int amalloc(uint8_t **, size_t);
 
 int akmos_cli_help(void);
 int akmos_cli_digest(int, char **);

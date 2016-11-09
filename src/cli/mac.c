@@ -382,7 +382,7 @@ int akmos_cli_mac(int argc, char **argv)
         return err;
 
     keylen = opt.keylen * 2;
-    AMALLOC(keybuf, keylen, err);
+    err = amalloc(&keybuf, keylen);
     if(err)
         return err;
     memset(keybuf, 0, keylen);
@@ -405,11 +405,11 @@ int akmos_cli_mac(int argc, char **argv)
         memcpy(keybuf, keypass, opt.keylen);
     }
 
-    AMALLOC(macbuf, opt.maclen, err);
+    err = amalloc(&macbuf, opt.maclen);
     if(err)
         goto out;
 
-    AMALLOC(buf, BUFSIZ, err);
+    err = amalloc(&buf, BUFSIZ);
     if(err)
         goto out;
 

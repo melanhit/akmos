@@ -367,7 +367,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     if(opt.flag)
         keylen *= 3;
 
-    AMALLOC(keybuf, keylen, err);
+    err = amalloc(&keybuf, keylen);
     if(err)
         return err;
     memset(keybuf, 0, keylen);
@@ -434,7 +434,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     /* Create and cook header */
     hlen = sizeof(struct akmos_cipher_header_s);
     hdp = (uint8_t *)&hd;
-    AMALLOC(hbuf, hlen, err);
+    err= amalloc(&hbuf, hlen);
     if(err)
         goto out;
 
@@ -490,7 +490,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
         akmos_cipher_setcnt(ctx, NULL);
 
     /* enc/dec input to output */
-    AMALLOC(buf, BUFLEN + opt.blklen, err);
+    err = amalloc(&buf, BUFLEN + opt.blklen);
     if(err)
         goto out;
     memset(buf, 0, BUFLEN + opt.blklen);

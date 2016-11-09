@@ -30,6 +30,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <unistd.h>
+#include <errno.h>
 
 #include "../akmos.h"
 #include "cli.h"
@@ -42,6 +44,17 @@ typedef enum {
     AKMOS_CLI_HELP,
     AKMOS_CLI_UNKNOWN
 } akmos_cli_id;
+
+int amalloc(uint8_t **ptr, size_t len)
+{
+    *ptr = NULL;
+
+    *ptr = malloc(len);
+    if(*ptr == NULL)
+        fprintf(stderr, "%s\n", strerror(errno));
+
+    return errno;
+}
 
 int akmos_cli_help() {
     printf("Usage: akmos <command> <options>\n"

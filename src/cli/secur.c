@@ -80,7 +80,7 @@ int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *sal
         goto out;
     }
 
-    AMALLOC(kbuf, (SECUR_MAX_KEYBUF + BUFSIZ), err);
+    err = amalloc(&kbuf, (SECUR_MAX_KEYBUF + BUFSIZ));
     if(err)
         goto out;
 
@@ -133,7 +133,7 @@ int secur_rand_buf(uint8_t *buf, size_t len)
     err = EXIT_SUCCESS;
     diglen = akmos_digest_outlen(SECUR_ALGO);
 
-    AMALLOC(sbuf, diglen * 2, err);
+    err = amalloc(&sbuf, diglen * 2);
     if(err)
         return err;
 
