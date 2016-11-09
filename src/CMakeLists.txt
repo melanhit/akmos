@@ -2,6 +2,8 @@ include(CMake/CheckHeader.txt)
 include(CMake/CheckSize.txt)
 include(CMake/CheckSymbol.txt)
 
+find_package(Threads)
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/inc/config.h)
 
 set(src_lib
@@ -111,7 +113,7 @@ set_target_properties(akmos_static PROPERTIES OUTPUT_NAME akmos)
 
 add_executable(akmos ${src_cli})
 target_compile_options(akmos PUBLIC -fPIC -ansi -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion)
-target_link_libraries(akmos akmos_shared)
+target_link_libraries(akmos akmos_shared ${CMAKE_THREAD_LIBS_INIT})
 
 set(BINDIR bin)
 

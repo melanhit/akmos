@@ -39,13 +39,20 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <pthread.h>
+
 #include "../akmos.h"
 #include "../error.h"
 #include "cli.h"
 
+#define DEFAULT_THREADS   2
+#define MAX_THREADS     128
+
+static akmos_algo_id algo;
+
 struct opt_digest_s {
-    akmos_algo_id algo;
-    int count;
+    size_t num;
+    size_t thr_num;
     char **input;
     struct {
         int algo;
@@ -53,15 +60,20 @@ struct opt_digest_s {
     } set;
 };
 
+struct opt_thread_s {
+    const char *input;
+    uint8_t *md;
+};
+
 static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
 {
-    int c;
+    int c, err;
 
-    while((c = getopt(argc, argv, "a:bh")) != -1) {
+    while((c = getopt(argc, argv, "a:n:bh")) != -1) {
         switch(c) {
             case 'a':
-                opt->algo = akmos_digest_id(optarg);
-                if(!opt->algo)
+                algo = akmos_digest_id(optarg);
+                if(algo)
                     return akmos_perror(AKMOS_ERR_ALGOID);
 
                 opt->set.algo = c;
@@ -71,28 +83,41 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
                 opt->set.bin = c;
                 break;
 
+            case 'n':
+                err = sscanf(optarg, "%2lu", &opt->thr_num);
+                if((err == EOF) || (!err) || (opt->thr_num < 1)) {
+                    fprintf(stderr, "Invalid number of the threads\n");
+                    return EXIT_FAILURE;
+                }
+                if(opt->thr_num > MAX_THREADS) {
+                    fprintf(stderr, "Invalid number of the threads (maximum %d)\n", MAX_THREADS);
+                    return EXIT_FAILURE;
+                }
+
+                break;
+
             case 'h':
             default:
-                printf("Usage: akmos dgst [-a algo] [-b] <input>\n");
+                printf("Usage: akmos dgst [-a algo] [-n thread] [-b] <input>\n");
                 return EXIT_FAILURE;
         }
     }
 
     if(!opt->set.algo)
-        opt->algo = AKMOS_ALGO_SHA2_256;
+        algo = AKMOS_ALGO_SHA2_256;
 
-    opt->count = argc - optind;
+    opt->num   = (size_t)(argc - optind);
     opt->input = argv + optind;
 
-    if(opt->count == 0) {
-        opt->count = 1;
+    if(opt->num == 0) {
+        opt->num = 1;
         opt->input[0] = NULL;
     }
 
     return EXIT_SUCCESS;
 }
 
-static void digest_print_hex(const char *path, const char *stralg, uint8_t *md, size_t len)
+static void print_hex(const char *path, const char *stralg, uint8_t *md, size_t len)
 {
     size_t i;
     const char *s = "-";
@@ -106,7 +131,7 @@ static void digest_print_hex(const char *path, const char *stralg, uint8_t *md, 
     printf(" = %s(%s)\n", stralg, path);
 }
 
-static void digest_print_raw(uint8_t *md, size_t len)
+static void print_raw(uint8_t *md, size_t len)
 {
     size_t i;
 
@@ -114,71 +139,127 @@ static void digest_print_raw(uint8_t *md, size_t len)
         printf("%c", md[i]);
 }
 
-int akmos_cli_digest(int argc, char **argv)
+static void *digest(void *arg)
 {
     akmos_digest_t ctx;
-    const akmos_digest_xdesc_t *desc;
-    struct opt_digest_s opt;
-    int i, err;
+    struct opt_thread_s *opt;
+    int err;
     size_t len;
-    uint8_t buf[BUFSIZ], *md;
+    uint8_t buf[BUFSIZ];
     FILE *fd;
 
     fd = NULL;
+
+    opt = (struct opt_thread_s *)arg;
+
+    if(!opt->input)
+        fd = stdin;
+    else
+        fd = fopen(opt->input, "r");
+
+    if(!fd) {
+        fprintf(stderr, "%s: %s\n", opt->input, strerror(errno));
+        return NULL;
+    }
+
+    err = akmos_digest_init(&ctx, algo);
+    if(err) {
+        akmos_perror(err);
+        return NULL;
+    }
+
+    while((len = fread(buf, 1, BUFSIZ, fd)) != 0)
+        akmos_digest_update(ctx, buf, len);
+
+    if(ferror(fd)) {
+        fprintf(stderr, "%s: %s\n", opt->input, strerror(errno));
+        return NULL;
+    }
+
+    akmos_digest_done(ctx, opt->md);
+
+    if(fd)
+        fclose(fd);
+
+    return NULL;
+}
+
+int akmos_cli_digest(int argc, char **argv)
+{
+    struct opt_digest_s opt;
+    struct opt_thread_s thr_opt[MAX_THREADS];
+    const akmos_digest_xdesc_t *desc;
+    pthread_t *thread;
+    uint8_t *md;
+    size_t i, j, thr_cnt;
+    int err;
+
+    err = EXIT_SUCCESS;
 
     memset(&opt, 0, sizeof(opt));
     err = parse_arg(&opt, argc, argv);
     if(err)
         return err;
 
-    desc = akmos_digest_desc(opt.algo);
+    if(!opt.thr_num)
+        opt.thr_num = DEFAULT_THREADS;
+
+    if(opt.num < opt.thr_num)
+        opt.thr_num = opt.num;
+
+    thread = malloc(sizeof(pthread_t) * opt.thr_num);
+    if(thread == NULL) {
+        fprintf(stderr, "%s\n", strerror(errno));
+        return err;
+    }
+
+    desc = akmos_digest_desc(algo);
     if(!desc)
         return akmos_perror(AKMOS_ERR_ALGOID);
 
-    err = amalloc(&md, desc->outlen);
+    err = amalloc(&md, desc->outlen * opt.thr_num);
     if(err)
-        return err;
+        goto out;
 
-    for(i = 0; i < opt.count; i++) {
-        if(!opt.input[i])
-            fd = stdin;
-        else
-            fd = fopen(opt.input[i], "r");
+    for(i = 0, j = 0; i < opt.thr_num; i++, j += desc->outlen)
+        thr_opt[i].md = md + j;
 
-        if(!fd) {
-            fprintf(stderr, "%s: %s\n", opt.input[i], strerror(errno));
-            free(md);
-            return EXIT_FAILURE;
+    for(i = 0, thr_cnt = opt.thr_num; i < opt.num; i += opt.thr_num, opt.input += opt.thr_num) {
+        if((opt.num - i) < opt.thr_num)
+            thr_cnt = opt.num - i;
+
+        for(j = 0; j < thr_cnt; j++) {
+            thr_opt[j].input = opt.input[j];
+
+            err = pthread_create(&thread[j], NULL, &digest, &thr_opt[j]);
+            if(err) {
+                fprintf(stderr, "%s\n", strerror(errno));
+                goto out;
+            }
         }
 
-        err = akmos_digest_init(&ctx, opt.algo);
-        if(err) {
-            free(md);
-            return akmos_perror(err);
+        for(j = 0; j < thr_cnt; j++) {
+            err = pthread_join(thread[j], NULL);
+            if(err) {
+                fprintf(stderr, "%s\n", strerror(errno));
+                goto out;
+            }
         }
 
-        while((len = fread(buf, 1, BUFSIZ, fd)) != 0)
-            akmos_digest_update(ctx, buf, len);
-
-        if(ferror(fd)) {
-            fprintf(stderr, "%s: %s\n", opt.input[i], strerror(errno));
-            free(md);
-            return EXIT_FAILURE;
+        for(j = 0; j < thr_cnt; j++) {
+            if(!opt.set.bin)
+                print_hex(thr_opt[j].input, desc->name, thr_opt[j].md, desc->outlen);
+            else
+                print_raw(thr_opt[j].md, desc->outlen);
         }
-
-        akmos_digest_done(ctx, md);
-
-        if(fd)
-            fclose(fd);
-
-        if(!opt.set.bin)
-            digest_print_hex(opt.input[i], desc->name, md, desc->outlen);
-        else
-            digest_print_raw(md, desc->outlen);
     }
 
+out:
     if(md)
         free(md);
 
-    return EXIT_SUCCESS;
+    if(thread)
+        free(thread);
+
+    return err;
 }

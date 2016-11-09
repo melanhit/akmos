@@ -227,7 +227,7 @@ Supported cipher modes:
 .SH "HASHING"
 .SS ""
 .HP \w'\fBakmos\ dgst\fR\ 'u
-\fBakmos dgst\fR [\-a\ \fIalgo\fR] [\-b] [\-h] \fIinput\fR...
+\fBakmos dgst\fR [\-a\ \fIalgo\fR] [\-n\ \fIthreads\fR] [\-b] [\-h] \fIinput\fR...
 .SS "Options"
 .PP
 .PP
@@ -235,6 +235,11 @@ Supported cipher modes:
 .RS 4
 Digest algorithm to use\&. By default is
 \fBSHA2\-256\fR
+.RE
+.PP
+\-n\ threads
+.RS 4
+Number of the threads to process multiple inputs\&. By default is \fB2\fR
 .RE
 .PP
 \-b

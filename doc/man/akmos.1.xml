@@ -352,6 +352,7 @@
                 <cmdsynopsis>
                     <command>akmos dgst</command>
                     <arg>-a <replaceable>algo</replaceable></arg>
+                    <arg>-n <replaceable>threads</replaceable></arg>
                     <arg>-b</arg>
                     <arg>-h</arg>
                     <arg rep='repeat' choice='plain'><replaceable>input</replaceable></arg>
@@ -366,6 +367,12 @@
                             <term><arg choice="plain">-a algo</arg></term>
                             <listitem>
                                 <para>Digest algorithm to use. By default is <constant>SHA2-256</constant></para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-n threads</arg></term>
+                            <listitem>
+                                <para>Number of the threads to process multiple inputs. By default is <constant>2</constant></para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
