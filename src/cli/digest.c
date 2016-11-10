@@ -68,6 +68,7 @@ struct opt_thread_s {
 static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
 {
     int c, err;
+    unsigned num;
 
     while((c = getopt(argc, argv, "a:n:bh")) != -1) {
         switch(c) {
@@ -84,15 +85,17 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
                 break;
 
             case 'n':
-                err = sscanf(optarg, "%2lu", &opt->thr_num);
-                if((err == EOF) || (!err) || (opt->thr_num < 1)) {
+                err = sscanf(optarg, "%u", &num);
+                if((err == EOF) || (!err) || (num < 1)) {
                     fprintf(stderr, "Invalid number of the threads\n");
                     return EXIT_FAILURE;
                 }
-                if(opt->thr_num > MAX_THREADS) {
+                if(num > MAX_THREADS) {
                     fprintf(stderr, "Invalid number of the threads (maximum %d)\n", MAX_THREADS);
                     return EXIT_FAILURE;
                 }
+
+                opt->thr_num = num;
 
                 break;
 
