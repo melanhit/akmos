@@ -74,7 +74,7 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
         switch(c) {
             case 'a':
                 algo = akmos_digest_id(optarg);
-                if(algo)
+                if(!algo)
                     return akmos_perror(AKMOS_ERR_ALGOID);
 
                 opt->set.algo = c;
