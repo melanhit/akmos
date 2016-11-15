@@ -16,11 +16,6 @@ CHECK_INCLUDE_FILES(limits.h HAVE_LIMITS_H)
 CHECK_INCLUDE_FILES(termios.h HAVE_TERMIOS_H)
 CHECK_INCLUDE_FILES(pthread.h HAVE_PTHREAD_H)
 
-if(AKMOS_ENABLE_TEST)
-    CHECK_INCLUDE_FILES(libgen.h HAVE_LIBGEN_H)
-    CHECK_INCLUDE_FILES(ctype.h HAVE_CTYPE_H)
-endif()
-
 if(NOT HAVE_STDIO_H)
     unset(HAVE_STDIO_H)
     message(FATAL_ERROR "<stdio.h> is not found")
@@ -90,18 +85,6 @@ endif()
 if(NOT HAVE_PTHREAD_H)
     unset(HAVE_PTHREAD_H)
     message(FATAL_ERROR "<pthread.h> is not found")
-endif()
-
-if(AKMOS_ENABLE_TEST)
-    if(NOT HAVE_LIBGEN_H)
-        unset(HAVE_LIBGEN_H)
-        message(FATAL_ERROR "<libgen.h> is not found")
-    endif()
-    
-    if(NOT HAVE_CTYPE_H)
-        unset(HAVE_CTYPE_H)
-        message(FATAL_ERROR "<ctype.h> is not found")
-    endif()
 endif()
 
 # vim: syn=cmake
