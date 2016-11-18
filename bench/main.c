@@ -155,7 +155,7 @@ int main(int argc, char **argv)
     }
 
     if(opt.len > BENCH_MAXBLKLEN) {
-        fprintf(stderr, "Error: reached maximum block length %d Mb\n", BENCH_MAXBLKLEN / (1024 * 1024));
+        fprintf(stderr, "Error: reached maximum block length %d MiB\n", BENCH_MAXBLKLEN / (1024 * 1024));
         return EXIT_FAILURE;
     }
 
@@ -456,10 +456,10 @@ void bench_print(struct opt_bench_s *opt)
     speed = (opt->len * opt->cnt / (1024*1024)) / ((opt->stop - opt->start) / CLOCKS_PER_SEC);
 
     if((opt->algo & BENCH_DIGEST_MASK) > 0)
-        fprintf(stdout, " %-32s %12.2f Mb/s\n", akmos_digest_name(opt->algo), speed);
+        fprintf(stdout, " %-32s %12.2f MiB/s\n", akmos_digest_name(opt->algo), speed);
 
     if((opt->algo & BENCH_CIPHER_MASK) > 0) {
         sprintf(name, "%s-%lu-%s", akmos_cipher_name(opt->algo), opt->keylen*8, akmos_mode2str(opt->mode));
-        fprintf(stdout, " %-32s %12.2f Mb/s\n", name, speed);
+        fprintf(stdout, " %-32s %12.2f MiB/s\n", name, speed);
     }
 }
