@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -50,10 +50,12 @@ int amalloc(uint8_t **ptr, size_t len)
     *ptr = NULL;
 
     *ptr = malloc(len);
-    if(*ptr == NULL)
+    if(*ptr == NULL) {
         fprintf(stderr, "%s\n", strerror(errno));
+        return errno;
+    }
 
-    return errno;
+    return EXIT_SUCCESS;
 }
 
 int akmos_cli_help() {
