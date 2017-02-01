@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,7 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -46,44 +47,9 @@
 #include "../error.h"
 #include "cli.h"
 #include "secur.h"
+#include "cipher.h"
 
-#define DEFAULT_EALGO   AKMOS_ALGO_TWOFISH
-#define DEFAULT_BMODE   AKMOS_MODE_CBC
-#define DEFAULT_SMODE   AKMOS_MODE_CTR
-#define DEFAULT_DALGO   AKMOS_ALGO_SHA2_512
-#define DEFAULT_KEYLEN  128
-#define DEFAULT_ITER    4096
-
-#define MAX_PASSLEN     128
-
-#define BUFLEN          (BUFSIZ*2)
-
-struct opt_cipher_s {
-    akmos_algo_id algo;
-    akmos_algo_id flag;
-    akmos_mode_id mode;
-    size_t blklen;
-    size_t keylen;
-    uint32_t iter;
-    char pass[MAX_PASSLEN];
-    char *key;
-    char *input;
-    char *output;
-    struct {
-        int algo;
-        int mode;
-        int pass;
-        int key;
-        int keylen;
-        int iter;
-        int over;
-    } set;
-};
-
-struct header_cipher_s {
-    uint8_t *iv;
-    uint8_t *key;
-};
+#define BUFLEN  (BUFSIZ*2)
 
 static int prompt_over(char *s, int flag)
 {
@@ -109,7 +75,7 @@ static int prompt_over(char *s, int flag)
         return 0;
 }
 
-static int parse_algo(struct opt_cipher_s *opt, char *algo_str)
+static int parse_algo(cipher_opt_t *opt, char *algo_str)
 {
     char *s1, *s2, *sv;
 
@@ -145,7 +111,7 @@ static int parse_algo(struct opt_cipher_s *opt, char *algo_str)
     return EXIT_SUCCESS;
 }
 
-static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
+static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
 {
     char *algo_str, *mode_str, *keylen_str;
     int c, err, len;
@@ -219,7 +185,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
 
     /* set algo */
     if(!opt->set.algo) {
-        opt->algo = DEFAULT_EALGO;
+        opt->algo = CIPHER_DEFAULT_EALGO;
     } else {
         err = parse_algo(opt, algo_str);
         if(err)
@@ -231,11 +197,11 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
         switch(opt->algo) {
             case AKMOS_ALGO_SALSA:
             case AKMOS_ALGO_CHACHA:
-                opt->mode = DEFAULT_SMODE;
+                opt->mode = CIPHER_DEFAULT_SMODE;
                 break;
 
             default:
-                opt->mode = DEFAULT_BMODE;
+                opt->mode = CIPHER_DEFAULT_BMODE;
                 break;
         }
     } else {
@@ -269,7 +235,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
                 break;
 
             default:
-                opt->keylen = DEFAULT_KEYLEN;
+                opt->keylen = CIPHER_DEFAULT_KEYLEN;
                 break;
        }
     } else {
@@ -306,7 +272,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
             return EXIT_FAILURE;
         }
     } else {
-        opt->iter = DEFAULT_ITER;
+        opt->iter = CIPHER_DEFAULT_ITER;
     }
 
     if(opt->flag)
@@ -315,7 +281,7 @@ static int parse_arg(struct opt_cipher_s *opt, int argc, char **argv)
     return EXIT_SUCCESS;
 }
 
-static int lb_padbuf(akmos_cipher_t ctx, uint8_t *buf, size_t *rlen, size_t blklen, const int enc)
+static int padbuf_hook(akmos_cipher_t ctx, uint8_t *buf, size_t *rlen, size_t blklen, const int enc)
 {
     size_t len, tmplen;
 
@@ -341,23 +307,96 @@ static int lb_padbuf(akmos_cipher_t ctx, uint8_t *buf, size_t *rlen, size_t blkl
     return EXIT_SUCCESS;
 }
 
+static int header_encode(cipher_header_t *hd, uint8_t *buf)
+{
+    akmos_digest_t ctx;
+    int err;
+
+    hd->version = CIPHER_VERSION;
+
+    memcpy(buf, hd->iv,  sizeof(hd->iv));  buf += sizeof(hd->iv);
+    memcpy(buf, hd->key, sizeof(hd->key)); buf += sizeof(hd->key);
+    *buf = hd->version; buf++;
+
+    if(hd->version == CIPHER_VERSION_V02) {
+        err = akmos_digest_init(&ctx, CIPHER_HEADER_MD);
+        if(err) {
+            akmos_perror(err);
+            return err;
+        }
+
+        akmos_digest_update(ctx, hd->iv, sizeof(hd->iv));
+        akmos_digest_update(ctx, hd->key, sizeof(hd->key));
+        akmos_digest_update(ctx, &hd->version, sizeof(hd->version));
+        akmos_digest_done(ctx, hd->md);
+
+        memcpy(buf, hd->md, sizeof(hd->md));
+        buf += sizeof(hd->md);
+    }
+
+    return EXIT_SUCCESS;
+}
+
+static int header_decode(uint8_t *buf, cipher_header_t *hd)
+{
+    akmos_digest_t ctx;
+    uint8_t md[CIPHER_HEADER_MDLEN];
+    int err;
+
+    memcpy(hd->iv,  buf, sizeof(hd->iv));  buf += sizeof(hd->iv);
+    memcpy(hd->key, buf, sizeof(hd->key)); buf += sizeof(hd->key);
+
+    hd->version = *buf; buf++;
+    if(hd->version > CIPHER_VERSION) {
+        fprintf(stderr, "Invalid header version\n");
+        return EXIT_FAILURE;
+    }
+
+    if(hd->version == CIPHER_VERSION_V02) {
+        memcpy(hd->md, buf, sizeof(hd->md));
+
+        err = akmos_digest_init(&ctx, CIPHER_HEADER_MD);
+        if(err) {
+            akmos_perror(err);
+            return err;
+        }
+
+        akmos_digest_update(ctx, hd->iv, sizeof(hd->iv));
+        akmos_digest_update(ctx, hd->key, sizeof(hd->key));
+        akmos_digest_update(ctx, &hd->version, sizeof(hd->version));
+        akmos_digest_done(ctx, md);
+
+        if(memcmp(md, hd->md, sizeof(md)) != 0) {
+            fprintf(stderr, "Invalid key or broken header\n");
+            return EXIT_FAILURE;
+        }
+
+        akmos_memzero(md, sizeof(md));
+
+        buf += sizeof(hd->md);
+    }
+
+    return EXIT_SUCCESS;
+}
+
 int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 {
     akmos_cipher_t ctx;
-    struct opt_cipher_s opt;
-    akmos_cipher_header_t hd;
+    cipher_opt_t opt;
+    cipher_header_t hd;
+
     uint8_t *keybuf, *keypass;
-    uint8_t *buf, *tbuf, *hbuf, *hdp, *rbuf, *wbuf;
-    size_t keylen, rlen, wlen, hlen, tmplen;
+    uint8_t *buf, *tbuf, *rbuf, *wbuf;
+    size_t keylen, len, rlen, wlen, tmplen;
     mode_t mask;
     FILE *fd_in, *fd_out;
     int err;
 
     ctx = NULL;
-    keybuf = hbuf = buf = NULL;
+    keybuf = buf = NULL;
     fd_in = fd_out = NULL;
 
-    memset(&opt, 0, sizeof(struct opt_cipher_s));
+    memset(&opt, 0, sizeof(struct cipher_opt_s));
     err = parse_arg(&opt, argc, argv);
     if(err)
         return err;
@@ -377,7 +416,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
     if(opt.set.pass) {
         tbuf = keypass;
-        err = akmos_kdf_pbkdf2(tbuf, keylen, NULL, 0, opt.pass, opt.iter, DEFAULT_DALGO);
+        err = akmos_kdf_pbkdf2(tbuf, keylen, NULL, 0, opt.pass, opt.iter, CIPHER_DEFAULT_DALGO);
         if(err) {
             akmos_perror(err);
             goto out;
@@ -431,42 +470,59 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
         goto out;
     }
 
-    /* Create and cook header */
-    hlen = sizeof(struct akmos_cipher_header_s);
-    hdp = (uint8_t *)&hd;
-    err= amalloc(&hbuf, hlen);
+    /* allocate work buf */
+    err = amalloc(&buf, BUFLEN + opt.blklen);
     if(err)
         goto out;
+    memset(buf, 0, BUFLEN + opt.blklen);
 
-    if(enc == AKMOS_MODE_DECRYPT) {
-        if(fread(hdp, 1, hlen, fd_in) != hlen) {
-            err = EXIT_FAILURE;
-            fprintf(stderr, "%s: %s\n", opt.input, strerror(errno));
-            goto out;
-        }
-    } else {
-        err = secur_rand_buf(hdp, hlen);
-        if(err)
-            goto out;
+    /* Create and cook header */
+    len = sizeof(struct cipher_header_s);
+    assert(enc == AKMOS_MODE_ENCRYPT && enc == AKMOS_MODE_DECRYPT);
+    switch(enc) {
+        case AKMOS_MODE_ENCRYPT:
+            err = secur_rand_buf(&hd, len);
+            if(err)
+                goto out;
 
-        hd.version = CIPHER_VERSION;
-    }
+            err = header_encode(&hd, buf);
+            if(err)
+                goto out;
 
-    err = akmos_cipher_ex(opt.algo, opt.mode|enc, keybuf, opt.keylen, NULL, hdp, hlen, hbuf);
-    if(err) {
-        akmos_perror(err);
-        goto out;
-    }
+            err = akmos_cipher_ex(opt.algo, opt.mode|enc, keybuf, opt.keylen, NULL, buf, len, buf);
+            if(err) {
+                akmos_perror(err);
+                goto out;
+            }
 
-    /* store header in file or struct */
-    if(enc == AKMOS_MODE_ENCRYPT) {
-        if(fwrite(hbuf, 1, hlen, fd_out) != hlen) {
-            err = EXIT_FAILURE;
-            fprintf(stderr, "%s: %s\n", opt.output, strerror(errno));
-            goto out;
-        }
-    } else {
-        memcpy(hdp, hbuf, hlen);
+            if(fwrite(buf, 1, len, fd_out) != len) {
+                err = EXIT_FAILURE;
+                fprintf(stderr, "%s: %s\n", opt.output, strerror(errno));
+                goto out;
+            }
+            break;
+
+        case AKMOS_MODE_DECRYPT:
+            if(fread(buf, 1, len, fd_in) != len) {
+                err = EXIT_FAILURE;
+                fprintf(stderr, "%s: %s\n", opt.input, strerror(errno));
+                goto out;
+            }
+
+            err = akmos_cipher_ex(opt.algo, opt.mode|enc, keybuf, opt.keylen, NULL, buf, len, buf);
+            if(err) {
+                akmos_perror(err);
+                goto out;
+            }
+
+            err = header_decode(buf, &hd);
+            if(err)
+                goto out;
+
+            break;
+
+        default:
+            break;
     }
 
     /* Create and init cipher contexts */
@@ -489,12 +545,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     if(opt.mode == AKMOS_MODE_CTR)
         akmos_cipher_setcnt(ctx, NULL);
 
-    /* enc/dec input to output */
-    err = amalloc(&buf, BUFLEN + opt.blklen);
-    if(err)
-        goto out;
-    memset(buf, 0, BUFLEN + opt.blklen);
-
+    /* ciphering */
     rbuf = buf;
     wbuf = buf + BUFSIZ;
 
@@ -522,11 +573,12 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
         tmplen = rlen; rlen = wlen; wlen = tmplen;
     }
 
+    /* process padding */
     switch(opt.mode) {
         case AKMOS_MODE_ECB:
         case AKMOS_MODE_CBC:
         case AKMOS_MODE_CFB:
-            err = lb_padbuf(ctx, rbuf, &rlen, opt.blklen, enc);
+            err = padbuf_hook(ctx, rbuf, &rlen, opt.blklen, enc);
             if(err)
                 goto out;
 
@@ -559,12 +611,7 @@ out:
         free(buf);
     }
 
-    if(hbuf) {
-        akmos_memzero(hbuf, hlen);
-        free(hbuf);
-    }
-
-    akmos_memzero(&hd, sizeof(struct akmos_cipher_header_s));
+    akmos_memzero(&hd, sizeof(struct cipher_header_s));
 
     if(ctx)
         akmos_cipher_free(ctx);

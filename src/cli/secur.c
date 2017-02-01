@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -123,7 +123,7 @@ out:
     return err;
 }
 
-int secur_rand_buf(uint8_t *buf, size_t len)
+int secur_rand_buf(void *buf, size_t len)
 {
     size_t i, j, l, tmplen, diglen;
     ssize_t t;

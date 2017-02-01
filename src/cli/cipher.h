@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,16 +26,55 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_CLI_SECUR_H
-#define AKMOS_CLI_SECUR_H
+#ifndef AKMOS_CLI_CIPHER
+#define AKMOS_CLI_CIPHER
 
-#define SECUR_MAX_KEYBUF    (1024*1024)
-#define SECUR_ALGO          AKMOS_ALGO_SHA2_512
-#define SECUR_RNDFILE       "/dev/urandom"
+#define CIPHER_DEFAULT_EALGO    AKMOS_ALGO_TWOFISH
+#define CIPHER_DEFAULT_BMODE    AKMOS_MODE_CBC
+#define CIPHER_DEFAULT_SMODE    AKMOS_MODE_CTR
+#define CIPHER_DEFAULT_DALGO    AKMOS_ALGO_SHA2_512
+#define CIPHER_DEFAULT_KEYLEN   128
+#define CIPHER_DEFAULT_ITER     4096
 
-int secur_read_passw(char *);
-int secur_mk_keyfile(const char *, uint8_t *, size_t, uint8_t *, size_t);
+#define CIPHER_MAX_PASSLEN      128
+#define CIPHER_MAX_KEYLEN       128
+#define CIPHER_MAX_BLKLEN       128
 
-int secur_rand_buf(void *, size_t);
+#define CIPHER_HEADER_MD        AKMOS_ALGO_SHA2_256
+#define CIPHER_HEADER_MDLEN     32
 
-#endif  /* AKMOS_CLI_SECUR_H */
+#define CIPHER_VERSION_V01      0x01
+#define CIPHER_VERSION_V02      0x02
+#define CIPHER_VERSION          CIPHER_VERSION_V02
+
+typedef struct cipher_opt_s {
+    akmos_algo_id algo;
+    akmos_algo_id flag;
+    akmos_mode_id mode;
+    size_t blklen;
+    size_t keylen;
+    uint32_t iter;
+    char pass[CIPHER_MAX_PASSLEN];
+    char *key;
+    char *input;
+    char *output;
+    struct {
+        int algo;
+        int mode;
+        int pass;
+        int key;
+        int keylen;
+        int iter;
+        int over;
+    } set;
+} cipher_opt_t;
+
+typedef struct __attribute__((__packed__)) cipher_header_s {
+    uint8_t iv [CIPHER_MAX_BLKLEN * 3];
+    uint8_t key[CIPHER_MAX_KEYLEN * 3];
+    uint8_t version;
+    uint8_t md[CIPHER_HEADER_MDLEN];
+    uint8_t pad[223];
+} cipher_header_t; /* 1024 bytes */
+
+#endif  /* AKMOS_CLI_CIPHER */

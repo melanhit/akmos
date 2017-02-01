@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -28,18 +28,6 @@
 
 #ifndef AKMOS_CLI_H
 #define AKMOS_CLI_H
-
-#define CIPHER_MAX_KEYLEN   128
-#define CIPHER_MAX_BLKLEN   128
-
-#define CIPHER_VERSION      0x01
-
-typedef struct __attribute__((__packed__)) akmos_cipher_header_s {
-    uint8_t iv [CIPHER_MAX_BLKLEN * 3];
-    uint8_t key[CIPHER_MAX_KEYLEN * 3];
-    uint8_t version;
-    uint8_t pad[255];
-} akmos_cipher_header_t; /* 1024 bytes */
 
 int amalloc(uint8_t **, size_t);
 
