@@ -55,7 +55,7 @@ int pw_read_passw(char *pass)
     tcsetattr(STDIN_FILENO, TCSANOW, &t_new);
 
     printf("Enter password: ");
-    if(!scanf("%125s", pass))
+    if(!scanf("%125[^\n]s", pass))
        return EXIT_FAILURE;
     printf("\n");
 
