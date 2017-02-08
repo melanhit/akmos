@@ -36,7 +36,6 @@
 #define CIPHER_DEFAULT_KEYLEN   128
 #define CIPHER_DEFAULT_ITER     4096
 
-#define CIPHER_MAX_PASSLEN      128
 #define CIPHER_MAX_KEYLEN       128
 #define CIPHER_MAX_BLKLEN       128
 
@@ -54,7 +53,7 @@ typedef struct cipher_opt_s {
     size_t blklen;
     size_t keylen;
     uint32_t iter;
-    char pass[CIPHER_MAX_PASSLEN];
+    char pass[PW_MAX_PASSLEN];
     char *key;
     char *input;
     char *output;

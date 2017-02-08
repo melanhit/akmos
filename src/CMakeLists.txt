@@ -68,7 +68,7 @@ set(src_cli
     cli/main.c
     cli/cipher.c
     cli/digest.c
-    cli/secur.c
+    cli/pw.c
     cli/mac.c)
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")

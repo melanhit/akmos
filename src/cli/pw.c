@@ -40,9 +40,9 @@
 
 #include "../akmos.h"
 #include "cli.h"
-#include "secur.h"
+#include "pw.h"
 
-int secur_read_passw(char *pass)
+int pw_read_passw(char *pass)
 {
     struct termios t_old, t_new;
 
@@ -64,7 +64,7 @@ int secur_read_passw(char *pass)
     return EXIT_SUCCESS;
 }
 
-int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *salt, size_t saltlen)
+int pw_read_key(const char *path, uint8_t *key, size_t keylen, uint8_t *salt, size_t saltlen)
 {
     int fd, i, err;
     ssize_t klen, len;
@@ -80,13 +80,13 @@ int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *sal
         goto out;
     }
 
-    err = amalloc(&kbuf, (SECUR_MAX_KEYBUF + BUFSIZ));
+    err = amalloc(&kbuf, (PW_MAX_KEYLEN + BUFSIZ));
     if(err)
         goto out;
 
     buf = kbuf;
     klen = 0;
-    for(i = 0; i <= (SECUR_MAX_KEYBUF / BUFSIZ); i++) {
+    for(i = 0; i <= (PW_MAX_KEYLEN / BUFSIZ); i++) {
         len = read(fd, buf, BUFSIZ);
         if(len == -1) {
             err = EXIT_FAILURE;
@@ -101,13 +101,13 @@ int secur_mk_keyfile(const char *path, uint8_t *key, size_t keylen, uint8_t *sal
         buf += BUFSIZ;
     }
 
-    if(klen > SECUR_MAX_KEYBUF) {
-        fprintf(stderr, "Keyfile \"%s\" is too big (maximum %d KiB)\n", path, (SECUR_MAX_KEYBUF / 1024));
+    if(klen > PW_MAX_KEYLEN) {
+        fprintf(stderr, "Keyfile \"%s\" is too big (maximum %d KiB)\n", path, (PW_MAX_KEYLEN / 1024));
         err = EXIT_FAILURE;
         goto out;
     }
 
-    err = akmos_kdf_kdf2(key, keylen, salt, saltlen, kbuf, (size_t)klen, 0, SECUR_ALGO);
+    err = akmos_kdf_kdf2(key, keylen, salt, saltlen, kbuf, (size_t)klen, 0, PW_ALGO);
     if(err)
         goto out;
 
@@ -116,14 +116,14 @@ out:
         close(fd);
 
     if(kbuf) {
-        akmos_memzero(kbuf, (SECUR_MAX_KEYBUF + BUFSIZ));
+        akmos_memzero(kbuf, (PW_MAX_KEYLEN + BUFSIZ));
         free(kbuf);
     }
 
     return err;
 }
 
-int secur_rand_buf(void *buf, size_t len)
+int pw_rand_buf(void *buf, size_t len)
 {
     size_t i, j, l, tmplen, diglen;
     ssize_t t;
@@ -131,7 +131,7 @@ int secur_rand_buf(void *buf, size_t len)
     uint8_t tbuf[BUFSIZ], *sbuf, *md, *key, *pbuf;
 
     err = EXIT_SUCCESS;
-    diglen = akmos_digest_outlen(SECUR_ALGO);
+    diglen = akmos_digest_outlen(PW_ALGO);
 
     err = amalloc(&sbuf, diglen * 2);
     if(err)
@@ -140,9 +140,9 @@ int secur_rand_buf(void *buf, size_t len)
     md = sbuf;
     key = sbuf + diglen;
 
-    fd = open(SECUR_RNDFILE, O_RDONLY);
+    fd = open(PW_RNDFILE, O_RDONLY);
     if(fd == -1) {
-        fprintf(stderr, "%s: %s\n", SECUR_RNDFILE, strerror(errno));
+        fprintf(stderr, "%s: %s\n", PW_RNDFILE, strerror(errno));
         return EXIT_FAILURE;
     }
 
@@ -154,16 +154,16 @@ int secur_rand_buf(void *buf, size_t len)
     t = (ssize_t)diglen;
     for(i = 0, tmplen = diglen; i <= l; i++) {
         if(read(fd, key, diglen) != t) {
-            fprintf(stderr, "%s: %s\n", SECUR_RNDFILE, strerror(errno));
+            fprintf(stderr, "%s: %s\n", PW_RNDFILE, strerror(errno));
             return EXIT_FAILURE;
         }
 
         if(read(fd, tbuf, BUFSIZ) != BUFSIZ) {
-            fprintf(stderr, "%s: %s\n", SECUR_RNDFILE, strerror(errno));
+            fprintf(stderr, "%s: %s\n", PW_RNDFILE, strerror(errno));
             return EXIT_FAILURE;
         }
 
-        err = akmos_mac_ex(SECUR_ALGO, AKMOS_MODE_HMAC, key, diglen, tbuf, BUFSIZ, md);
+        err = akmos_mac_ex(PW_ALGO, AKMOS_MODE_HMAC, key, diglen, tbuf, BUFSIZ, md);
         if(err) {
             akmos_perror(err);
             return err;

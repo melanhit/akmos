@@ -46,7 +46,7 @@
 #include "../akmos.h"
 #include "../error.h"
 #include "cli.h"
-#include "secur.h"
+#include "pw.h"
 #include "cipher.h"
 
 #define BUFLEN  (BUFSIZ*2)
@@ -259,7 +259,7 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
 
     /* read password */
     if(opt->set.pass) {
-        err = secur_read_passw(opt->pass);
+        err = pw_read_passw(opt->pass);
         if(err) {
             fprintf(stderr, "Could not read password\n");
             return EXIT_FAILURE;
@@ -425,7 +425,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
     if(opt.set.key) {
         /* keypass is used as salt */
-        err = secur_mk_keyfile(opt.key, keybuf, keylen, keypass, keylen);
+        err = pw_read_key(opt.key, keybuf, keylen, keypass, keylen);
         if(err)
             goto out;
     } else {
@@ -481,7 +481,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     assert(enc == AKMOS_MODE_ENCRYPT && enc == AKMOS_MODE_DECRYPT);
     switch(enc) {
         case AKMOS_MODE_ENCRYPT:
-            err = secur_rand_buf(&hd, len);
+            err = pw_rand_buf(&hd, len);
             if(err)
                 goto out;
 

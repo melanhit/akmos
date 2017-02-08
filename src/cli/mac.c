@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -42,13 +42,11 @@
 #include "../akmos.h"
 #include "../error.h"
 #include "cli.h"
-#include "secur.h"
+#include "pw.h"
 
 #define DEFAULT_MODE    AKMOS_MODE_HMAC
 #define DEFAULT_KEYLEN  128
 #define DEFAULT_ITER    4096
-
-#define MAX_PASSLEN     128
 
 struct opt_mac_s {
     akmos_algo_id algo;
@@ -56,7 +54,7 @@ struct opt_mac_s {
     size_t keylen;
     size_t maclen;
     char *key;
-    char pass[MAX_PASSLEN];
+    char pass[PW_MAX_PASSLEN];
     int  count;
     char **input;
     struct {
@@ -168,7 +166,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
         opt->set.pass = 'p';
 
     if(opt->set.pass) {
-        err = secur_read_passw(opt->pass);
+        err = pw_read_passw(opt->pass);
         if(err) {
             fprintf(stderr, "Could not read password\n");
             return EXIT_FAILURE;
@@ -398,7 +396,7 @@ int akmos_cli_mac(int argc, char **argv)
 
     if(opt.set.key) {
         /* keypass is used as salt */
-        err = secur_mk_keyfile(opt.key, keybuf, opt.keylen, keypass, opt.keylen);
+        err = pw_read_key(opt.key, keybuf, opt.keylen, keypass, opt.keylen);
         if(err)
             goto out;
     } else {

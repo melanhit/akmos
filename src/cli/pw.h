@@ -26,16 +26,17 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_CLI_SECUR_H
-#define AKMOS_CLI_SECUR_H
+#ifndef AKMOS_CLI_PW_H
+#define AKMOS_CLI_PW_H
 
-#define SECUR_MAX_KEYBUF    (1024*1024)
-#define SECUR_ALGO          AKMOS_ALGO_SHA2_512
-#define SECUR_RNDFILE       "/dev/urandom"
+#define PW_MAX_KEYLEN   (1024*1024)
+#define PW_MAX_PASSLEN  128
+#define PW_ALGO         AKMOS_ALGO_SHA2_512
+#define PW_RNDFILE      "/dev/urandom"
 
-int secur_read_passw(char *);
-int secur_mk_keyfile(const char *, uint8_t *, size_t, uint8_t *, size_t);
+int pw_read_passw(char *);
+int pw_read_key(const char *, uint8_t *, size_t, uint8_t *, size_t);
 
-int secur_rand_buf(void *, size_t);
+int pw_rand_buf(void *, size_t);
 
-#endif  /* AKMOS_CLI_SECUR_H */
+#endif  /* AKMOS_CLI_PW_H */
