@@ -51,21 +51,14 @@
 
 #define BUFLEN  (BUFSIZ*2)
 
-static int prompt_over(char *s, int flag)
+static int prompt_over(char *s)
 {
     int ans;
-
-    /* use flag for skip newline of printf, unclean but work :) */
-    if(flag) {
-        ans = getchar();
-
-        if(ans == EOF)
-            return 0;
-    }
 
     printf("Overwrite %s? [Y/n] ", s);
 
     ans = getchar();
+
     if(ans == EOF)
         return 0;
 
@@ -118,7 +111,7 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
 
     algo_str = mode_str = keylen_str = NULL;
 
-    while((c = getopt(argc, argv, "a:m:l:pk:i:hy")) != -1) {
+    while((c = getopt(argc, argv, "a:m:l:pP:k:i:hy")) != -1) {
         switch(c) {
             case 'a':
                 algo_str = optarg;
@@ -136,7 +129,12 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
                 break;
 
             case 'p':
-                opt->set.pass = c;
+                opt->set.passw = c;
+                break;
+
+            case 'P':
+                opt->passf = optarg;
+                opt->set.passf = c;
                 break;
 
             case 'k':
@@ -160,7 +158,7 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
 
             case 'h':
             default:
-                printf("Usage: akmos enc|dec [-a algo] [-m mode] [-k key] [-l keylen] [-p] [-i iter] [-y] [-h] <input> <output>\n");
+                printf("Usage: akmos enc|dec [-a algo] [-m mode] [-k key] [-l keylen] [-p | -P passfile] [-i iter] [-y] [-h] <input> <output>\n");
                 return EXIT_FAILURE;
         }
     }
@@ -212,8 +210,8 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
         }
     }
 
-    if(!opt->set.key && !opt->set.pass)
-        opt->set.pass = 'p';
+    if(!opt->set.key && !opt->set.passw && !opt->set.passf)
+        opt->set.passw = 'p';
 
     /* set keylen */
     if(!opt->set.keylen) {
@@ -258,15 +256,24 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
     }
 
     /* read password */
-    if(opt->set.pass) {
-        err = pw_read_passw(opt->pass);
-        if(err) {
-            fprintf(stderr, "Could not read password\n");
-            return EXIT_FAILURE;
-        }
+    if(opt->set.passw && opt->set.passf) {
+        fprintf(stderr, "Options -p and -P are mutually exlusive\n");
+        return EXIT_FAILURE;
     }
 
-    if(opt->set.iter && opt->set.pass) {
+    if(opt->set.passw) {
+        err = pw_read_passw(opt->pass);
+        if(err)
+            return err;
+    }
+
+    if(opt->set.passf) {
+        err = pw_read_passf(opt->passf, opt->pass);
+        if(err)
+            return err;
+    }
+
+    if(opt->set.iter && (opt->set.passw || opt->set.passf)) {
         if(opt->iter > UINT16_MAX) {
             fprintf(stderr, "Maximum number of iterations - %u\n", UINT32_MAX);
             return EXIT_FAILURE;
@@ -414,7 +421,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     keylen /= 2;
     keypass = keybuf + keylen;
 
-    if(opt.set.pass) {
+    if(opt.set.passw || opt.set.passf) {
         tbuf = keypass;
         err = akmos_kdf_pbkdf2(tbuf, keylen, NULL, 0, opt.pass, opt.iter, CIPHER_DEFAULT_DALGO);
         if(err) {
@@ -448,7 +455,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     /* check for overwrite */
     if(!opt.set.over && opt.output) {
         if(!access(opt.output, F_OK)) {
-            if(!prompt_over(opt.output, opt.set.pass)) {
+            if(!prompt_over(opt.output)) {
                 err = EXIT_SUCCESS;
                 fprintf(stderr, "%s: not overwrited - exiting\n", opt.output);
                 goto out;

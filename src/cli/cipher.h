@@ -54,13 +54,15 @@ typedef struct cipher_opt_s {
     size_t keylen;
     uint32_t iter;
     char pass[PW_MAX_PASSLEN];
+    char *passf;
     char *key;
     char *input;
     char *output;
     struct {
         int algo;
         int mode;
-        int pass;
+        int passw;
+        int passf;
         int key;
         int keylen;
         int iter;

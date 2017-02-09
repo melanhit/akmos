@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: akmos
 .\"    Author: Andrew Romanenko <melanhit@gmail.com>
-.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
-.\"      Date: November, 2016
+.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
+.\"      Date: February, 2017
 .\"    Manual: AKMOS CLI REFERENCE
-.\"    Source: akmos 0.8
+.\"    Source: akmos 0.6
 .\"  Language: English
 .\"
-.TH "AKMOS" "1" "November, 2016" "akmos 0.6" "AKMOS CLI REFERENCE"
+.TH "AKMOS" "1" "February, 2017" "akmos 0.6" "AKMOS CLI REFERENCE"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -57,12 +57,12 @@ compute message authentication code
 .PP
 \fBhelp\fR
 .RS 4
-print short help
+Print a short help
 .RE
 .SH "SYMMETRIC CIPHERING"
 .SS ""
 .HP \w'\fBakmos\ enc|dec\fR\ 'u
-\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-i\ \fIiter\fR] [\-y] [\-h] {input} {output}
+\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-P\ \fIpassfile\fR] [\-i\ \fIiter\fR] [\-y] [\-h] {input} {output}
 .SS "Options"
 .PP
 .PP
@@ -104,6 +104,11 @@ NOTE: size of keyfile is limited by
 Use a passphrase as a component of the keyfile
 .RE
 .PP
+\-P\ passfile
+.RS 4
+Read passphrase from a file
+.RE
+.PP
 \-l\ keylen
 .RS 4
 Key length (in bits) to use with the given crypto algorithm\&. By default is
@@ -124,7 +129,7 @@ Overwrite output file without promt
 .PP
 \-h
 .RS 4
-Print short help
+Print a short help
 .RE
 .SS "Algorithms"
 .PP
@@ -239,7 +244,8 @@ Digest algorithm to use\&. By default is
 .PP
 \-n\ threads
 .RS 4
-Number of the threads to process multiple inputs\&. By default is \fB2\fR
+Number of the threads to process multiple inputs\&. By default is
+\fB2\fR
 .RE
 .PP
 \-b
@@ -249,7 +255,7 @@ Output result in binary format\&. By default use hexadecimal
 .PP
 \-h
 .RS 4
-Print short help
+Print a short help
 .RE
 .SS "Algorithms"
 .PP
@@ -258,7 +264,7 @@ Supported digest algorithms:
 .SH "MESSAGE AUTHENTICATION CODE (MAC)"
 .SS ""
 .HP \w'\fBakmos\ mac\fR\ 'u
-\fBakmos mac\fR [\-a\ \fIalgo\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-b] [\-h] \fIinput\fR...
+\fBakmos mac\fR [\-a\ \fIalgo\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-P\ \fIpassfile\fR] [\-b] [\-h] \fIinput\fR...
 .SS "Options"
 .PP
 .PP
@@ -290,6 +296,11 @@ NOTE: size of keyfile is limited by
 Use a passphrase as a component of the keyfile
 .RE
 .PP
+\-P\ passfile
+.RS 4
+Read passphrase from a file
+.RE
+.PP
 \-l\ keylen
 .RS 4
 Key length (in bits) to use with the given algorithm\&.
@@ -306,7 +317,7 @@ Output computed MAC in raw (binary) form\&.
 .PP
 \-h
 .RS 4
-Print short help
+Print a short help
 .RE
 .SS "Modes"
 .PP

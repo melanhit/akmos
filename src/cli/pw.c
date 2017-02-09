@@ -45,6 +45,7 @@
 int pw_read_passw(char *pass)
 {
     struct termios t_old, t_new;
+    int c;
 
     if(!pass)
         return EXIT_FAILURE;
@@ -55,13 +56,62 @@ int pw_read_passw(char *pass)
     tcsetattr(STDIN_FILENO, TCSANOW, &t_new);
 
     printf("Enter password: ");
-    if(!scanf("%125[^\n]s", pass))
-       return EXIT_FAILURE;
+    scanf("%125[^\n]*c", pass);
     printf("\n");
 
     tcsetattr(STDIN_FILENO, TCSANOW, &t_old);
 
+    while ((c = getchar()) != '\n' && c != EOF);
+
     return EXIT_SUCCESS;
+}
+
+int pw_read_passf(const char *path, char *pass)
+{
+    int fd, err;
+    uint8_t buf[PW_MAX_PASSLEN+1];
+    ssize_t len, i;
+
+    err = EXIT_SUCCESS;
+
+    fd = open(path, O_RDONLY);
+    if(fd == -1) {
+        fprintf(stderr, "%s: %s\n", path, strerror(errno));
+        err = EXIT_FAILURE;
+        goto out;
+    }
+
+    len = read(fd, buf, PW_MAX_PASSLEN+1);
+    if(len == -1) {
+        err = EXIT_FAILURE;
+        fprintf(stderr, "%s: %s\n", path, strerror(errno));
+        goto out;
+    }
+
+    /* remove newline */
+    for(i = 0; i < len; i++) {
+        if(buf[i] == '\n') {
+            len = i;
+            break;
+        }
+    }
+
+    if(len == PW_MAX_PASSLEN) {
+        fprintf(stderr, "%s: maximum password length %d\n", path, PW_MAX_PASSLEN-1);
+        err = EXIT_FAILURE;
+        goto out;
+    }
+
+    memcpy(pass, buf, (size_t)len);
+    pass[len] = 0;
+
+out:
+    if(fd > 0)
+        close(fd);
+
+    akmos_memzero(buf, PW_MAX_PASSLEN);
+
+    return err;
 }
 
 int pw_read_key(const char *path, uint8_t *key, size_t keylen, uint8_t *salt, size_t saltlen)

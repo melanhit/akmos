@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<article xmlns='http://docbook.org/ns/docbook'>
+<?xml-stylesheet type="text/xsl" href="http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl"?>
+<article xmlns='http://docbook.org/ns/docbook' version='5.0'>
     <title>AKMOS CLI REFERENCE</title>
     <refentry xml:id="akmos">
         <info>
@@ -9,7 +10,7 @@
                 <email>melanhit@gmail.com</email>
                 <contrib></contrib>
             </author>
-            <date>November, 2016</date>
+            <date>February, 2017</date>
             <productname>akmos 0.6</productname>
         </info>
 
@@ -62,7 +63,7 @@
                 <varlistentry>
                     <term><command>help</command></term>
                     <listitem>
-                        <para>print short help</para>
+                        <para>Print a short help</para>
                     </listitem>
                 </varlistentry>
             </variablelist>
@@ -78,6 +79,7 @@
                     <arg>-k <replaceable>keyfile</replaceable></arg>
                     <arg>-l <replaceable>keylen</replaceable></arg>
                     <arg>-p</arg>
+                    <arg>-P <replaceable>passfile</replaceable></arg>
                     <arg>-i <replaceable>iter</replaceable></arg>
                     <arg>-y</arg>
                     <arg>-h</arg>
@@ -123,6 +125,12 @@
                             </listitem>
                         </varlistentry>
                         <varlistentry>
+                            <term><arg choice="plain">-P passfile</arg></term>
+                            <listitem>
+                                <para>Read passphrase from a file</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
                             <term><arg choice="plain">-l keylen</arg></term>
                             <listitem>
                                 <para>
@@ -149,7 +157,7 @@
                         <varlistentry>
                             <term><arg choice="plain">-h</arg></term>
                             <listitem>
-                                <para>Print short help</para>
+                                <para>Print a short help</para>
                             </listitem>
                         </varlistentry>
                     </variablelist>
@@ -384,7 +392,7 @@
                         <varlistentry>
                             <term><arg choice="plain">-h</arg></term>
                             <listitem>
-                                <para>Print short help</para>
+                                <para>Print a short help</para>
                             </listitem>
                          </varlistentry>
                     </variablelist>
@@ -425,6 +433,7 @@
                     <arg>-k <replaceable>keyfile</replaceable></arg>
                     <arg>-l <replaceable>keylen</replaceable></arg>
                     <arg>-p</arg>
+                    <arg>-P <replaceable>passfile</replaceable></arg>
                     <arg>-b</arg>
                     <arg>-h</arg>
                     <arg rep='repeat' choice='plain'><replaceable>input</replaceable></arg>
@@ -461,6 +470,12 @@
                             </listitem>
                         </varlistentry>
                         <varlistentry>
+                            <term><arg choice="plain">-P passfile</arg></term>
+                            <listitem>
+                                <para>Read passphrase from a file</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
                             <term><arg choice="plain">-l keylen</arg></term>
                             <listitem>
                                 <para>Key length (in bits) to use with the given algorithm.</para>
@@ -476,7 +491,7 @@
                         <varlistentry>
                             <term><arg choice="plain">-h</arg></term>
                             <listitem>
-                                <para>Print short help</para>
+                                <para>Print a short help</para>
                             </listitem>
                         </varlistentry>
                     </variablelist>

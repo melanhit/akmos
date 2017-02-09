@@ -35,6 +35,7 @@
 #define PW_RNDFILE      "/dev/urandom"
 
 int pw_read_passw(char *);
+int pw_read_passf(const char *, char *);
 int pw_read_key(const char *, uint8_t *, size_t, uint8_t *, size_t);
 
 int pw_rand_buf(void *, size_t);

@@ -54,13 +54,15 @@ struct opt_mac_s {
     size_t keylen;
     size_t maclen;
     char *key;
+    char *passf;
     char pass[PW_MAX_PASSLEN];
     int  count;
     char **input;
     struct {
         int algo;
         int mode;
-        int pass;
+        int passw;
+        int passf;
         int key;
         int keylen;
         int bin;
@@ -76,7 +78,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
 
     algo_str = mode_str = keylen_str = NULL;
 
-    while((c = getopt(argc, argv, "a:m:k:l:pbh")) != -1) {
+    while((c = getopt(argc, argv, "a:m:k:l:pP:bh")) != -1) {
         switch(c) {
             case 'a':
                 algo_str = optarg;
@@ -99,7 +101,12 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
                 break;
 
             case 'p':
-                opt->set.pass = c;
+                opt->set.passw = c;
+                break;
+
+            case 'P':
+                opt->passf = optarg;
+                opt->set.passf = c;
                 break;
 
             case 'b':
@@ -108,7 +115,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
 
             case 'h':
             default:
-                printf("Usage: akmos dgst [-a algo] [-m mode] [-k keyfile] [-l keylen] [-p] [-b] [-h] <input>\n");
+                printf("Usage: akmos dgst [-a algo] [-m mode] [-k keyfile] [-l keylen] [-p | -P passfile] [-b] [-h] <input>\n");
                 return EXIT_FAILURE;
         }
     }
@@ -162,15 +169,25 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
         }
     }
 
-    if(!opt->set.key && !opt->set.pass)
-        opt->set.pass = 'p';
+    if(!opt->set.key && !opt->set.passw && !opt->set.passf)
+        opt->set.passw = 'p';
 
-    if(opt->set.pass) {
+    /* read password */
+    if(opt->set.passw && opt->set.passf) {
+        fprintf(stderr, "Options -p and -P are mutually exlusive\n");
+        return EXIT_FAILURE;
+    }
+
+    if(opt->set.passw) {
         err = pw_read_passw(opt->pass);
-        if(err) {
-            fprintf(stderr, "Could not read password\n");
-            return EXIT_FAILURE;
-        }
+        if(err)
+            return err;
+    }
+
+    if(opt->set.passf) {
+        err = pw_read_passf(opt->passf, opt->pass);
+        if(err)
+            return err;
     }
 
     if(!opt->set.keylen) {
@@ -386,7 +403,7 @@ int akmos_cli_mac(int argc, char **argv)
     memset(keybuf, 0, keylen);
 
     keypass = keybuf + opt.keylen;
-    if(opt.set.pass) {
+    if(opt.set.passw || opt.set.passf) {
         err = akmos_kdf_pbkdf2(keypass, opt.keylen, NULL, 0, opt.pass, DEFAULT_ITER, AKMOS_ALGO_SHA2_256);
         if(err) {
             akmos_perror(err);
