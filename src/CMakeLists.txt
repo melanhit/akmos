@@ -1,6 +1,6 @@
-include(CMake/CheckHeader.txt)
-include(CMake/CheckSize.txt)
-include(CMake/CheckSymbol.txt)
+include(CMakeTxt/CheckHeader.txt)
+include(CMakeTxt/CheckSize.txt)
+include(CMakeTxt/CheckSymbol.txt)
 
 find_package(Threads)
 
