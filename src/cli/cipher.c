@@ -111,7 +111,7 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
 
     algo_str = mode_str = keylen_str = NULL;
 
-    while((c = getopt(argc, argv, "a:m:l:pP:k:i:hy")) != -1) {
+    while((c = getopt(argc, argv, "a:m:l:pP:k:i:yVh")) != -1) {
         switch(c) {
             case 'a':
                 algo_str = optarg;
@@ -156,9 +156,13 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
                 opt->set.over = c;
                 break;
 
+            case 'V':
+                opt->ver = c;
+                return EXIT_SUCCESS;
+
             case 'h':
             default:
-                printf("Usage: akmos enc|dec [-a algo] [-m mode] [-k key] [-l keylen] [-p | -P passfile] [-i iter] [-y] [-h] <input> <output>\n");
+                printf("Usage: akmos enc|dec [-a algo] [-m mode] [-k key] [-l keylen] [-p | -P passfile] [-i iter] [-y] [-h] [-V] <input> <output>\n");
                 return EXIT_FAILURE;
         }
     }
@@ -407,6 +411,9 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     err = parse_arg(&opt, argc, argv);
     if(err)
         return err;
+
+    if(opt.ver)
+        return akmos_cli_version();
 
     /* Setup master keys */
     keylen = opt.keylen * 2;

@@ -10,7 +10,7 @@
                 <email>melanhit@gmail.com</email>
                 <contrib></contrib>
             </author>
-            <date>February, 2017</date>
+            <date>March, 2017</date>
             <productname>akmos 0.6</productname>
         </info>
 
@@ -82,6 +82,7 @@
                     <arg>-P <replaceable>passfile</replaceable></arg>
                     <arg>-i <replaceable>iter</replaceable></arg>
                     <arg>-y</arg>
+                    <arg>-V</arg>
                     <arg>-h</arg>
                     <arg choice='req'>input</arg>
                     <arg choice='req'>output</arg>
@@ -152,6 +153,12 @@
                             <term><arg choice="plain">-y</arg></term>
                             <listitem>
                                 <para>Overwrite output file without promt</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-V</arg></term>
+                            <listitem>
+                                <para>Display akmos version</para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
@@ -362,6 +369,7 @@
                     <arg>-a <replaceable>algo</replaceable></arg>
                     <arg>-n <replaceable>threads</replaceable></arg>
                     <arg>-b</arg>
+                    <arg>-V</arg>
                     <arg>-h</arg>
                     <arg rep='repeat' choice='plain'><replaceable>input</replaceable></arg>
                 </cmdsynopsis>
@@ -387,6 +395,12 @@
                             <term><arg choice="plain">-b</arg></term>
                             <listitem>
                                 <para>Output result in binary format. By default use hexadecimal</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-V</arg></term>
+                            <listitem>
+                                <para>Display akmos version</para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
@@ -435,6 +449,7 @@
                     <arg>-p</arg>
                     <arg>-P <replaceable>passfile</replaceable></arg>
                     <arg>-b</arg>
+                    <arg>-V</arg>
                     <arg>-h</arg>
                     <arg rep='repeat' choice='plain'><replaceable>input</replaceable></arg>
                 </cmdsynopsis>
@@ -486,6 +501,12 @@
                             <term><arg choice="plain">-b</arg></term>
                             <listitem>
                                 <para>Output computed MAC in raw (binary) form.</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-V</arg></term>
+                            <listitem>
+                                <para>Display akmos version</para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>

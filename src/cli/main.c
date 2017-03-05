@@ -70,6 +70,16 @@ int akmos_cli_help() {
     return EXIT_SUCCESS;
 }
 
+int akmos_cli_version()
+{
+    const char *buf;
+
+    buf = akmos_version();
+    printf("%s\n", buf);
+
+    return EXIT_SUCCESS;
+}
+
 int main(int argc, char **argv)
 {
     int opt;

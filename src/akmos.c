@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -39,6 +39,8 @@
 #include "mac.h"
 
 #include "mask.h"
+
+static char version_str[32];
 
 akmos_mode_id akmos_str2mode(const char *name)
 {
@@ -172,6 +174,13 @@ void akmos_memzero(volatile void *p, size_t len)
 
     while(len--)
         *_p++=0;
+}
+
+const char *akmos_version()
+{
+    sprintf(version_str, "akmos %d.%d.%d", AKMOS_MAJOR_VERSION, AKMOS_MINOR_VERSION, AKMOS_PATCH_VERSION);
+
+    return version_str;
 }
 
 const akmos_cipher_xalgo_t *akmos_cipher_xalgo(akmos_algo_id algo)

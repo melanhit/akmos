@@ -67,6 +67,7 @@ struct opt_mac_s {
         int keylen;
         int bin;
     } set;
+    int ver;
 };
 
 static char *path_stdin = "-";
@@ -78,7 +79,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
 
     algo_str = mode_str = keylen_str = NULL;
 
-    while((c = getopt(argc, argv, "a:m:k:l:pP:bh")) != -1) {
+    while((c = getopt(argc, argv, "a:m:k:l:pP:bVh")) != -1) {
         switch(c) {
             case 'a':
                 algo_str = optarg;
@@ -112,6 +113,10 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
             case 'b':
                 opt->set.bin = c;
                 break;
+
+            case 'V':
+                opt->ver = c;
+                return EXIT_SUCCESS;
 
             case 'h':
             default:
@@ -395,6 +400,9 @@ int akmos_cli_mac(int argc, char **argv)
     err = parse_arg(&opt, argc, argv);
     if(err)
         return err;
+
+    if(opt.ver)
+        return akmos_cli_version();
 
     keylen = opt.keylen * 2;
     err = amalloc(&keybuf, keylen);

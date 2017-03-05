@@ -32,6 +32,7 @@
 int amalloc(uint8_t **, size_t);
 
 int akmos_cli_help(void);
+int akmos_cli_version(void);
 int akmos_cli_digest(int, char **);
 int akmos_cli_cipher(int, char **, akmos_mode_id);
 int akmos_cli_mac(int, char **);

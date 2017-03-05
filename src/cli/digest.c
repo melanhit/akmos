@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,7 @@ struct opt_digest_s {
         int algo;
         int bin;
     } set;
+    int ver;
 };
 
 struct opt_thread_s {
@@ -70,7 +71,7 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
     int c, err;
     unsigned num;
 
-    while((c = getopt(argc, argv, "a:n:bh")) != -1) {
+    while((c = getopt(argc, argv, "a:n:bVh")) != -1) {
         switch(c) {
             case 'a':
                 algo = akmos_digest_id(optarg);
@@ -99,9 +100,13 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
 
                 break;
 
+            case 'V':
+                opt->ver = c;
+                return EXIT_SUCCESS;
+
             case 'h':
             default:
-                printf("Usage: akmos dgst [-a algo] [-n thread] [-b] <input>\n");
+                printf("Usage: akmos dgst [-a algo] [-n thread] [-b] [-V] <input>\n");
                 return EXIT_FAILURE;
         }
     }
@@ -203,6 +208,9 @@ int akmos_cli_digest(int argc, char **argv)
     err = parse_arg(&opt, argc, argv);
     if(err)
         return err;
+
+    if(opt.ver)
+        return akmos_cli_version();
 
     if(!opt.thr_num)
         opt.thr_num = DEFAULT_THREADS;

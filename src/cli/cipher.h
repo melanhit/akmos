@@ -68,6 +68,7 @@ typedef struct cipher_opt_s {
         int iter;
         int over;
     } set;
+    int ver;
 } cipher_opt_t;
 
 typedef struct __attribute__((__packed__)) cipher_header_s {

@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -28,6 +28,11 @@
 
 #ifndef AKMOS_H
 #define AKMOS_H
+
+/* version */
+#define AKMOS_MAJOR_VERSION 0
+#define AKMOS_MINOR_VERSION 6
+#define AKMOS_PATCH_VERSION 0
 
 typedef enum {
     /* block cipher algo */
@@ -161,5 +166,7 @@ void   akmos_padadd(const uint8_t *, size_t, uint8_t *, size_t);
 size_t akmos_padrem(uint8_t *, size_t);
 
 int akmos_perror(int);
+
+const char *akmos_version(void);
 
 #endif  /* AKMOS_H */

@@ -2,12 +2,12 @@
 .\"     Title: akmos
 .\"    Author: Andrew Romanenko <melanhit@gmail.com>
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: February, 2017
+.\"      Date: March, 2017
 .\"    Manual: AKMOS CLI REFERENCE
 .\"    Source: akmos 0.6
 .\"  Language: English
 .\"
-.TH "AKMOS" "1" "February, 2017" "akmos 0.6" "AKMOS CLI REFERENCE"
+.TH "AKMOS" "1" "March, 2017" "akmos 0.6" "AKMOS CLI REFERENCE"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -62,7 +62,7 @@ Print a short help
 .SH "SYMMETRIC CIPHERING"
 .SS ""
 .HP \w'\fBakmos\ enc|dec\fR\ 'u
-\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-P\ \fIpassfile\fR] [\-i\ \fIiter\fR] [\-y] [\-h] {input} {output}
+\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-P\ \fIpassfile\fR] [\-i\ \fIiter\fR] [\-y] [\-V] [\-h] {input} {output}
 .SS "Options"
 .PP
 .PP
@@ -125,6 +125,11 @@ Number of iterations to use with PKCS#5v2 when processing passphrase component\&
 \-y
 .RS 4
 Overwrite output file without promt
+.RE
+.PP
+\-V
+.RS 4
+Display akmos version
 .RE
 .PP
 \-h
@@ -232,7 +237,7 @@ Supported cipher modes:
 .SH "HASHING"
 .SS ""
 .HP \w'\fBakmos\ dgst\fR\ 'u
-\fBakmos dgst\fR [\-a\ \fIalgo\fR] [\-n\ \fIthreads\fR] [\-b] [\-h] \fIinput\fR...
+\fBakmos dgst\fR [\-a\ \fIalgo\fR] [\-n\ \fIthreads\fR] [\-b] [\-V] [\-h] \fIinput\fR...
 .SS "Options"
 .PP
 .PP
@@ -253,6 +258,11 @@ Number of the threads to process multiple inputs\&. By default is
 Output result in binary format\&. By default use hexadecimal
 .RE
 .PP
+\-V
+.RS 4
+Display akmos version
+.RE
+.PP
 \-h
 .RS 4
 Print a short help
@@ -264,7 +274,7 @@ Supported digest algorithms:
 .SH "MESSAGE AUTHENTICATION CODE (MAC)"
 .SS ""
 .HP \w'\fBakmos\ mac\fR\ 'u
-\fBakmos mac\fR [\-a\ \fIalgo\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-P\ \fIpassfile\fR] [\-b] [\-h] \fIinput\fR...
+\fBakmos mac\fR [\-a\ \fIalgo\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-P\ \fIpassfile\fR] [\-b] [\-V] [\-h] \fIinput\fR...
 .SS "Options"
 .PP
 .PP
@@ -313,6 +323,11 @@ mode
 \-b
 .RS 4
 Output computed MAC in raw (binary) form\&.
+.RE
+.PP
+\-V
+.RS 4
+Display akmos version
 .RE
 .PP
 \-h
