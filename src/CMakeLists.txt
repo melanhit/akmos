@@ -32,7 +32,6 @@ set(src_lib
     algo/blowfish_sbox.c
     algo/seed.c
     algo/seed_sbox.c
-    algo/chacha.c
     kdf/kdf2.c
     mode/ecb.c
     mode/cbc.c
@@ -55,6 +54,7 @@ set(src_amd64
     algo/amd64/threefish_512.s
     algo/amd64/sha3_transform.s
     algo/amd64/salsa_sse2.s
+    algo/amd64/chacha_sse2.s
     amd64/pxor.s)
 
 set(src_orig
@@ -62,6 +62,7 @@ set(src_orig
     algo/threefish_512.c
     algo/sha3_transform.c
     algo/salsa.c
+    algo/chacha.c
     pxor.c)
 
 set(src_cli
