@@ -29,6 +29,9 @@
 #ifndef AKMOS_CLI_H
 #define AKMOS_CLI_H
 
+#define CLI_PBKDF2_ALGO     AKMOS_ALGO_SHA2_256
+#define CLI_PBKDF2_ITER     4096
+
 int amalloc(uint8_t **, size_t);
 
 int akmos_cli_help(void);

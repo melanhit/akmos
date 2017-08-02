@@ -46,7 +46,6 @@
 
 #define DEFAULT_MODE    AKMOS_MODE_HMAC
 #define DEFAULT_KEYLEN  128
-#define DEFAULT_ITER    4096
 
 struct opt_mac_s {
     akmos_algo_id algo;
@@ -412,7 +411,10 @@ int akmos_cli_mac(int argc, char **argv)
 
     keypass = keybuf + opt.keylen;
     if(opt.set.passw || opt.set.passf) {
-        err = akmos_kdf_pbkdf2(keypass, opt.keylen, NULL, 0, (const uint8_t *)opt.pass, strlen(opt.pass), DEFAULT_ITER, AKMOS_ALGO_SHA2_256);
+        err = akmos_kdf_pbkdf2(keypass, opt.keylen,
+                               NULL, 0,
+                               (const uint8_t *)opt.pass, strlen(opt.pass),
+                               CLI_PBKDF2_ITER, CLI_PBKDF2_ALGO);
         if(err) {
             akmos_perror(err);
             goto out;

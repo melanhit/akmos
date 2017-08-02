@@ -283,7 +283,7 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
             return EXIT_FAILURE;
         }
     } else {
-        opt->iter = CIPHER_DEFAULT_ITER;
+        opt->iter = CLI_PBKDF2_ITER;
     }
 
     if(opt->flag)
@@ -430,7 +430,10 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
     if(opt.set.passw || opt.set.passf) {
         tbuf = keypass;
-        err = akmos_kdf_pbkdf2(tbuf, keylen, NULL, 0, (const uint8_t *)opt.pass, strlen(opt.pass), opt.iter, CIPHER_DEFAULT_DALGO);
+        err = akmos_kdf_pbkdf2(tbuf, keylen,
+                               NULL, 0,
+                               (const uint8_t *)opt.pass, strlen(opt.pass),
+                               opt.iter, CLI_PBKDF2_ALGO);
         if(err) {
             akmos_perror(err);
             goto out;
