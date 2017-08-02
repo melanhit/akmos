@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -34,10 +34,10 @@
 #include "../error.h"
 #include "../bits.h"
 
-int akmos_kdf_kdf2(uint8_t *key, size_t keylen,
-                   const uint8_t *salt, size_t saltlen,
-                   const uint8_t *pass, size_t passlen,
-                   uint32_t iter, akmos_algo_id algo)
+int akmos_kdf_pbkdf2(uint8_t *key, size_t keylen,
+                     const uint8_t *salt, size_t saltlen,
+                     const uint8_t *pass, size_t passlen,
+                     uint32_t iter, akmos_algo_id algo)
 {
     akmos_mac_t ctx;
     uint32_t i, y;
@@ -116,12 +116,4 @@ out:
     memset(cnt, 0, sizeof(uint32_t));
 
     return err;
-}
-
-int akmos_kdf_pbkdf2(uint8_t *key, size_t keylen,
-                     const uint8_t *salt, size_t saltlen,
-                     const char *pass, uint32_t iter,
-                     akmos_algo_id algo)
-{
-    return akmos_kdf_kdf2(key, keylen, salt, saltlen, (uint8_t *)pass, strlen(pass), iter, algo);
 }

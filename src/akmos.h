@@ -153,8 +153,7 @@ int  akmos_mac_done  (akmos_mac_t, uint8_t *);
 int  akmos_mac_ex    (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t, const uint8_t *, size_t, uint8_t *);
 
 /* Key derivation function */
-int akmos_kdf_pbkdf2(uint8_t *, size_t, const uint8_t *, size_t, const char *, uint32_t, akmos_algo_id);
-int akmos_kdf_kdf2(uint8_t *, size_t, const uint8_t *, size_t, const uint8_t *, size_t, uint32_t, akmos_algo_id);
+int akmos_kdf_pbkdf2(uint8_t *, size_t, const uint8_t *, size_t, const uint8_t *, size_t, uint32_t, akmos_algo_id);
 
 /* Misc */
 akmos_mode_id akmos_str2mode(const char *);

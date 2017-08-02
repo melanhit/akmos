@@ -157,7 +157,7 @@ int pw_read_key(const char *path, uint8_t *key, size_t keylen, uint8_t *salt, si
         goto out;
     }
 
-    err = akmos_kdf_kdf2(key, keylen, salt, saltlen, kbuf, (size_t)klen, 0, PW_ALGO);
+    err = akmos_kdf_pbkdf2(key, keylen, salt, saltlen, kbuf, (size_t)klen, 0, PW_ALGO);
     if(err)
         goto out;
 
