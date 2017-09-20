@@ -1,10 +1,4 @@
-
-CHECK_INCLUDE_FILES(time.h HAVE_TIME_H)
-
-if(NOT HAVE_TIME_H)
-    unset(HAVE_TIME_H)
-    message(FATAL_ERROR "<time.h> is not found")
-endif()
+include(${PROJECT_SOURCE_DIR}/cmake/CheckHeader.txt)
 
 find_package(Threads)
 

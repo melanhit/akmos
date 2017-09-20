@@ -1,10 +1,10 @@
-include(CMakeTxt/CheckHeader.txt)
-include(CMakeTxt/CheckSize.txt)
-include(CMakeTxt/CheckSymbol.txt)
+include(${PROJECT_SOURCE_DIR}/cmake/CheckHeader.txt)
+include(${PROJECT_SOURCE_DIR}/cmake/CheckSize.txt)
+include(${PROJECT_SOURCE_DIR}/cmake/CheckSymbol.txt)
 
 find_package(Threads)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/inc/config.h)
+configure_file(${PROJECT_SOURCE_DIR}/src/config.h.in ${PROJECT_BINARY_DIR}/inc/config.h)
 
 set(src_lib
     algo/anubis.c
@@ -73,19 +73,21 @@ set(src_cli
     cli/mac.c)
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
-    set(AMD64 TRUE)
+    set(ARCH_AMD64 true)
 elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "amd64")
-    set(AMD64 TRUE)
-else()
-    set(AMD64 FALSE)
+    set(ARCH_AMD64 true)
 endif()
 
-if(AKMOS_USE_ASM AND AMD64)
-    enable_language(ASM-ATT)
-    if(CMAKE_ASM-ATT_COMPILER_WORKS)
-        list(SORT src_amd64)
-        add_library(akmos_obj_asm OBJECT ${src_amd64})
-        add_definitions(-DAKMOS_ASM -DAKMOS_ASM_SSE2)
+if(AKMOS_USE_ASM)
+    if(ARCH_AMD64)
+        enable_language(ASM-ATT)
+        if(CMAKE_ASM-ATT_COMPILER_WORKS)
+            list(SORT src_amd64)
+            add_library(akmos_obj_asm OBJECT ${src_amd64})
+            add_definitions(-DAKMOS_ASM_AMD64 -DAKMOS_ASM_SSE2)
+        endif()
+    else()
+        set(src_lib ${src_lib} ${src_orig})
     endif()
 else()
     set(src_lib ${src_lib} ${src_orig})

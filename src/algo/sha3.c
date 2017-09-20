@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
 #include "sha3.h"
 #include "sha3_transform.h"
 
-#ifdef AKMOS_ASM
+#ifdef AKMOS_ASM_AMD64
 #define sha3_transform(ctx, blk, nb)            \
 {                                               \
     akmos_sha3_transform(ctx, blk, ctx->r, nb); \

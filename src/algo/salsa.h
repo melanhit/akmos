@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -39,10 +39,10 @@
 
 typedef struct {
     uint32_t s[16];
-#ifndef AKMOS_ASM_SSE2
-} akmos_salsa_t;
-#else
+#if defined(AKMOS_ASM_AMD64) && defined(AKMOS_ASM_SSE2)
 } akmos_salsa_t __attribute__((aligned (16)));
+#else
+} akmos_salsa_t;
 #endif
 
 void akmos_salsa_setiv (akmos_salsa_t *, const uint8_t *);

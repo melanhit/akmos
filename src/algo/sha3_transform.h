@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 #ifndef AKMOS_SHA3_TRANSFORM_H
 #define AKMOS_SHA3_TRANSFORM_H
 
-#ifdef AKMOS_ASM
+#ifdef AKMOS_ASM_AMD64
  void akmos_sha3_transform(akmos_sha3_t *, const uint8_t *, size_t, size_t);
 #else
  void akmos_sha3_transform(akmos_sha3_t *, const uint8_t *, size_t);

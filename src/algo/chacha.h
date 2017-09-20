@@ -39,10 +39,10 @@
 
 typedef struct {
     uint32_t s[16];
-#ifndef AKMOS_ASM_SSE2
-} akmos_chacha_t;
-#else
+#if defined(AKMOS_ASM_AMD64) && defined(AKMOS_ASM_SSE2)
 } akmos_chacha_t __attribute__((aligned (16)));
+#else
+} akmos_chacha_t;
 #endif
 
 void akmos_chacha_setiv (akmos_chacha_t *, const uint8_t *);

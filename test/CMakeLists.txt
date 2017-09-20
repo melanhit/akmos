@@ -1,15 +1,4 @@
-CHECK_INCLUDE_FILES(libgen.h HAVE_LIBGEN_H)
-CHECK_INCLUDE_FILES(ctype.h HAVE_CTYPE_H)
-
-if(NOT HAVE_LIBGEN_H)
-    unset(HAVE_LIBGEN_H)
-    message(FATAL_ERROR "<libgen.h> is not found")
-endif()
-
-if(NOT HAVE_CTYPE_H)
-    unset(HAVE_CTYPE_H)
-    message(FATAL_ERROR "<ctype.h> is not found")
-endif()
+include(${PROJECT_SOURCE_DIR}/cmake/CheckHeader.txt)
 
 set(src
     main.c
@@ -89,6 +78,6 @@ add_custom_target(akmos_test_copy)
 foreach(item ${vector})
     add_custom_command(TARGET akmos_test_copy POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_SOURCE_DIR}/test/vector/${item} ${PROJECT_BINARY_DIR}/test)
+        ${PROJECT_SOURCE_DIR}/test/vector/${item} ${PROJECT_BINARY_DIR}/test)
 endforeach()
 add_dependencies(akmos_test akmos_test_copy)
