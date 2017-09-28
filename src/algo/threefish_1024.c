@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -39,8 +39,6 @@
 #define ROUNDS_1024 (80 / 8)
 #define SKEYS_1024  ((ROUNDS_1024 * 2) + 1)
 
-#define CONST_240   UINT64_C(0x1bd11bdaa9fc1a22)
-
 void akmos_threefish_1024_setkey(akmos_threefish_1024_t *ctx,
                                  const uint8_t *key,
                                  size_t __attribute__((unused)) len)
@@ -53,7 +51,7 @@ void akmos_threefish_1024_setkey(akmos_threefish_1024_t *ctx,
     for(i = 0; i < WORDS_1024; i++, key +=8)
         k[i] = PACK64BE(key);
 
-    k[WORDS_1024] = CONST_240;
+    k[WORDS_1024] = AKMOS_THREEFISH_C240;
     for(i = 0; i < WORDS_1024; i++)
         k[WORDS_1024] ^= k[i];
 

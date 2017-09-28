@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -47,6 +47,8 @@
 #define AKMOS_THREEFISH_WORDS_256       4
 #define AKMOS_THREEFISH_WORDS_512       8
 #define AKMOS_THREEFISH_WORDS_1024      16
+
+#define AKMOS_THREEFISH_C240            UINT64_C(0x1bd11bdaa9fc1a22)
 
 typedef struct {
     uint64_t S[AKMOS_THREEFISH_WORDS_256 * 19];
