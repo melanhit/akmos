@@ -10,7 +10,7 @@
                 <email>melanhit@gmail.com</email>
                 <contrib></contrib>
             </author>
-            <date>March, 2017</date>
+            <date>October, 2017</date>
             <productname>akmos 0.6</productname>
         </info>
 
@@ -430,6 +430,9 @@
                         <member><parameter class='option'>SHA3-256</parameter></member>
                         <member><parameter class='option'>SHA3-384</parameter></member>
                         <member><parameter class='option'>SHA3-512</parameter></member>
+                        <member><parameter class='option'>SKEIN-256</parameter></member>
+                        <member><parameter class='option'>SKEIN-512</parameter></member>
+                        <member><parameter class='option'>SKEIN-1024</parameter></member>
                         <member><parameter class='option'>TIGER</parameter></member>
                         <member><parameter class='option'>WHIRLPOOL</parameter></member>
                     </simplelist>

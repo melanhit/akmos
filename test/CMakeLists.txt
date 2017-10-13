@@ -62,6 +62,9 @@ set(vector
     digest-sha3-256.bin
     digest-sha3-384.bin
     digest-sha3-512.bin
+    digest-skein-256.bin
+    digest-skein-512.bin
+    digest-skein-1024.bin
     digest-tiger.bin
     digest-whirlpool.bin)
 

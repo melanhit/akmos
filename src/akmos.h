@@ -68,6 +68,9 @@ typedef enum {
     AKMOS_ALGO_SHA3_512         = 0x0000c000,
     AKMOS_ALGO_TIGER            = 0x0000d000,
     AKMOS_ALGO_WHIRLPOOL        = 0x0000e000,
+    AKMOS_ALGO_SKEIN_256        = 0x0000f000,
+    AKMOS_ALGO_SKEIN_512        = 0x00010000,
+    AKMOS_ALGO_SKEIN_1024       = 0x00020000,
 
     /* cipher algo flag */
     AKMOS_ALGO_FLAG_EDE         = 0x10000000,

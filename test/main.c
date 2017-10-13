@@ -93,6 +93,12 @@ int main(int __attribute__((unused)) argc, char **argv)
         return EXIT_FAILURE;
     if(test_digest(AKMOS_ALGO_SHA3_512, argv[0]))
         return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SKEIN_256, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SKEIN_512, argv[0]))
+        return EXIT_FAILURE;
+    if(test_digest(AKMOS_ALGO_SKEIN_1024, argv[0]))
+        return EXIT_FAILURE;
     if(test_digest(AKMOS_ALGO_TIGER, argv[0]))
         return EXIT_FAILURE;
     if(test_digest(AKMOS_ALGO_WHIRLPOOL, argv[0]))

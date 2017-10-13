@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,42 +26,11 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_DIGEST_H
-#define AKMOS_DIGEST_H
+#ifndef AKMOS_SKEIN_TRANSFORM_H
+#define AKMOS_SKEIN_TRANSFORM_H
 
-#include "algo/ripemd.h"
-#include "algo/sha1.h"
-#include "algo/sha2.h"
-#include "algo/sha3.h"
-#include "algo/tiger.h"
-#include "algo/whirlpool.h"
-#include "algo/skein.h"
+void akmos_skein_256_transform  (akmos_skein_t *, const uint8_t *, size_t, size_t);
+void akmos_skein_512_transform  (akmos_skein_t *, const uint8_t *, size_t, size_t);
+void akmos_skein_1024_transform (akmos_skein_t *, const uint8_t *, size_t, size_t);
 
-typedef union {
-    akmos_ripemd_t      ripemd;
-    akmos_sha1_t        sha1;
-    akmos_sha2_256_t    sha2_256;
-    akmos_sha2_512_t    sha2_512;
-    akmos_sha3_t        sha3;
-    akmos_tiger_t       tiger;
-    akmos_whirlpool_t   whirlpool;
-    akmos_skein_t       skein;
-} akmos_digest_algo_t;
-
-typedef struct akmos_digest_xalgo_s {
-    akmos_digest_xdesc_t desc;
-    void (*init)   (void *);
-    void (*update) (void *, const uint8_t *, size_t);
-    void (*done)   (void *, uint8_t *);
-} akmos_digest_xalgo_t;
-
-struct akmos_digest_s {
-    const akmos_digest_xalgo_t  *xalgo;
-    akmos_digest_algo_t         actx;
-};
-
-const akmos_digest_xalgo_t *akmos_digest_xalgo(akmos_algo_id);
-
-extern const akmos_digest_xalgo_t akmos_digest_xlist[];
-
-#endif  /* AKMOS_DIGEST_H */
+#endif  /* AKMOS_SKEIN_TRANSFORM_H */

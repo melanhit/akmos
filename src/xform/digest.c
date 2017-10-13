@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -158,6 +158,33 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
         (void *)akmos_whirlpool_init,
         (void *)akmos_whirlpool_update,
         (void *)akmos_whirlpool_done
+    },
+    {
+        {
+            AKMOS_ALGO_SKEIN_256, "Skein-256",
+            AKMOS_SKEIN_256_BLKLEN, AKMOS_SKEIN_256_DIGLEN
+        },
+        (void *)akmos_skein_256_init,
+        (void *)akmos_skein_update,
+        (void *)akmos_skein_done
+    },
+    {
+        {
+            AKMOS_ALGO_SKEIN_512, "Skein-512",
+            AKMOS_SKEIN_512_BLKLEN, AKMOS_SKEIN_512_DIGLEN
+        },
+        (void *)akmos_skein_512_init,
+        (void *)akmos_skein_update,
+        (void *)akmos_skein_done
+    },
+    {
+        {
+            AKMOS_ALGO_SKEIN_1024, "Skein-1024",
+            AKMOS_SKEIN_1024_BLKLEN, AKMOS_SKEIN_1024_DIGLEN
+        },
+        (void *)akmos_skein_1024_init,
+        (void *)akmos_skein_update,
+        (void *)akmos_skein_done
     },
     {
         { 0, NULL, 0, 0 },

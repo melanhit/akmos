@@ -32,6 +32,10 @@ set(src_lib
     algo/blowfish_sbox.c
     algo/seed.c
     algo/seed_sbox.c
+    algo/skein.c
+    algo/skein_transform_256.c
+    algo/skein_transform_512.c
+    algo/skein_transform_1024.c
     kdf/pbkdf2.c
     mode/ecb.c
     mode/cbc.c
