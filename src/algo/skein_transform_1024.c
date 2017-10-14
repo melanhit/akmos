@@ -33,6 +33,7 @@
 
 #include "skein.h"
 #include "skein_transform.h"
+#include "skein_skey.h"
 #include "threefish_mix.h"
 
 #define SKEIN_ROUNDS    AKMOS_SKEIN_1024_ROUNDS
@@ -41,7 +42,7 @@
 
 void akmos_skein_1024_transform(akmos_skein_t *ctx, const uint8_t *blk, size_t nb, size_t len)
 {
-    uint64_t k[SKEIN_WORDS+1], s[SKEIN_WORDS], w[SKEIN_WORDS], *skey;
+    uint64_t s[SKEIN_WORDS], w[SKEIN_WORDS], *k, *skey;
     size_t i, j, y;
 
     for(i = 0; i < nb; i++) {
@@ -49,20 +50,12 @@ void akmos_skein_1024_transform(akmos_skein_t *ctx, const uint8_t *blk, size_t n
         ctx->tw[0] += len;
         ctx->tw[2] = ctx->tw[0] ^ ctx->tw[1];
 
+        k = ctx->key;
         k[SKEIN_WORDS] = AKMOS_SKEIN_C240;
-        for(j = 0; j < SKEIN_WORDS; j++) {
-            k[j] = ctx->key[j];
-            k[SKEIN_WORDS] ^= ctx->key[j];
-        }
+        for(j = 0; j < SKEIN_WORDS; j++)
+            k[SKEIN_WORDS] ^= k[j];
 
-        for(j = 0, skey = ctx->skey; j < SKEIN_SKEYS; j++, skey += SKEIN_WORDS) {
-            for(y = 0; y < SKEIN_WORDS; y++)
-                skey[y] = k[(j+y)%(SKEIN_WORDS+1)];
-
-            skey[SKEIN_WORDS - 3] += ctx->tw[j%3];
-            skey[SKEIN_WORDS - 2] += ctx->tw[(j+1)%3];
-            skey[SKEIN_WORDS - 1] += j;
-        }
+        SKEIN_SKEY_1024(ctx->skey, k, ctx->tw);
 
         /* encrypt */
         for(j = 0; j < SKEIN_WORDS; j++, blk += 8)
