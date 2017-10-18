@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -41,32 +41,30 @@
 #define AKMOS_SHA2_512_DIGLEN 64
 #define AKMOS_SHA2_512_BLKLEN 128
 
-typedef struct {
+#define AKMOS_SHA2_MAX_BLKLEN AKMOS_SHA2_512_BLKLEN
+
+typedef struct akmos_sha2_s {
     uint64_t total;
     size_t   len;
-    uint8_t  block[2 * AKMOS_SHA2_256_BLKLEN];
-    uint32_t h[136];
-    uint32_t *w;
+    uint8_t  block[AKMOS_SHA2_MAX_BLKLEN];
     size_t   diglen;
-} akmos_sha2_256_t;
+    size_t   blklen;
+    union {
+        uint32_t h32[8+64];
+        uint64_t h64[8+80];
+    } h;
+    struct {
+        void(*transform) (void *, const uint8_t *, size_t);
+        void(*out)       (struct akmos_sha2_s *, uint8_t *);
+    };
+} akmos_sha2_t;
 
-typedef struct {
-    uint64_t total;
-    size_t   len;
-    uint8_t  block[2 * AKMOS_SHA2_512_BLKLEN];
-    uint64_t h[96];
-    uint64_t *w;
-    size_t   diglen;
-} akmos_sha2_512_t;
+void akmos_sha2_224_init  (akmos_sha2_t *);
+void akmos_sha2_256_init  (akmos_sha2_t *);
+void akmos_sha2_384_init  (akmos_sha2_t *);
+void akmos_sha2_512_init  (akmos_sha2_t *);
 
-void akmos_sha2_224_init  (akmos_sha2_256_t *);
-void akmos_sha2_256_init  (akmos_sha2_256_t *);
-void akmos_sha2_256_update(akmos_sha2_256_t *, const uint8_t *, size_t);
-void akmos_sha2_256_done  (akmos_sha2_256_t *, uint8_t *);
-
-void akmos_sha2_384_init  (akmos_sha2_512_t *);
-void akmos_sha2_512_init  (akmos_sha2_512_t *);
-void akmos_sha2_512_update(akmos_sha2_512_t *, const uint8_t *, size_t);
-void akmos_sha2_512_done  (akmos_sha2_512_t *, uint8_t *);
+void akmos_sha2_update    (akmos_sha2_t *, const uint8_t *, size_t);
+void akmos_sha2_done      (akmos_sha2_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_SHA2_H */

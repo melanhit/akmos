@@ -40,8 +40,7 @@
 typedef union {
     akmos_ripemd_t      ripemd;
     akmos_sha1_t        sha1;
-    akmos_sha2_256_t    sha2_256;
-    akmos_sha2_512_t    sha2_512;
+    akmos_sha2_t        sha2;
     akmos_sha3_t        sha3;
     akmos_tiger_t       tiger;
     akmos_whirlpool_t   whirlpool;

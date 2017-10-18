@@ -75,8 +75,8 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
             AKMOS_SHA2_224_BLKLEN, AKMOS_SHA2_224_DIGLEN
         },
         (void *)akmos_sha2_224_init,
-        (void *)akmos_sha2_256_update,
-        (void *)akmos_sha2_256_done
+        (void *)akmos_sha2_update,
+        (void *)akmos_sha2_done
     },
     {
         {
@@ -84,8 +84,8 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
             AKMOS_SHA2_256_BLKLEN, AKMOS_SHA2_256_DIGLEN
         },
         (void *)akmos_sha2_256_init,
-        (void *)akmos_sha2_256_update,
-        (void *)akmos_sha2_256_done
+        (void *)akmos_sha2_update,
+        (void *)akmos_sha2_done
     },
     {
         {
@@ -93,8 +93,8 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
             AKMOS_SHA2_384_BLKLEN, AKMOS_SHA2_384_DIGLEN
         },
         (void *)akmos_sha2_384_init,
-        (void *)akmos_sha2_512_update,
-        (void *)akmos_sha2_512_done
+        (void *)akmos_sha2_update,
+        (void *)akmos_sha2_done
     },
     {
         {
@@ -102,8 +102,8 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
             AKMOS_SHA2_512_BLKLEN, AKMOS_SHA2_512_DIGLEN
         },
         (void *)akmos_sha2_512_init,
-        (void *)akmos_sha2_512_update,
-        (void *)akmos_sha2_512_done
+        (void *)akmos_sha2_update,
+        (void *)akmos_sha2_done
     },
     {
         {
