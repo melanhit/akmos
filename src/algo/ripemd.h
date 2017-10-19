@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -36,11 +36,15 @@
 #define AKMOS_RIPEMD_BLKLEN     64
 
 typedef struct {
-    uint32_t state[10];
-    uint32_t x[AKMOS_RIPEMD_BLKLEN / sizeof(uint32_t)];
-    uint64_t count;
-    uint8_t  buffer[AKMOS_RIPEMD_BLKLEN];
+    uint32_t h[10+16];
+    uint64_t total;
+    uint8_t  block[AKMOS_RIPEMD_BLKLEN];
     size_t   diglen;
+    size_t   blklen;
+    size_t   len;
+    struct {
+        void(*transform) (uint32_t *, const uint8_t *, size_t);
+    };
 } akmos_ripemd_t;
 
 void akmos_ripemd_160_init(akmos_ripemd_t *);

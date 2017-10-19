@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -79,28 +79,21 @@
 
 #define X(i)    x[i]
 
-static uint8_t PADDING[64] = {
-    0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
-
-static void ripemd_160_transform(akmos_ripemd_t *ctx, const uint8_t *block, size_t nb)
+static void ripemd_160_transform(uint32_t *h, const uint8_t *block, size_t nb)
 {
-    uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, *x, *state;
+    uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, *x;
     size_t i;
 
-    state = ctx->state;
-    x = ctx->x;
+    x = h + 5;
 
     for(i = 0; i < nb; i++, block += AKMOS_RIPEMD_BLKLEN) {
         memcpy(x, block, AKMOS_RIPEMD_BLKLEN);
 
-        a = state[0];
-        b = state[1];
-        c = state[2];
-        d = state[3];
-        e = state[4];
+        a = h[0];
+        b = h[1];
+        c = h[2];
+        d = h[3];
+        e = h[4];
 
         /* Round 1 */
         R1(a, b, c, d, e, F0, K0, 11,  0);
@@ -190,11 +183,7 @@ static void ripemd_160_transform(akmos_ripemd_t *ctx, const uint8_t *block, size
 
         aa = a ; bb = b; cc = c; dd = d; ee = e;
 
-        a = state[0];
-        b = state[1];
-        c = state[2];
-        d = state[3];
-        e = state[4];
+        a = h[0]; b = h[1]; c = h[2]; d = h[3]; e = h[4];
 
         /* Parallel round 1 */
         R1(a, b, c, d, e, F4, KK0,  8,  5);
@@ -282,34 +271,27 @@ static void ripemd_160_transform(akmos_ripemd_t *ctx, const uint8_t *block, size
         R1(c, d, e, a, b, F0, KK4, 11,  9);
         R1(b, c, d, e, a, F0, KK4, 11, 11); /* #79 */
 
-        t =        state[1] + cc + d;
-        state[1] = state[2] + dd + e;
-        state[2] = state[3] + ee + a;
-        state[3] = state[4] + aa + b;
-        state[4] = state[0] + bb + c;
-        state[0] = t;
+        t    = h[1] + cc + d;
+        h[1] = h[2] + dd + e;
+        h[2] = h[3] + ee + a;
+        h[3] = h[4] + aa + b;
+        h[4] = h[0] + bb + c;
+        h[0] = t;
     }
 }
 
-static void ripemd_256_transform(akmos_ripemd_t *ctx, const uint8_t *block, size_t nb)
+static void ripemd_256_transform(uint32_t *h, const uint8_t *block, size_t nb)
 {
-    uint32_t a, b, c, d, aa, bb, cc, dd, t, *x, *state;
+    uint32_t a, b, c, d, aa, bb, cc, dd, t, *x;
     size_t i;
 
-    state = ctx->state;
-    x = ctx->x;
+    x = h + 8;
 
     for(i = 0; i < nb; i++, block += AKMOS_RIPEMD_BLKLEN) {
         memcpy(x, block, AKMOS_RIPEMD_BLKLEN);
 
-        a = state[0];
-        b = state[1];
-        c = state[2];
-        d = state[3];
-        aa = state[4];
-        bb = state[5];
-        cc = state[6];
-        dd = state[7];
+        a  = h[0]; b  = h[1]; c  = h[2]; d  = h[3];
+        aa = h[4]; bb = h[5]; cc = h[6]; dd = h[7];
 
         /* Round 1 */
         R0(a, b, c, d, F0, K0, 11,  0);
@@ -459,38 +441,23 @@ static void ripemd_256_transform(akmos_ripemd_t *ctx, const uint8_t *block, size
 
         t = d; d = dd; dd = t;
 
-        state[0] += a;
-        state[1] += b;
-        state[2] += c;
-        state[3] += d;
-        state[4] += aa;
-        state[5] += bb;
-        state[6] += cc;
-        state[7] += dd;
+        h[0] +=  a; h[1] +=  b; h[2] +=  c; h[3] +=  d;
+        h[4] += aa; h[5] += bb; h[6] += cc; h[7] += dd;
     }
 }
 
-static void ripemd_320_transform(akmos_ripemd_t *ctx, const uint8_t *block, size_t nb)
+static void ripemd_320_transform(uint32_t *h, const uint8_t *block, size_t nb)
 {
-    uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, *x, *state;
+    uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, *x;
     size_t i;
 
-    state = ctx->state;
-    x = ctx->x;
+    x = h + 10;
 
     for(i = 0; i < nb; i++, block += AKMOS_RIPEMD_BLKLEN) {
         memcpy(x, block, AKMOS_RIPEMD_BLKLEN);
 
-        a = state[0];
-        b = state[1];
-        c = state[2];
-        d = state[3];
-        e = state[4];
-        aa = state[5];
-        bb = state[6];
-        cc = state[7];
-        dd = state[8];
-        ee = state[9];
+        a  = h[0]; b  = h[1]; c  = h[2]; d  = h[3]; e  = h[4];
+        aa = h[5]; bb = h[6]; cc = h[7]; dd = h[8]; ee = h[9];
 
         /* Round 1 */
         R1(a, b, c, d, e, F0, K0, 11,  0);
@@ -677,132 +644,118 @@ static void ripemd_320_transform(akmos_ripemd_t *ctx, const uint8_t *block, size
 
         t = e; e = ee; ee = t;
 
-        state[0] += a;
-        state[1] += b;
-        state[2] += c;
-        state[3] += d;
-        state[4] += e;
-        state[5] += aa;
-        state[6] += bb;
-        state[7] += cc;
-        state[8] += dd;
-        state[9] += ee;
+        h[0] +=  a; h[1] +=  b; h[2] +=  c; h[3] +=  d; h[4] +=  e;
+        h[5] += aa; h[6] += bb; h[7] += cc; h[8] += dd; h[9] += ee;
     }
 }
 
 void akmos_ripemd_160_init(akmos_ripemd_t *ctx)
 {
-    ctx->count = 0;
-    ctx->state[0] = H0;
-    ctx->state[1] = H1;
-    ctx->state[2] = H2;
-    ctx->state[3] = H3;
-    ctx->state[4] = H4;
+    ctx->h[0] = H0;
+    ctx->h[1] = H1;
+    ctx->h[2] = H2;
+    ctx->h[3] = H3;
+    ctx->h[4] = H4;
 
+    ctx->total  = ctx->len = 0;
     ctx->diglen = AKMOS_RIPEMD_160_DIGLEN;
+
+    ctx->transform = ripemd_160_transform;
 }
 
 void akmos_ripemd_256_init(akmos_ripemd_t *ctx)
 {
-    ctx->count = 0;
-    ctx->state[0] = H0;
-    ctx->state[1] = H1;
-    ctx->state[2] = H2;
-    ctx->state[3] = H3;
-    ctx->state[4] = H5;
-    ctx->state[5] = H6;
-    ctx->state[6] = H7;
-    ctx->state[7] = H8;
+    ctx->h[0] = H0;
+    ctx->h[1] = H1;
+    ctx->h[2] = H2;
+    ctx->h[3] = H3;
+    ctx->h[4] = H5;
+    ctx->h[5] = H6;
+    ctx->h[6] = H7;
+    ctx->h[7] = H8;
 
+    ctx->total  = ctx->len = 0;
     ctx->diglen = AKMOS_RIPEMD_256_DIGLEN;
+
+    ctx->transform = ripemd_256_transform;
 }
 
 void akmos_ripemd_320_init(akmos_ripemd_t *ctx)
 {
-    ctx->count = 0;
-    ctx->state[0] = H0;
-    ctx->state[1] = H1;
-    ctx->state[2] = H2;
-    ctx->state[3] = H3;
-    ctx->state[4] = H4;
-    ctx->state[5] = H5;
-    ctx->state[6] = H6;
-    ctx->state[7] = H7;
-    ctx->state[8] = H8;
-    ctx->state[9] = H9;
+    ctx->h[0] = H0;
+    ctx->h[1] = H1;
+    ctx->h[2] = H2;
+    ctx->h[3] = H3;
+    ctx->h[4] = H4;
+    ctx->h[5] = H5;
+    ctx->h[6] = H6;
+    ctx->h[7] = H7;
+    ctx->h[8] = H8;
+    ctx->h[9] = H9;
 
+    ctx->total  = ctx->len = 0;
     ctx->diglen = AKMOS_RIPEMD_320_DIGLEN;
+
+    ctx->transform = ripemd_320_transform;
 }
 
 void akmos_ripemd_update(akmos_ripemd_t *ctx, const uint8_t *input, size_t len)
 {
-    size_t have, off, need, nb;
+    size_t nb, tmp_len;
 
-    have = ctx->count % AKMOS_RIPEMD_BLKLEN;
-    need = AKMOS_RIPEMD_BLKLEN - have;
-    ctx->count += len;
-    off = 0;
-    nb = 0;
+    tmp_len = len + ctx->len;
 
-    if(len >= need) {
-        if(have) {
-            memcpy(ctx->buffer + have, input, need);
-
-            switch(ctx->diglen) {
-                case AKMOS_RIPEMD_160_DIGLEN:
-                    ripemd_160_transform(ctx, ctx->buffer, 1);
-                    break;
-
-                case AKMOS_RIPEMD_256_DIGLEN:
-                    ripemd_256_transform(ctx, ctx->buffer, 1);
-                    break;
-
-                case AKMOS_RIPEMD_320_DIGLEN:
-                    ripemd_320_transform(ctx, ctx->buffer, 1);
-                    break;
-            }
-
-            off = need;
-            have = 0;
-        }
-        /* now the buffer is empty */
-        nb = (len - off) / AKMOS_RIPEMD_BLKLEN;
-        switch(ctx->diglen) {
-            case AKMOS_RIPEMD_160_DIGLEN:
-                ripemd_160_transform(ctx, input + off, nb);
-                break;
-
-            case AKMOS_RIPEMD_256_DIGLEN:
-                ripemd_256_transform(ctx, input + off, nb);
-                break;
-
-            case AKMOS_RIPEMD_320_DIGLEN:
-                ripemd_320_transform(ctx, input + off, nb);
-                break;
-        }
+    if(tmp_len < AKMOS_RIPEMD_BLKLEN) {
+         memcpy(ctx->block + ctx->len, input, len);
+         ctx->len += len;
+         return;
     }
 
-    off += nb * AKMOS_RIPEMD_BLKLEN;
-    if(off < len)
-        memcpy(ctx->buffer + have, input + off, len - off);
+    if(ctx->len) {
+        tmp_len = AKMOS_RIPEMD_BLKLEN - ctx->len;
+        memcpy(ctx->block + ctx->len, input, tmp_len);
+
+        ctx->transform(ctx->h, ctx->block, 1 & SIZE_T_MAX);
+
+        ctx->len = 0;
+        ctx->total++;
+
+        len -= tmp_len;
+        input += tmp_len;
+    }
+
+    nb = len / AKMOS_RIPEMD_BLKLEN;
+    if(nb)
+        ctx->transform(ctx->h, input, nb);
+
+    tmp_len = len % AKMOS_RIPEMD_BLKLEN;
+    if(tmp_len) {
+        memcpy(ctx->block, input + (len - tmp_len), tmp_len);
+        ctx->len = tmp_len;
+    }
+
+    ctx->total += nb;
 }
 
 void akmos_ripemd_done(akmos_ripemd_t *ctx, uint8_t *digest)
 {
-    uint8_t size[8];
-    size_t i, padlen;
+    uint64_t len_b;
+    size_t i;
 
-    UNPACK64BE(size, (ctx->count * 8));
+    len_b = ((ctx->total * AKMOS_RIPEMD_BLKLEN) + ctx->len) * 8;
+    ctx->block[ctx->len] = 0x80;
+    ctx->len++;
 
-    padlen = (AKMOS_RIPEMD_BLKLEN - (ctx->count % AKMOS_RIPEMD_BLKLEN)) & SIZE_T_MAX;
-    if(padlen < (1 + 8))
-        padlen += AKMOS_RIPEMD_BLKLEN;
-
-    akmos_ripemd_update(ctx, PADDING, padlen - 8);
-    akmos_ripemd_update(ctx, size, sizeof(size));
-
-    if(digest != NULL) {
-        for(i = 0; i < (ctx->diglen / 4); i++)
-            UNPACK32BE(digest + (i * 4), ctx->state[i]);
+    if(ctx->len > (AKMOS_RIPEMD_BLKLEN - sizeof(uint64_t))) {
+         memset(ctx->block + ctx->len, 0, AKMOS_RIPEMD_BLKLEN - ctx->len);
+         ctx->transform(ctx->h, ctx->block, 1);
+         ctx->len = 0;
     }
+
+    memset(ctx->block + ctx->len, 0, AKMOS_RIPEMD_BLKLEN - ctx->len);
+    UNPACK64BE(ctx->block + (AKMOS_RIPEMD_BLKLEN - sizeof(uint64_t)), len_b);
+    ctx->transform(ctx->h, ctx->block, 1);
+
+    for(i = 0; i < (ctx->diglen / 4); i++, digest += sizeof(uint32_t))
+        UNPACK32BE(digest, ctx->h[i]);
 }
