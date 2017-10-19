@@ -38,98 +38,112 @@
 #include "sha3.h"
 #include "sha3_transform.h"
 
-#ifdef AKMOS_ASM_AMD64
-#define sha3_transform(ctx, blk, nb)            \
-{                                               \
-    akmos_sha3_transform(ctx, blk, ctx->r, nb); \
+#define sha3_transform(ctx, blk, nb)                \
+{                                                   \
+    akmos_sha3_transform(ctx->S, blk, ctx->r, nb);  \
 }
-#else
-#define sha3_transform(ctx, blk, nb)            \
-{                                               \
-    akmos_sha3_transform(ctx, blk, nb);         \
+
+static void sha3_224_out(akmos_sha3_t *ctx, uint8_t *digest)
+{
+    uint32_t *p;
+    size_t i;
+
+    p = (uint32_t *)ctx->S;
+    for(i = 0; i < ctx->diglen / sizeof(uint32_t); i++, digest += sizeof(uint32_t))
+        UNPACK32BE(digest, p[i]);
 }
-#endif
+
+static void sha3_out(akmos_sha3_t *ctx, uint8_t *digest)
+{
+    size_t i;
+
+    for(i = 0; i < ctx->diglen / sizeof(uint64_t); i++, digest += sizeof(uint64_t))
+        UNPACK64BE(digest, ctx->S[i]);
+}
 
 void akmos_sha3_224_init(akmos_sha3_t *ctx)
 {
-    memset(ctx, 0, sizeof(akmos_sha3_t));
     ctx->blklen = AKMOS_SHA3_224_BLKLEN;
     ctx->diglen = AKMOS_SHA3_224_DIGLEN;
+
     ctx->r = AKMOS_SHA3_224_BLKLEN / sizeof(uint64_t);
+
+    ctx->out = sha3_224_out;
 }
 
 void akmos_sha3_256_init(akmos_sha3_t *ctx)
 {
-    memset(ctx, 0, sizeof(akmos_sha3_t));
     ctx->blklen = AKMOS_SHA3_256_BLKLEN;
     ctx->diglen = AKMOS_SHA3_256_DIGLEN;
+
     ctx->r = AKMOS_SHA3_256_BLKLEN / sizeof(uint64_t);
+
+    ctx->out = sha3_out;
 }
 
 void akmos_sha3_384_init(akmos_sha3_t *ctx)
 {
-    memset(ctx, 0, sizeof(akmos_sha3_t));
     ctx->blklen = AKMOS_SHA3_384_BLKLEN;
     ctx->diglen = AKMOS_SHA3_384_DIGLEN;
+
     ctx->r = AKMOS_SHA3_384_BLKLEN / sizeof(uint64_t);
+
+    ctx->out = sha3_out;
 }
 
 void akmos_sha3_512_init(akmos_sha3_t *ctx)
 {
-    memset(ctx, 0, sizeof(akmos_sha3_t));
     ctx->blklen = AKMOS_SHA3_512_BLKLEN;
     ctx->diglen = AKMOS_SHA3_512_DIGLEN;
+
     ctx->r = AKMOS_SHA3_512_BLKLEN / sizeof(uint64_t);
+
+    ctx->out = sha3_out;
 }
 
 void akmos_sha3_update(akmos_sha3_t *ctx, const uint8_t *input, size_t len)
 {
-    size_t nb, new_len, rem_len, tmp_len;
-    const uint8_t *blk;
+    size_t nb, tmp_len;
 
-    tmp_len = ctx->blklen - ctx->len;
-    rem_len = len < tmp_len ? len : tmp_len;
+    tmp_len = len + ctx->len;
 
-    memcpy(&ctx->b[ctx->len], input, rem_len);
-
-    if((ctx->len + len) < ctx->blklen) {
+    if(tmp_len < ctx->blklen) {
+        memcpy(ctx->block + ctx->len, input, len);
         ctx->len += len;
         return;
     }
 
-    new_len = len - rem_len;
-    nb = new_len / ctx->blklen;
+    if(ctx->len) {
+        tmp_len = ctx->blklen - ctx->len;
+        memcpy(ctx->block + ctx->len, input, tmp_len);
 
-    blk = input + rem_len;
+        sha3_transform(ctx, ctx->block, 1 & SIZE_T_MAX);
 
-    sha3_transform(ctx, ctx->b, 1 & SIZE_T_MAX);
-    sha3_transform(ctx, blk, nb);
+        ctx->len = 0;
 
-    rem_len = new_len % ctx->blklen;
+        len -= tmp_len;
+        input += tmp_len;
+    }
 
-    memcpy(ctx->b, &blk[nb * ctx->blklen], rem_len);
-    ctx->len = rem_len;
+    nb = len / ctx->blklen;
+    if(nb)
+        sha3_transform(ctx, input, nb);
+
+    tmp_len = len % ctx->blklen;
+    if(tmp_len) {
+        memcpy(ctx->block, input + (len - tmp_len), tmp_len);
+        ctx->len = tmp_len;
+    }
 }
 
 void akmos_sha3_done(akmos_sha3_t *ctx, uint8_t *digest)
 {
-    uint32_t *p;
-    size_t i, nb, pm_len;
+    memset(ctx->block + ctx->len, 0, ctx->blklen - ctx->len);
 
-    nb = (1 + ((ctx->blklen - 1) < (ctx->len % ctx->blklen)));
-    pm_len = nb * ctx->blklen;
+    ctx->block[ctx->len] = 0x06;
+    ctx->block[ctx->blklen - 1] |= 0x80;
 
-    memset(ctx->b + ctx->len, 0, pm_len - ctx->len);
+    sha3_transform(ctx, ctx->block, 1 & SIZE_T_MAX);
 
-    ctx->b[ctx->len] = 0x06;
-    ctx->b[ctx->blklen - 1] |= 0x80;
-
-    if(nb > 0)
-        sha3_transform(ctx, ctx->b, nb);
-
-    /* because 224 not multiple 64, use 32 */
-    p = (uint32_t *)ctx->S;
-    for(i = 0; i < ctx->diglen / sizeof(uint32_t); i++)
-        UNPACK32BE(digest + (i * sizeof(uint32_t)), p[i]);
+    ctx->out(ctx, digest);
 }
-

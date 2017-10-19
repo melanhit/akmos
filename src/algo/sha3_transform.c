@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -160,26 +160,26 @@ static const uint32_t RO[25] = {
     S[0] ^= RC[y];                              \
 }
 
-void akmos_sha3_transform(akmos_sha3_t *ctx, const uint8_t *blk, size_t nb)
+void akmos_sha3_transform(uint64_t *S, const uint8_t *blk, size_t r, size_t nb)
 {
     uint64_t *B, *C, *D;
     size_t i, y;
 
-    B = ctx->B;
+    B = S + 25;
     C = B + 25;
     D = B + 30;
 
     for(i = 0; i < nb; i++) {
-        for(y = 0; y < ctx->r; y++) {
-            ctx->S[y] ^= PACK64BE(blk);
+        for(y = 0; y < r; y++) {
+            S[y] ^= PACK64BE(blk);
             blk += sizeof(uint64_t);
         }
 
         for(y = 0; y < AKMOS_SHA3_ROUNDS; y++) {
-            f_theta(ctx->S);
-            f_rho_pi(ctx->S);
-            f_chi(ctx->S);
-            f_iota(ctx->S, y);
+            f_theta(S);
+            f_rho_pi(S);
+            f_chi(S);
+            f_iota(S, y);
         }
     }
 }

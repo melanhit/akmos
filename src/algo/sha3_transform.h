@@ -29,10 +29,6 @@
 #ifndef AKMOS_SHA3_TRANSFORM_H
 #define AKMOS_SHA3_TRANSFORM_H
 
-#ifdef AKMOS_ASM_AMD64
- void akmos_sha3_transform(akmos_sha3_t *, const uint8_t *, size_t, size_t);
-#else
- void akmos_sha3_transform(akmos_sha3_t *, const uint8_t *, size_t);
-#endif /* AKMOS_ASM */
+void akmos_sha3_transform(uint64_t *, const uint8_t *, size_t, size_t);
 
 #endif  /* AKMOS_SHA3_TRANSFORM_H */

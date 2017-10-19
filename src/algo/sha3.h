@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -43,14 +43,18 @@
 
 #define AKMOS_SHA3_ROUNDS       24
 
-typedef struct {
-    uint64_t S[25];
-    uint64_t B[35];
-    uint8_t  b[AKMOS_SHA3_224_BLKLEN * 2];
+#define AKMOS_SHA3_MAX_BLKLEN   AKMOS_SHA3_224_BLKLEN
+
+typedef struct akmos_sha3_s {
+    uint64_t S[25+35];
+    uint8_t  block[AKMOS_SHA3_MAX_BLKLEN];
     size_t   r;
     size_t   blklen;
     size_t   diglen;
     size_t   len;
+    struct {
+        void(*out) (struct akmos_sha3_s *, uint8_t *);
+    };
 } __attribute__((aligned(16))) akmos_sha3_t;
 
 void akmos_sha3_224_init (akmos_sha3_t *);
