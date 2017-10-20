@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -35,10 +35,8 @@
 const uint64_t akmos_tiger_sbox[4][256];
 
 typedef struct {
-    uint64_t h[3];
-    uint64_t w[8];
-    uint8_t  t[8];
-    uint8_t  block[2 * AKMOS_TIGER_BLKLEN];
+    uint64_t h[3+8];
+    uint8_t  block[AKMOS_TIGER_BLKLEN];
     uint64_t total;
     size_t   len;
 } akmos_tiger_t;

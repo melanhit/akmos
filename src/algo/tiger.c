@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -75,21 +75,20 @@
 #define H1  UINT64_C(0xfedcba9876543210)
 #define H2  UINT64_C(0xf096a5b4c3b2e187)
 
-static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, size_t nb)
+static void tiger_transform(uint64_t *h, const uint8_t *blk, size_t nb)
 {
     uint64_t a, b, c, aa, bb, cc, *w;
-    uint8_t *t;
+    uint8_t t[8];
     size_t i;
 
-    w = ctx->w;
-    t = ctx->t;
+    w = h + 3;
 
-    a = aa = ctx->h[0];
-    b = bb = ctx->h[1];
-    c = cc = ctx->h[2];
+    a = aa = h[0];
+    b = bb = h[1];
+    c = cc = h[2];
 
-    for(i = 0; i < nb; i++, block += AKMOS_TIGER_BLKLEN) {
-        memcpy(w, block, AKMOS_TIGER_BLKLEN);
+    for(i = 0; i < nb; i++, blk += AKMOS_TIGER_BLKLEN) {
+        memcpy(w, blk, AKMOS_TIGER_BLKLEN);
 
         aa = a; bb = b; cc = c;
 
@@ -124,14 +123,10 @@ static void tiger_transform(akmos_tiger_t *ctx, const uint8_t *block, size_t nb)
         tiger_round(b, c, a, w[6], 9);
         tiger_round(c, a, b, w[7], 9);
 
-        a ^= aa;
-        b -= bb;
-        c += cc;
+        a ^= aa; b -= bb; c += cc;
     }
 
-    ctx->h[0] = a;
-    ctx->h[1] = b;
-    ctx->h[2] = c;
+    h[0] = a; h[1] = b; h[2] = c;
 }
 
 void akmos_tiger_init(akmos_tiger_t *ctx)
@@ -139,57 +134,67 @@ void akmos_tiger_init(akmos_tiger_t *ctx)
     ctx->h[0] = H0;
     ctx->h[1] = H1;
     ctx->h[2] = H2;
+
+    ctx->total = ctx->len = 0;
 }
 
 void akmos_tiger_update(akmos_tiger_t *ctx, const uint8_t *input, size_t len)
 {
-    size_t nb, new_len, rem_len, tmp_len;
-    const uint8_t *sfi;
+    size_t nb, tmp_len;
 
-    tmp_len = AKMOS_TIGER_BLKLEN - ctx->len;
-    rem_len = len < tmp_len ? len : tmp_len;
+    tmp_len = len + ctx->len;
 
-    memcpy(ctx->block + ctx->len, input, rem_len);
-
-    if((ctx->len + len) < AKMOS_TIGER_BLKLEN) {
+    if(tmp_len < AKMOS_TIGER_BLKLEN) {
+        memcpy(ctx->block + ctx->len, input, len);
         ctx->len += len;
         return;
     }
-    new_len = len - rem_len;
-    nb = new_len / AKMOS_TIGER_BLKLEN;
 
-    sfi = input + rem_len;
+    if(ctx->len) {
+        tmp_len = AKMOS_TIGER_BLKLEN - ctx->len;
+        memcpy(ctx->block + ctx->len, input, tmp_len);
 
-    tiger_transform(ctx, ctx->block, 1 & SIZE_T_MAX);
-    tiger_transform(ctx, sfi, nb);
+        tiger_transform(ctx->h, ctx->block, 1 & SIZE_T_MAX);
 
-    rem_len = new_len % AKMOS_TIGER_BLKLEN;
+        ctx->len = 0;
+        ctx->total++;
 
-    if(rem_len > 0)
-        memcpy(ctx->block, sfi + (nb * 64), rem_len);
+        len -= tmp_len;
+        input += tmp_len;
+    }
 
-    ctx->len = rem_len;
-    ctx->total += (nb + 1);
+    nb = len / AKMOS_TIGER_BLKLEN;
+    if(nb)
+        tiger_transform(ctx->h, input, nb);
+
+    tmp_len = len % AKMOS_TIGER_BLKLEN;
+    if(tmp_len) {
+        memcpy(ctx->block, input + (len - tmp_len), tmp_len);
+        ctx->len = tmp_len;
+    }
+
+    ctx->total += nb;
 }
 
 void akmos_tiger_done(akmos_tiger_t *ctx, uint8_t *digest)
 {
-    size_t nb, pm_len;
-    uint64_t len_bit;
+    uint64_t len_b;
+    size_t i;
 
-    nb = (1 + ((AKMOS_TIGER_BLKLEN - 9) < (ctx->len % AKMOS_TIGER_BLKLEN)));
-
-    len_bit = ((ctx->total * 64) + ctx->len) * 8;
-    pm_len = nb * 64;
-
-    memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
+    len_b = ((ctx->total * AKMOS_TIGER_BLKLEN) + ctx->len) * 8;
     ctx->block[ctx->len] = 0x01;
+    ctx->len++;
 
-    UNPACK64BE(ctx->block + (pm_len - 8), len_bit);
+    if(ctx->len > (AKMOS_TIGER_BLKLEN - sizeof(uint64_t))) {
+        memset(ctx->block + ctx->len, 0, AKMOS_TIGER_BLKLEN - ctx->len);
+        tiger_transform(ctx->h, ctx->block, 1);
+        ctx->len = 0;
+    }
 
-    tiger_transform(ctx, ctx->block, nb);
+    memset(ctx->block + ctx->len, 0, AKMOS_TIGER_BLKLEN - ctx->len);
+    UNPACK64BE(ctx->block + (AKMOS_TIGER_BLKLEN - sizeof(uint64_t)), len_b);
+    tiger_transform(ctx->h, ctx->block, 1);
 
-    UNPACK64LE(digest     , ctx->h[0]);
-    UNPACK64LE(digest +  8, ctx->h[1]);
-    UNPACK64LE(digest + 16, ctx->h[2]);
+    for(i = 0; i < AKMOS_TIGER_DIGLEN / (sizeof(uint64_t)); i++, digest += sizeof(uint64_t))
+        UNPACK64BE(digest, ctx->h[i]);
 }
