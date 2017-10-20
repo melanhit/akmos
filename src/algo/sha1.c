@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -63,29 +63,26 @@
 #define H3  0x10325476
 #define H4  0xc3d2e1f0
 
-static void sha1_transform(akmos_sha1_t *ctx, const uint8_t *block, size_t nb)
+static void sha1_transform(uint32_t *h, const uint8_t *blk, size_t nb)
 {
-    uint32_t A, B, C, D, E, i;
-    uint32_t *w;
-    const uint8_t *sub;
+    uint32_t A, B, C, D, E, *w;
+    size_t i;
 
-    w = ctx->w;
+    w = h + 5;
 
-    for(i = 0; i < nb; i++) {
-        A = ctx->h[0]; B = ctx->h[1];
-        C = ctx->h[2]; D = ctx->h[3];
-        E = ctx->h[4];
+    for(i = 0; i < nb; i++, blk += AKMOS_SHA1_BLKLEN) {
+        A = h[0]; B = h[1];
+        C = h[2]; D = h[3];
+        E = h[4];
 
-        sub = block + (i * 64);
-
-        w[ 0] = PACK32LE(sub     ); w[ 1] = PACK32LE(sub +  4);
-        w[ 2] = PACK32LE(sub +  8); w[ 3] = PACK32LE(sub + 12);
-        w[ 4] = PACK32LE(sub + 16); w[ 5] = PACK32LE(sub + 20);
-        w[ 6] = PACK32LE(sub + 24); w[ 7] = PACK32LE(sub + 28);
-        w[ 8] = PACK32LE(sub + 32); w[ 9] = PACK32LE(sub + 36);
-        w[10] = PACK32LE(sub + 40); w[11] = PACK32LE(sub + 44);
-        w[12] = PACK32LE(sub + 48); w[13] = PACK32LE(sub + 52);
-        w[14] = PACK32LE(sub + 56); w[15] = PACK32LE(sub + 60);
+        w[ 0] = PACK32LE(blk     ); w[ 1] = PACK32LE(blk +  4);
+        w[ 2] = PACK32LE(blk +  8); w[ 3] = PACK32LE(blk + 12);
+        w[ 4] = PACK32LE(blk + 16); w[ 5] = PACK32LE(blk + 20);
+        w[ 6] = PACK32LE(blk + 24); w[ 7] = PACK32LE(blk + 28);
+        w[ 8] = PACK32LE(blk + 32); w[ 9] = PACK32LE(blk + 36);
+        w[10] = PACK32LE(blk + 40); w[11] = PACK32LE(blk + 44);
+        w[12] = PACK32LE(blk + 48); w[13] = PACK32LE(blk + 52);
+        w[14] = PACK32LE(blk + 56); w[15] = PACK32LE(blk + 60);
 
         R(A, B, C, D, E, F0, K0, w[ 0]);
         R(E, A, B, C, D, F0, K0, w[ 1]);
@@ -171,11 +168,9 @@ static void sha1_transform(akmos_sha1_t *ctx, const uint8_t *block, size_t nb)
         R(C, D, E, A, B, F3, K3, E(w, 78));
         R(B, C, D, E, A, F3, K3, E(w, 79));
 
-        ctx->h[0] += A;
-        ctx->h[1] += B;
-        ctx->h[2] += C;
-        ctx->h[3] += D;
-        ctx->h[4] += E;
+        h[0] += A; h[1] += B;
+        h[2] += C; h[3] += D;
+        h[4] += E;
     }
 }
 
@@ -192,56 +187,61 @@ void akmos_sha1_init(akmos_sha1_t *ctx)
 
 void akmos_sha1_update(akmos_sha1_t *ctx, const uint8_t *input, size_t len)
 {
-    size_t nb, new_len, rem_len, tmp_len;
-    const uint8_t *sfi;
+    size_t nb, tmp_len;
 
-    tmp_len = AKMOS_SHA1_BLKLEN - ctx->len;
-    rem_len = len < tmp_len ? len : tmp_len;
+    tmp_len = len + ctx->len;
 
-    memcpy(ctx->block + ctx->len, input, rem_len);
-
-    if((ctx->len + len) < AKMOS_SHA1_BLKLEN) {
+    if(tmp_len < AKMOS_SHA1_BLKLEN) {
+        memcpy(ctx->block + ctx->len, input, len);
         ctx->len += len;
         return;
     }
 
-    new_len = len - rem_len;
-    nb = new_len / AKMOS_SHA1_BLKLEN;
+    if(ctx->len) {
+        tmp_len = AKMOS_SHA1_BLKLEN - ctx->len;
+        memcpy(ctx->block + ctx->len, input, tmp_len);
 
-    sfi = input + rem_len;
+        sha1_transform(ctx->h, ctx->block, 1 & SIZE_T_MAX);
 
-    sha1_transform(ctx, ctx->block, 1 & SIZE_T_MAX);
-    sha1_transform(ctx, sfi, nb);
+        ctx->len = 0;
+        ctx->total++;
 
-    rem_len = new_len % AKMOS_SHA1_BLKLEN;
+        len -= tmp_len;
+        input += tmp_len;
+    }
 
-    if(rem_len > 0)
-        memcpy(ctx->block, sfi + (nb * 64), rem_len);
+    nb = len / AKMOS_SHA1_BLKLEN;
+    if(nb)
+        sha1_transform(ctx->h, input, nb);
 
-    ctx->len = rem_len;
-    ctx->total += (nb + 1);
+    tmp_len = len % AKMOS_SHA1_BLKLEN;
+    if(tmp_len) {
+        memcpy(ctx->block, input + (len - tmp_len), tmp_len);
+        ctx->len = tmp_len;
+    }
+
+    ctx->total += nb;
 }
 
 void akmos_sha1_done(akmos_sha1_t *ctx, uint8_t *digest)
 {
-    size_t nb, pm_len;
-    uint64_t len_bit;
+    uint64_t len_b;
+    size_t i;
 
-    nb = (1 + ((AKMOS_SHA1_BLKLEN - 9) < (ctx->len % AKMOS_SHA1_BLKLEN)));
-
-    len_bit = ((ctx->total * 64) + ctx->len) * 8;
-    pm_len = nb * 64;
-
-    memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
+    len_b = ((ctx->total * AKMOS_SHA1_BLKLEN) + ctx->len) * 8;
     ctx->block[ctx->len] = 0x80;
+    ctx->len++;
 
-    UNPACK64LE(ctx->block + (pm_len - 8), len_bit);
+    if(ctx->len > (AKMOS_SHA1_BLKLEN - sizeof(uint64_t))) {
+        memset(ctx->block + ctx->len, 0, AKMOS_SHA1_BLKLEN - ctx->len);
+        sha1_transform(ctx->h, ctx->block, 1);
+        ctx->len = 0;
+    }
 
-    sha1_transform(ctx, ctx->block, nb);
+    memset(ctx->block + ctx->len, 0, AKMOS_SHA1_BLKLEN - ctx->len);
+    UNPACK64LE(ctx->block + (AKMOS_SHA1_BLKLEN - sizeof(uint64_t)), len_b);
+    sha1_transform(ctx->h, ctx->block, 1);
 
-    UNPACK32LE(digest     , ctx->h[0]);
-    UNPACK32LE(digest +  4, ctx->h[1]);
-    UNPACK32LE(digest +  8, ctx->h[2]);
-    UNPACK32LE(digest + 12, ctx->h[3]);
-    UNPACK32LE(digest + 16, ctx->h[4]);
+    for(i = 0; i < AKMOS_SHA1_DIGLEN / (sizeof(uint32_t)); i++, digest += sizeof(uint32_t))
+        UNPACK32LE(digest, ctx->h[i]);
 }

@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -33,11 +33,10 @@
 #define AKMOS_SHA1_BLKLEN   64
 
 typedef struct {
-    uint32_t h[AKMOS_SHA1_DIGLEN / 4];
-    uint32_t w[AKMOS_SHA1_BLKLEN / 4];
+    uint32_t h[5+16];
     size_t   len;
     uint64_t total;
-    uint8_t block[2 * AKMOS_SHA1_BLKLEN];
+    uint8_t  block[AKMOS_SHA1_BLKLEN];
 } akmos_sha1_t;
 
 void akmos_sha1_init  (akmos_sha1_t *);
