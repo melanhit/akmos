@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -54,25 +54,20 @@ static const uint64_t RC[10] = {
     UINT64_C(0xfbee7c66dd17479e), UINT64_C(0xca2dbf07ad5a8333)
 };
 
-static void whirlpool_transform(akmos_whirlpool_t *ctx, const uint8_t *block, size_t nb)
+static void whirlpool_transform(uint64_t *h, const uint8_t *blk, size_t nb)
 {
-    uint64_t *w, *s, *k, *h;
-    const uint8_t *sub;
+    uint64_t *w, *s, *k;
     size_t i, j;
 
-    w = ctx->w;
+    w = h + 8;
     s = w + 8;
     k = w + 16;
 
-    h = ctx->h;
-
-    for(i = 0; i < nb; i++) {
-        sub = block + (i * 64);
-
-        w[0] = PACK64LE(sub     ); w[1] = PACK64LE(sub +  8);
-        w[2] = PACK64LE(sub + 16); w[3] = PACK64LE(sub + 24);
-        w[4] = PACK64LE(sub + 32); w[5] = PACK64LE(sub + 40);
-        w[6] = PACK64LE(sub + 48); w[7] = PACK64LE(sub + 56);
+    for(i = 0; i < nb; i++, blk += AKMOS_WHIRLPOOL_BLKLEN) {
+        w[0] = PACK64LE(blk     ); w[1] = PACK64LE(blk +  8);
+        w[2] = PACK64LE(blk + 16); w[3] = PACK64LE(blk + 24);
+        w[4] = PACK64LE(blk + 32); w[5] = PACK64LE(blk + 40);
+        w[6] = PACK64LE(blk + 48); w[7] = PACK64LE(blk + 56);
 
         k[0] = h[0]; k[1] = h[1];
         k[2] = h[2]; k[3] = h[3];
@@ -189,64 +184,66 @@ void akmos_whirlpool_init(akmos_whirlpool_t *ctx)
     ctx->h[0] = ctx->h[1] = ctx->h[2] = ctx->h[3] = 0;
     ctx->h[4] = ctx->h[5] = ctx->h[6] = ctx->h[7] = 0;
 
-    ctx->len=0;
+    ctx->len = ctx->total = 0;
 }
 
 void akmos_whirlpool_update(akmos_whirlpool_t *ctx, const uint8_t *input, size_t len)
 {
-    size_t nb, new_len, rem_len, tmp_len;
-    const uint8_t *sfi;
+    size_t nb, tmp_len;
 
-    tmp_len = AKMOS_WHIRLPOOL_BLKLEN - ctx->len;
-    rem_len = len < tmp_len ? len : tmp_len;
+    tmp_len = len + ctx->len;
 
-    memcpy(ctx->block + ctx->len, input, rem_len);
-
-    if((ctx->len + len) < AKMOS_WHIRLPOOL_BLKLEN) {
+    if(tmp_len < AKMOS_WHIRLPOOL_BLKLEN) {
+        memcpy(ctx->block + ctx->len, input, len);
         ctx->len += len;
         return;
     }
-    new_len = len - rem_len;
-    nb = new_len / AKMOS_WHIRLPOOL_BLKLEN;
 
-    sfi = input + rem_len;
+    if(ctx->len) {
+        tmp_len = AKMOS_WHIRLPOOL_BLKLEN - ctx->len;
+        memcpy(ctx->block + ctx->len, input, tmp_len);
 
-    whirlpool_transform(ctx, ctx->block, 1 & SIZE_T_MAX);
-    whirlpool_transform(ctx, sfi, nb);
+        whirlpool_transform(ctx->h, ctx->block, 1 & SIZE_T_MAX);
 
-    rem_len = new_len % AKMOS_WHIRLPOOL_BLKLEN;
+        ctx->len = 0;
+        ctx->total++;
 
-    if(rem_len > 0)
-        memcpy(ctx->block, sfi + (nb * 64), rem_len);
+        len -= tmp_len;
+        input += tmp_len;
+    }
 
-    ctx->len = rem_len;
-    ctx->total += (nb + 1);
+    nb = len / AKMOS_WHIRLPOOL_BLKLEN;
+    if(nb)
+        whirlpool_transform(ctx->h, input, nb);
+
+    tmp_len = len % AKMOS_WHIRLPOOL_BLKLEN;
+    if(tmp_len) {
+        memcpy(ctx->block, input + (len - tmp_len), tmp_len);
+        ctx->len = tmp_len;
+    }
+
+    ctx->total += nb;
 }
 
 void akmos_whirlpool_done(akmos_whirlpool_t *ctx, uint8_t *digest)
 {
-    size_t nb, pm_len;
-    uint64_t len_bit;
+    uint64_t len_b;
+    size_t i;
 
-    nb = (1 + ((AKMOS_WHIRLPOOL_BLKLEN - 33) < (ctx->len % AKMOS_WHIRLPOOL_BLKLEN)));
-
-    len_bit = ((ctx->total * 64) + ctx->len) * 8;
-    pm_len = nb * 64;
-
-    memset(ctx->block + ctx->len, 0, pm_len);
+    len_b = ((ctx->total * AKMOS_WHIRLPOOL_BLKLEN) + ctx->len) * 8;
     ctx->block[ctx->len] = 0x80;
+    ctx->len++;
 
-    /* decrease original bitcount from 256 to 64 (for speed) */
-    UNPACK64LE(ctx->block + (pm_len - 8), len_bit);
+    if(ctx->len > (AKMOS_WHIRLPOOL_BLKLEN - 32)) {
+        memset(ctx->block + ctx->len, 0, AKMOS_WHIRLPOOL_BLKLEN - ctx->len);
+        whirlpool_transform(ctx->h, ctx->block, 1);
+        ctx->len = 0;
+    }
 
-    whirlpool_transform(ctx, ctx->block, nb);
+    memset(ctx->block + ctx->len, 0, AKMOS_WHIRLPOOL_BLKLEN - ctx->len);
+    UNPACK64LE(ctx->block + (AKMOS_WHIRLPOOL_BLKLEN - 8), len_b);
+    whirlpool_transform(ctx->h, ctx->block, 1);
 
-    UNPACK64LE(digest     , ctx->h[0]);
-    UNPACK64LE(digest +  8, ctx->h[1]);
-    UNPACK64LE(digest + 16, ctx->h[2]);
-    UNPACK64LE(digest + 24, ctx->h[3]);
-    UNPACK64LE(digest + 32, ctx->h[4]);
-    UNPACK64LE(digest + 40, ctx->h[5]);
-    UNPACK64LE(digest + 48, ctx->h[6]);
-    UNPACK64LE(digest + 56, ctx->h[7]);
+    for(i = 0; i < AKMOS_WHIRLPOOL_DIGLEN / (sizeof(uint64_t)); i++, digest += sizeof(uint64_t))
+        UNPACK64LE(digest, ctx->h[i]);
 }
