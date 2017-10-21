@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include <fcntl.h>
 #include <errno.h>
 
@@ -40,7 +41,7 @@ static int digest_calc(test_digest_t *dctx, akmos_algo_id algo, size_t diglen, s
 {
     uint8_t *buf, *out, *p;
     int err;
-    size_t i, len;
+    size_t i, r, len;
     akmos_digest_t ctx;
 
     buf = out = NULL;
@@ -94,6 +95,29 @@ static int digest_calc(test_digest_t *dctx, akmos_algo_id algo, size_t diglen, s
     p = buf;
     for(i = 0; i < len; i++, p++) {
         akmos_digest_update(ctx, p, 1);
+    }
+
+    akmos_digest_done(ctx, out);
+
+    if(memcmp(out, dctx->h2, diglen) != 0) {
+        *res = TEST_FAIL;
+        goto out;
+    }
+
+    err = akmos_digest_init(&ctx, algo);
+    if(err) {
+        akmos_perror(err);
+        goto out;
+    }
+
+    srand((unsigned)time(NULL));
+    for(i = 0, r = 0; i != len;) {
+        akmos_digest_update(ctx, buf + i, r);
+        i += r;
+        r = (size_t)rand() % blklen;
+
+        if((i + r) > len)
+            r = len - i;
     }
 
     akmos_digest_done(ctx, out);
