@@ -6,7 +6,7 @@ list(SORT man1_src)
 foreach(man ${man1_src})
     add_custom_command(OUTPUT ${man}
             COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${man} ${CMAKE_CURRENT_BINARY_DIR}
-            COMMAND gzip -f -c ${CMAKE_CURRENT_BINARY_DIR}/${man} > ${CMAKE_CURRENT_BINARY_DIR}/${man}.gz
+            COMMAND gzip -n -f -c ${CMAKE_CURRENT_BINARY_DIR}/${man} > ${CMAKE_CURRENT_BINARY_DIR}/${man}.gz
             MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/${man})
 endforeach()
 
