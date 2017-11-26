@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -479,28 +479,28 @@ akmos_sha3_transform:
 .data
 .align  16
 RC:
-    .quad   1
-    .quad   32898
-    .quad   9223372036854808714
-    .quad   9223372039002292224
-    .quad   32907
-    .quad   2147483649
-    .quad   9223372039002292353
-    .quad   9223372036854808585
-    .quad   138
-    .quad   136
-    .quad   2147516425
-    .quad   2147483658
-    .quad   2147516555
-    .quad   9223372036854775947
-    .quad   9223372036854808713
-    .quad   9223372036854808579
-    .quad   9223372036854808578
-    .quad   9223372036854775936
-    .quad   32778
-    .quad   9223372039002259466
-    .quad   9223372039002292353
-    .quad   9223372036854808704
-    .quad   2147483649
-    .quad   9223372039002292232
+    .quad   0x0000000000000001
+    .quad   0x0000000000008082
+    .quad   0x800000000000808a
+    .quad   0x8000000080008000
+    .quad   0x000000000000808b
+    .quad   0x0000000080000001
+    .quad   0x8000000080008081
+    .quad   0x8000000000008009
+    .quad   0x000000000000008a
+    .quad   0x0000000000000088
+    .quad   0x0000000080008009
+    .quad   0x000000008000000a
+    .quad   0x000000008000808b
+    .quad   0x800000000000008b
+    .quad   0x8000000000008089
+    .quad   0x8000000000008003
+    .quad   0x8000000000008002
+    .quad   0x8000000000000080
+    .quad   0x000000000000800a
+    .quad   0x800000008000000a
+    .quad   0x8000000080008081
+    .quad   0x8000000000008080
+    .quad   0x0000000080000001
+    .quad   0x8000000080008008
 .size   RC, 192
