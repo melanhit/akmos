@@ -1,4 +1,5 @@
 include(${PROJECT_SOURCE_DIR}/cmake/CheckHeader.txt)
+include(${PROJECT_SOURCE_DIR}/cmake/Flags.txt)
 
 find_package(Threads)
 
@@ -10,9 +11,9 @@ set(src
 list(SORT src)
 
 include_directories("${PROJECT_BINARY_DIR}/inc")
-add_definitions(-D_BSD_SOURCE -D_POSIX_C_SOURCE=199309L -D_XOPEN_SOURCE=500)
-add_definitions(-DAKMOS_BUFSZ=8192)
+
+set_source_files_properties(${src} PROPERTIES COMPILE_DEFINITIONS "${C_DEFINE}")
 
 add_executable(akmos_bench ${src})
-target_compile_options(akmos_bench PUBLIC -fPIC -ansi -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion)
+target_compile_options(akmos_bench PUBLIC ${C_FLAGS})
 target_link_libraries(akmos_bench akmos_shared ${CMAKE_THREAD_LIBS_INIT})

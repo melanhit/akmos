@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
-project(Akmos C)
+cmake_minimum_required(VERSION 3.0)
+project(Akmos C ASM)
 
 option(AKMOS_USE_ASM      "Enable assembler optimization" ON)
 option(AKMOS_ENABLE_TEST  "Enable test suite" ON)

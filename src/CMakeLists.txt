@@ -1,6 +1,7 @@
 include(${PROJECT_SOURCE_DIR}/cmake/CheckHeader.txt)
 include(${PROJECT_SOURCE_DIR}/cmake/CheckSize.txt)
 include(${PROJECT_SOURCE_DIR}/cmake/CheckSymbol.txt)
+include(${PROJECT_SOURCE_DIR}/cmake/Flags.txt)
 
 find_package(Threads)
 
@@ -84,11 +85,11 @@ endif()
 
 if(AKMOS_USE_ASM)
     if(ARCH_AMD64)
-        enable_language(ASM-ATT)
-        if(CMAKE_ASM-ATT_COMPILER_WORKS)
+        enable_language(ASM)
+        if(CMAKE_ASM_COMPILER_WORKS)
             list(SORT src_amd64)
+            set_source_files_properties(${src_amd64} PROPERTIES COMPILE_FLAGS "-x assembler-with-cpp")
             add_library(akmos_obj_asm OBJECT ${src_amd64})
-            add_definitions(-DAKMOS_ASM_AMD64 -DAKMOS_ASM_SSE2)
         endif()
     else()
         set(src_lib ${src_lib} ${src_orig})
@@ -100,12 +101,12 @@ endif()
 list(SORT src_lib)
 list(SORT src_cli)
 
-add_library(akmos_obj OBJECT ${src_lib})
-
-add_definitions(-D_BSD_SOURCE -D_POSIX_C_SOURCE=199309L -D_XOPEN_SOURCE=500)
-add_definitions(-DAKMOS_BUFSZ=8192)
 include_directories("${PROJECT_BINARY_DIR}/inc")
-target_compile_options(akmos_obj PUBLIC -fPIC -ansi -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion)
+
+set_source_files_properties(${src_lib} PROPERTIES COMPILE_DEFINITIONS "${C_DEFINE}")
+
+add_library(akmos_obj OBJECT ${src_lib})
+target_compile_options(akmos_obj PUBLIC ${C_FLAGS})
 
 if(TARGET akmos_obj_asm)
     add_library(akmos_shared SHARED $<TARGET_OBJECTS:akmos_obj> $<TARGET_OBJECTS:akmos_obj_asm>)
@@ -119,7 +120,7 @@ set_target_properties(akmos_shared PROPERTIES VERSION 0.6 SOVERSION 6 OUTPUT_NAM
 set_target_properties(akmos_static PROPERTIES OUTPUT_NAME akmos)
 
 add_executable(akmos ${src_cli})
-target_compile_options(akmos PUBLIC -fPIC -ansi -Wall -Wextra -Werror -Wmissing-prototypes -Wconversion)
+target_compile_options(akmos PUBLIC ${C_FLAGS})
 target_link_libraries(akmos akmos_shared ${CMAKE_THREAD_LIBS_INIT})
 
 set(BINDIR bin)
