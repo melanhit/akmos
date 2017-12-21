@@ -26,7 +26,6 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -495,7 +494,6 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
     /* Create and cook header */
     len = sizeof(struct cipher_header_s);
-    assert(enc == AKMOS_MODE_ENCRYPT && enc == AKMOS_MODE_DECRYPT);
     switch(enc) {
         case AKMOS_MODE_ENCRYPT:
             err = pw_rand_buf(&hd, len);
