@@ -38,6 +38,7 @@ set(src_lib
     algo/skein_transform_512.c
     algo/skein_transform_1024.c
     kdf/pbkdf2.c
+    kdf/scrypt.c
     mode/ecb.c
     mode/cbc.c
     mode/hmac.c
