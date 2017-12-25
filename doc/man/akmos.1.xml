@@ -10,8 +10,8 @@
                 <email>melanhit@gmail.com</email>
                 <contrib></contrib>
             </author>
-            <date>October, 2017</date>
-            <productname>akmos 0.6</productname>
+            <date>December, 2017</date>
+            <productname>akmos 0.7</productname>
         </info>
 
         <refmeta>
@@ -78,9 +78,7 @@
                     <arg>-m <replaceable>mode</replaceable></arg>
                     <arg>-k <replaceable>keyfile</replaceable></arg>
                     <arg>-l <replaceable>keylen</replaceable></arg>
-                    <arg>-p</arg>
-                    <arg>-P <replaceable>passfile</replaceable></arg>
-                    <arg>-i <replaceable>iter</replaceable></arg>
+                    <arg>-p | -P <replaceable>passfile</replaceable></arg>
                     <arg>-y</arg>
                     <arg>-V</arg>
                     <arg>-h</arg>
@@ -137,15 +135,6 @@
                                 <para>
                                     Key length (in bits) to use with the given crypto algorithm.
                                     By default is <constant>128</constant> bits
-                                </para>
-                            </listitem>
-                        </varlistentry>
-                        <varlistentry>
-                            <term><arg choice="plain">-i iter</arg></term>
-                            <listitem>
-                                <para>
-                                    Number of iterations to use with PKCS#5v2 when processing passphrase component.
-                                    By defualt is <constant>4096</constant>.
                                 </para>
                             </listitem>
                         </varlistentry>

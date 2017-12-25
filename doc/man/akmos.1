@@ -2,12 +2,12 @@
 .\"     Title: akmos
 .\"    Author: Andrew Romanenko <melanhit@gmail.com>
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: October, 2017
+.\"      Date: December, 2017
 .\"    Manual: AKMOS CLI REFERENCE
-.\"    Source: akmos 0.6
+.\"    Source: akmos 0.7
 .\"  Language: English
 .\"
-.TH "AKMOS" "1" "October, 2017" "akmos 0.6" "AKMOS CLI REFERENCE"
+.TH "AKMOS" "1" "December, 2017" "akmos 0.7" "AKMOS CLI REFERENCE"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -62,7 +62,7 @@ Print a short help
 .SH "SYMMETRIC CIPHERING"
 .SS ""
 .HP \w'\fBakmos\ enc|dec\fR\ 'u
-\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p] [\-P\ \fIpassfile\fR] [\-i\ \fIiter\fR] [\-y] [\-V] [\-h] {input} {output}
+\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p\ |\ \-P\ \fIpassfile\fR] [\-y] [\-V] [\-h] {input} {output}
 .SS "Options"
 .PP
 .PP
@@ -114,12 +114,6 @@ Read passphrase from a file
 Key length (in bits) to use with the given crypto algorithm\&. By default is
 \fB128\fR
 bits
-.RE
-.PP
-\-i\ iter
-.RS 4
-Number of iterations to use with PKCS#5v2 when processing passphrase component\&. By defualt is
-\fB4096\fR\&.
 .RE
 .PP
 \-y

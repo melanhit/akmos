@@ -50,7 +50,6 @@ typedef struct cipher_opt_s {
     akmos_mode_id mode;
     size_t blklen;
     size_t keylen;
-    uint32_t iter;
     char pass[PW_MAX_PASSLEN];
     char *passf;
     char *key;
@@ -63,7 +62,6 @@ typedef struct cipher_opt_s {
         int passf;
         int key;
         int keylen;
-        int iter;
         int over;
     } set;
     int ver;

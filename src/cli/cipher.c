@@ -142,16 +142,6 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
                 opt->set.key = c;
                 break;
 
-            case 'i':
-                err = sscanf(optarg, "%5u", &opt->iter);
-                if(err == EOF || !err) {
-                    fprintf(stderr, "Invalid number iterations\n");
-                    return EXIT_FAILURE;
-                }
-
-                opt->set.iter = c;
-                break;
-
             case 'y':
                 opt->set.over = c;
                 break;
@@ -162,7 +152,7 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
 
             case 'h':
             default:
-                printf("Usage: akmos enc|dec [-a algo] [-m mode] [-k key] [-l keylen] [-p | -P passfile] [-i iter] [-y] [-h] [-V] <input> <output>\n");
+                printf("Usage: akmos enc|dec [-a algo] [-m mode] [-k key] [-l keylen] [-p | -P passfile] [-y] [-h] [-V] <input> <output>\n");
                 return EXIT_FAILURE;
         }
     }
@@ -275,15 +265,6 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
         err = pw_read_passf(opt->passf, opt->pass);
         if(err)
             return err;
-    }
-
-    if(opt->set.iter && (opt->set.passw || opt->set.passf)) {
-        if(opt->iter > UINT16_MAX) {
-            fprintf(stderr, "Maximum number of iterations - %u\n", UINT32_MAX);
-            return EXIT_FAILURE;
-        }
-    } else {
-        opt->iter = CLI_PBKDF2_ITER;
     }
 
     if(opt->flag)
@@ -431,7 +412,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
     if(opt.set.passw || opt.set.passf) {
         tbuf = keypass;
         err = akmos_kdf(tbuf, keylen, NULL, 0, (const uint8_t *)opt.pass, strlen(opt.pass),
-                        CLI_KDF_ALGO, opt.iter, CLI_PBKDF2_ALGO);
+                        CLI_KDF_ALGO, CLI_PBKDF2_ITER, CLI_PBKDF2_ALGO);
         if(err) {
             akmos_perror(err);
             goto out;
