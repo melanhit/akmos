@@ -48,6 +48,10 @@ List of supported MAC modes:
  * CBC-MAC
  * HMAC
 
+List of supported Key Derivation Function:
+ * PBKDF2
+ * Scrypt
+
 === Copyright ===
 
 Akmos is free software, distributed under the BSD License.
