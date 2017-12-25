@@ -31,7 +31,7 @@
 
 /* version */
 #define AKMOS_MAJOR_VERSION 0
-#define AKMOS_MINOR_VERSION 6
+#define AKMOS_MINOR_VERSION 7
 #define AKMOS_PATCH_VERSION 0
 
 typedef enum {
