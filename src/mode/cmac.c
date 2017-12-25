@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -128,7 +128,7 @@ int akmos_cmac_setkey(akmos_cmac_t *ctx, const uint8_t *key, size_t len)
         return AKMOS_ERR_ENOMEM;
 
     memset(k0, 0, l);
-    err = akmos_cipher_ex(ctx->algo, AKMOS_MODE_ECB|AKMOS_MODE_ENCRYPT, key, len, NULL, k0, l, k0);
+    err = akmos_cipher(ctx->algo, AKMOS_MODE_ECB|AKMOS_MODE_ENCRYPT, key, len, NULL, k0, l, k0);
     if(err)
         goto out;
 
@@ -215,8 +215,8 @@ int akmos_cmac_done(akmos_cmac_t *ctx, uint8_t *mac)
     blklen = akmos_cipher_blklen(ctx->algo);
 
     if(!ctx->len && ctx->c) {
-        err = akmos_cipher_ex(ctx->algo, AKMOS_MODE_ECB|AKMOS_MODE_DECRYPT, ctx->key, ctx->klen,
-                              NULL, ctx->buf + (AKMOS_BUFSZ - blklen), blklen, ctx->buf);
+        err = akmos_cipher(ctx->algo, AKMOS_MODE_ECB|AKMOS_MODE_DECRYPT, ctx->key, ctx->klen,
+                           NULL, ctx->buf + (AKMOS_BUFSZ - blklen), blklen, ctx->buf);
         if(err)
             goto out;
 

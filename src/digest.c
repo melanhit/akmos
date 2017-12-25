@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -71,7 +71,7 @@ void akmos_digest_done(akmos_digest_t ctx, uint8_t *dgst)
     free(ctx);
 }
 
-int akmos_digest_ex(akmos_algo_id algo, const uint8_t *blk, size_t len, uint8_t *out)
+int akmos_digest(akmos_algo_id algo, const uint8_t *blk, size_t len, uint8_t *out)
 {
     akmos_digest_t ctx;
     int err;

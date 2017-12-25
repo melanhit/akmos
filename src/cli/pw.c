@@ -215,7 +215,7 @@ int pw_rand_buf(void *buf, size_t len)
             return EXIT_FAILURE;
         }
 
-        err = akmos_mac_ex(PW_ALGO, AKMOS_MODE_HMAC, key, diglen, tbuf, BUFSIZ, md);
+        err = akmos_mac(PW_ALGO, AKMOS_MODE_HMAC, key, diglen, tbuf, BUFSIZ, md);
         if(err) {
             akmos_perror(err);
             return err;

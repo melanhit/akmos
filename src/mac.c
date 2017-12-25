@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -102,10 +102,10 @@ int akmos_mac_done(akmos_mac_t ctx, uint8_t *out)
     return AKMOS_ERR_SUCCESS;
 }
 
-int akmos_mac_ex(akmos_algo_id algo, akmos_mode_id mode,
-                 const uint8_t *key, size_t keylen,
-                 const uint8_t *blk, size_t blklen,
-                 uint8_t *out)
+int akmos_mac(akmos_algo_id algo, akmos_mode_id mode,
+              const uint8_t *key, size_t keylen,
+              const uint8_t *blk, size_t blklen,
+              uint8_t *out)
 {
     akmos_mac_t ctx;
     int err;

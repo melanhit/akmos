@@ -503,7 +503,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
             if(err)
                 goto out;
 
-            err = akmos_cipher_ex(opt.algo, opt.mode|enc, keybuf, opt.keylen, NULL, buf, len, buf);
+            err = akmos_cipher(opt.algo, opt.mode|enc, keybuf, opt.keylen, NULL, buf, len, buf);
             if(err) {
                 akmos_perror(err);
                 goto out;
@@ -523,7 +523,7 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
                 goto out;
             }
 
-            err = akmos_cipher_ex(opt.algo, opt.mode|enc, keybuf, opt.keylen, NULL, buf, len, buf);
+            err = akmos_cipher(opt.algo, opt.mode|enc, keybuf, opt.keylen, NULL, buf, len, buf);
             if(err) {
                 akmos_perror(err);
                 goto out;

@@ -63,7 +63,7 @@ static int digest_calc(test_digest_t *dctx, akmos_algo_id algo, size_t diglen, s
     test_rand(buf, len);
 
     /* test empty input */
-    err = akmos_digest_ex(algo, buf, 0, out);
+    err = akmos_digest(algo, buf, 0, out);
     if(err) {
         akmos_perror(err);
         goto out;
@@ -75,7 +75,7 @@ static int digest_calc(test_digest_t *dctx, akmos_algo_id algo, size_t diglen, s
     }
 
     /* test full input (TEST_CNT * blklen) */
-    err = akmos_digest_ex(algo, buf, len, out);
+    err = akmos_digest(algo, buf, len, out);
     if(err) {
         akmos_perror(err);
         goto out;
@@ -130,7 +130,7 @@ static int digest_calc(test_digest_t *dctx, akmos_algo_id algo, size_t diglen, s
     /* test input not multiple digest block length */
     len = blklen + 1;
 
-    err = akmos_digest_ex(algo, buf, len, out);
+    err = akmos_digest(algo, buf, len, out);
     if(err) {
         akmos_perror(err);
         goto out;
@@ -143,7 +143,7 @@ static int digest_calc(test_digest_t *dctx, akmos_algo_id algo, size_t diglen, s
 
     len = blklen - 1;
 
-    err = akmos_digest_ex(algo, buf, len, out);
+    err = akmos_digest(algo, buf, len, out);
     if(err) {
         akmos_perror(err);
         goto out;

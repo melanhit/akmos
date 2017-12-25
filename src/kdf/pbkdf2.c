@@ -94,7 +94,7 @@ int akmos_pbkdf2(uint8_t *key, size_t keylen,
         memcpy(tbuf, md, mdlen);
 
         for(y = 1; y < iter; y++) {
-            err = akmos_mac_ex(algo, AKMOS_MODE_HMAC, pass, passlen, md, mdlen, md);
+            err = akmos_mac(algo, AKMOS_MODE_HMAC, pass, passlen, md, mdlen, md);
             if(err)
                 goto out;
 

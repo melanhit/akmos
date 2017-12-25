@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -137,7 +137,7 @@ int akmos_cbcmac_done(akmos_cbcmac_t *ctx, uint8_t *mac)
     akmos_cipher_crypt(ctx->actx, mac, ctx->blklen, mac);
 
     /* encrypt-last-block */
-    err = akmos_cipher_ex(ctx->algo, AKMOS_MODE_ECB|AKMOS_MODE_ENCRYPT, ctx->key, ctx->klen, NULL, mac, ctx->blklen, mac);
+    err = akmos_cipher(ctx->algo, AKMOS_MODE_ECB|AKMOS_MODE_ENCRYPT, ctx->key, ctx->klen, NULL, mac, ctx->blklen, mac);
     if(err)
         goto out;
 

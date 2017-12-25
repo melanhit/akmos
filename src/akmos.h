@@ -119,7 +119,7 @@ void akmos_cipher_setiv  (akmos_cipher_t, const uint8_t *);
 void akmos_cipher_setcnt (akmos_cipher_t, const uint8_t *);
 void akmos_cipher_crypt  (akmos_cipher_t, const uint8_t *, size_t, uint8_t *);
 void akmos_cipher_free   (akmos_cipher_t);
-int  akmos_cipher_ex     (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t,
+int  akmos_cipher        (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t,
                           const uint8_t *, const uint8_t *, size_t, uint8_t *);
 
 const char *akmos_cipher_name(akmos_algo_id);
@@ -142,7 +142,7 @@ typedef struct akmos_digest_xdesc_s {
 int  akmos_digest_init  (akmos_digest_t *, akmos_algo_id);
 void akmos_digest_update(akmos_digest_t, const uint8_t *, size_t);
 void akmos_digest_done  (akmos_digest_t, uint8_t *);
-int  akmos_digest_ex    (akmos_algo_id, const uint8_t *, size_t, uint8_t *);
+int  akmos_digest       (akmos_algo_id, const uint8_t *, size_t, uint8_t *);
 
 const char *akmos_digest_name(akmos_algo_id);
 akmos_algo_id akmos_digest_id(const char *);
@@ -158,7 +158,7 @@ int  akmos_mac_init  (akmos_mac_t *, akmos_algo_id, akmos_mode_id);
 int  akmos_mac_setkey(akmos_mac_t, const uint8_t *, size_t);
 void akmos_mac_update(akmos_mac_t, const uint8_t *, size_t);
 int  akmos_mac_done  (akmos_mac_t, uint8_t *);
-int  akmos_mac_ex    (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t, const uint8_t *, size_t, uint8_t *);
+int  akmos_mac       (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t, const uint8_t *, size_t, uint8_t *);
 
 /* Key derivation function */
 /*

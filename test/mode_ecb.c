@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -46,7 +46,7 @@ static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t
     ct = key + keylen;
 
     /* test encryption */
-    err = akmos_cipher_ex(algo, AKMOS_MODE_ECB|AKMOS_MODE_ENCRYPT, ectx->key, keylen, NULL, ectx->pt, blklen, ct);
+    err = akmos_cipher(algo, AKMOS_MODE_ECB|AKMOS_MODE_ENCRYPT, ectx->key, keylen, NULL, ectx->pt, blklen, ct);
     if(err)
         return akmos_perror(err);
 
@@ -61,7 +61,7 @@ static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t
         for(j = 0; j < keylen; j++)
             key[j] ^= ct[j % blklen];
 
-        err = akmos_cipher_ex(algo, AKMOS_MODE_ECB|AKMOS_MODE_ENCRYPT, key, keylen, NULL, ct, blklen, ct);
+        err = akmos_cipher(algo, AKMOS_MODE_ECB|AKMOS_MODE_ENCRYPT, key, keylen, NULL, ct, blklen, ct);
         if(err)
             goto out;
     }
@@ -73,7 +73,7 @@ static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t
 
     /* test decryption */
     for(i = 0; i < TEST_CNT; i++) {
-        err = akmos_cipher_ex(algo, AKMOS_MODE_ECB|AKMOS_MODE_DECRYPT, key, keylen, NULL, ct, blklen, ct);
+        err = akmos_cipher(algo, AKMOS_MODE_ECB|AKMOS_MODE_DECRYPT, key, keylen, NULL, ct, blklen, ct);
         if(err)
             goto out;
 
@@ -86,7 +86,7 @@ static int ecb_crypt(test_ecb_t *ectx, akmos_algo_id algo, size_t keylen, size_t
         return EXIT_SUCCESS;
     }
 
-    err = akmos_cipher_ex(algo, AKMOS_MODE_ECB|AKMOS_MODE_DECRYPT, key, keylen, NULL, ct, blklen, ct);
+    err = akmos_cipher(algo, AKMOS_MODE_ECB|AKMOS_MODE_DECRYPT, key, keylen, NULL, ct, blklen, ct);
     if(err)
         return akmos_perror(err);
 

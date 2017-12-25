@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -295,8 +295,8 @@ void akmos_cipher_free(akmos_cipher_t ctx)
     free(ctx);
 }
 
-int akmos_cipher_ex(akmos_algo_id algo, akmos_mode_id mode, const uint8_t *key, size_t keylen,
-                    const uint8_t *iv, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+int akmos_cipher(akmos_algo_id algo, akmos_mode_id mode, const uint8_t *key, size_t keylen,
+                 const uint8_t *iv, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     akmos_cipher_t ctx;
     int err;
