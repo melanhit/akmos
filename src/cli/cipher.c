@@ -44,6 +44,7 @@
 
 #include "../akmos.h"
 #include "../error.h"
+
 #include "cli.h"
 #include "pw.h"
 #include "cipher.h"
@@ -429,10 +430,8 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
     if(opt.set.passw || opt.set.passf) {
         tbuf = keypass;
-        err = akmos_kdf_pbkdf2(tbuf, keylen,
-                               NULL, 0,
-                               (const uint8_t *)opt.pass, strlen(opt.pass),
-                               opt.iter, CLI_PBKDF2_ALGO);
+        err = akmos_kdf(tbuf, keylen, NULL, 0, (const uint8_t *)opt.pass, strlen(opt.pass),
+                        CLI_KDF_ALGO, opt.iter, CLI_PBKDF2_ALGO);
         if(err) {
             akmos_perror(err);
             goto out;

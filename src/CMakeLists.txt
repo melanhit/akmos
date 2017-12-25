@@ -53,7 +53,8 @@ set(src_lib
     akmos.c
     cipher.c
     digest.c
-    mac.c)
+    mac.c
+    kdf.c)
 
 set(src_amd64
     algo/amd64/threefish_256.s

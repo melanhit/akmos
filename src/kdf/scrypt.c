@@ -34,6 +34,9 @@
 #include "../error.h"
 #include "../bits.h"
 
+#include "pbkdf2.h"
+#include "scrypt.h"
+
 #define SCRYPT_BLKLEN   8   /* r = 8 */
 #define SALSA_BLKLEN    16  /* via uint32_t */
 
@@ -148,10 +151,10 @@ static int scrypt_romix(uint8_t *in_blk, uint8_t *out_blk, uint32_t in_len, uint
     return AKMOS_ERR_SUCCESS;
 }
 
-int akmos_kdf_scrypt(uint8_t *key, size_t keylen,
-                     const uint8_t *salt, size_t saltlen,
-                     const uint8_t *pass, size_t passlen,
-                     uint32_t N, uint32_t p)
+int akmos_scrypt(uint8_t *key, size_t keylen,
+                 const uint8_t *salt, size_t saltlen,
+                 const uint8_t *pass, size_t passlen,
+                 uint32_t N, uint32_t p)
 {
     uint8_t *buf, *blk;
     uint32_t buflen, blklen, i;
@@ -164,7 +167,7 @@ int akmos_kdf_scrypt(uint8_t *key, size_t keylen,
     if(!buf)
         return AKMOS_ERR_ENOMEM;
 
-    err = akmos_kdf_pbkdf2(buf, buflen, salt, saltlen, pass, passlen, 1, AKMOS_ALGO_SHA2_256);
+    err = akmos_pbkdf2(buf, buflen, salt, saltlen, pass, passlen, 1, AKMOS_ALGO_SHA2_256);
     if(err)
         goto out;
 
@@ -174,7 +177,7 @@ int akmos_kdf_scrypt(uint8_t *key, size_t keylen,
             goto out;
     }
 
-    err = akmos_kdf_pbkdf2(key, keylen, buf, buflen, pass, passlen, 1, AKMOS_ALGO_SHA2_256);
+    err = akmos_pbkdf2(key, keylen, buf, buflen, pass, passlen, 1, AKMOS_ALGO_SHA2_256);
     if(err)
         goto out;
 

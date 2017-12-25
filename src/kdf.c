@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2017, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,43 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_ERROR_H
-#define AKMOS_ERROR_H
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdarg.h>
 
-#define AKMOS_ERR_SUCCESS      0
-#define AKMOS_ERR_FAILED      -1
+#include "akmos.h"
+#include "error.h"
 
-#define AKMOS_ERR_ALGOID    -100
-#define AKMOS_ERR_MODEID    -101
-#define AKMOS_ERR_FLAGID    -102
-#define AKMOS_ERR_KDFID     -102
+#include "kdf/pbkdf2.h"
+#include "kdf/scrypt.h"
 
-#define AKMOS_ERR_KEYLEN    -200
-#define AKMOS_ERR_BLKLEN    -201
+int akmos_kdf(uint8_t *key, size_t keylen,
+              const uint8_t *salt, size_t saltlen,
+              const uint8_t *pass, size_t passlen,
+              akmos_kdf_id kdf_algo, ...)
+{
+    akmos_algo_id algo;
+    va_list ap;
+    uint32_t iter, N, p;
 
-#define AKMOS_ERR_STMMODE   -300
-#define AKMOS_ERR_STMTDEA   -301
+    switch(kdf_algo) {
+        case AKMOS_KDF_PBKDF2:
+            va_start(ap, kdf_algo);
+            iter = va_arg(ap, uint32_t);
+            algo = va_arg(ap, akmos_algo_id);
+            va_end(ap);
+            return akmos_pbkdf2(key, keylen, salt, saltlen, pass, passlen, iter, algo);
 
-#define AKMOS_ERR_ENOMEM    -400
+        case AKMOS_KDF_SCRYPT:
+            va_start(ap, kdf_algo);
+            N = va_arg(ap, uint32_t);
+            p = va_arg(ap, uint32_t);
+            va_end(ap);
+            return akmos_scrypt(key, keylen, salt, saltlen, pass, passlen, N, p);
 
-#endif  /* AKMOS_ERROR_H */
+        default:
+            return AKMOS_ERR_KDFID;
+    }
+
+    return AKMOS_ERR_SUCCESS;
+}

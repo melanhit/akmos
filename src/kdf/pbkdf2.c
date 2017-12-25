@@ -34,10 +34,12 @@
 #include "../error.h"
 #include "../bits.h"
 
-int akmos_kdf_pbkdf2(uint8_t *key, size_t keylen,
-                     const uint8_t *salt, size_t saltlen,
-                     const uint8_t *pass, size_t passlen,
-                     uint32_t iter, akmos_algo_id algo)
+#include "pbkdf2.h"
+
+int akmos_pbkdf2(uint8_t *key, size_t keylen,
+                 const uint8_t *salt, size_t saltlen,
+                 const uint8_t *pass, size_t passlen,
+                 uint32_t iter, akmos_algo_id algo)
 {
     akmos_mac_t ctx;
     uint32_t i, y;

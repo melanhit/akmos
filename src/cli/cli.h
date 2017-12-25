@@ -29,6 +29,7 @@
 #ifndef AKMOS_CLI_H
 #define AKMOS_CLI_H
 
+#define CLI_KDF_ALGO        AKMOS_KDF_PBKDF2
 #define CLI_PBKDF2_ALGO     AKMOS_ALGO_SHA2_256
 #define CLI_PBKDF2_ITER     4096
 

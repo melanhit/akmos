@@ -41,6 +41,7 @@
 
 #include "../akmos.h"
 #include "../error.h"
+
 #include "cli.h"
 #include "pw.h"
 
@@ -411,10 +412,8 @@ int akmos_cli_mac(int argc, char **argv)
 
     keypass = keybuf + opt.keylen;
     if(opt.set.passw || opt.set.passf) {
-        err = akmos_kdf_pbkdf2(keypass, opt.keylen,
-                               NULL, 0,
-                               (const uint8_t *)opt.pass, strlen(opt.pass),
-                               CLI_PBKDF2_ITER, CLI_PBKDF2_ALGO);
+        err = akmos_kdf(keypass, opt.keylen, NULL, 0, (const uint8_t *)opt.pass, strlen(opt.pass),
+                        CLI_KDF_ALGO, CLI_PBKDF2_ITER, CLI_PBKDF2_ALGO);
         if(err) {
             akmos_perror(err);
             goto out;
