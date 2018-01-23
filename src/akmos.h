@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -95,11 +95,6 @@ typedef enum {
     AKMOS_MODE_DECRYPT          = 0x20000000,
 } akmos_mode_id;
 
-typedef enum {
-    AKMOS_KDF_PBKDF2            = 0x00000001,
-    AKMOS_KDF_SCRYPT            = 0x00000002
-} akmos_kdf_id;
-
 /* Cipher */
 typedef struct akmos_cipher_s *akmos_cipher_t;
 
@@ -161,12 +156,8 @@ int  akmos_mac_done  (akmos_mac_t, uint8_t *);
 int  akmos_mac       (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t, const uint8_t *, size_t, uint8_t *);
 
 /* Key derivation function */
-/*
- * params depending of the kdf algo:
- * pbkdf2 - akmos_algo_id algo, uint32_t iter
- * scrypt - uint32_t N, uint32_t p
- */
-int akmos_kdf(uint8_t *, size_t, const uint8_t *, size_t, const uint8_t *, size_t, akmos_kdf_id, ...);
+int akmos_kdf_pbkdf2(uint8_t *, size_t, const uint8_t *, size_t, const uint8_t *, size_t, akmos_algo_id, uint32_t);
+int akmos_kdf_scrypt(uint8_t *, size_t, const uint8_t *, size_t, const uint8_t *, size_t, uint32_t, uint32_t);
 
 /* Misc */
 akmos_mode_id akmos_str2mode(const char *);

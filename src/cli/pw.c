@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -158,8 +158,8 @@ int pw_read_key(const char *path, uint8_t *key, size_t keylen, uint8_t *salt, si
         goto out;
     }
 
-    err = akmos_kdf(key, keylen, salt, saltlen, kbuf, (size_t)klen,
-                    CLI_KDF_ALGO, CLI_PBKDF2_ITER, CLI_PBKDF2_ALGO);
+    err = akmos_kdf_pbkdf2(key, keylen, salt, saltlen, kbuf, (size_t)klen,
+                           CLI_PBKDF2_ALGO, CLI_PBKDF2_ITER);
     if(err)
         goto out;
 

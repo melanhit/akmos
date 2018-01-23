@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -412,8 +412,8 @@ int akmos_cli_mac(int argc, char **argv)
 
     keypass = keybuf + opt.keylen;
     if(opt.set.passw || opt.set.passf) {
-        err = akmos_kdf(keypass, opt.keylen, NULL, 0, (const uint8_t *)opt.pass, strlen(opt.pass),
-                        CLI_KDF_ALGO, CLI_PBKDF2_ITER, CLI_PBKDF2_ALGO);
+        err = akmos_kdf_pbkdf2(keypass, opt.keylen, NULL, 0, (const uint8_t *)opt.pass, strlen(opt.pass),
+                               CLI_PBKDF2_ALGO, CLI_PBKDF2_ITER);
         if(err) {
             akmos_perror(err);
             goto out;
