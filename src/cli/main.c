@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -41,6 +41,7 @@ typedef enum {
     AKMOS_CLI_CIPHER_ENC,
     AKMOS_CLI_CIPHER_DEC,
     AKMOS_CLI_MAC,
+    AKMOS_CLI_BASE64,
     AKMOS_CLI_HELP,
     AKMOS_CLI_UNKNOWN
 } akmos_cli_id;
@@ -61,10 +62,11 @@ int amalloc(uint8_t **ptr, size_t len)
 int akmos_cli_help() {
     printf("Usage: akmos <command> <options>\n"
            "Available commands:\n"
-           " dgst - make digest (hash)\n"
-           " enc  - encrypt\n"
-           " dec  - decrypt\n"
-           " mac  - compute MAC\n"
+           " dgst   - make digest (hash)\n"
+           " base64 - binary to text\n"
+           " enc    - encrypt\n"
+           " dec    - decrypt\n"
+           " mac    - compute MAC\n"
            " help - print help\n");
 
     return EXIT_SUCCESS;
@@ -95,6 +97,8 @@ int main(int argc, char **argv)
         opt = AKMOS_CLI_CIPHER_DEC;
     else if(strcmp(argv[1], "mac") == 0)
         opt = AKMOS_CLI_MAC;
+    else if(strcmp(argv[1], "base64") == 0)
+        opt = AKMOS_CLI_BASE64;
     else if(strcmp(argv[1], "help") == 0)
         opt = AKMOS_CLI_HELP;
     else
@@ -112,6 +116,9 @@ int main(int argc, char **argv)
 
         case AKMOS_CLI_MAC:
             return akmos_cli_mac(--argc, ++argv);
+
+        case AKMOS_CLI_BASE64:
+            return akmos_cli_base64(--argc, ++argv);
 
         case AKMOS_CLI_HELP:
             return akmos_cli_help();

@@ -72,6 +72,10 @@ typedef enum {
     AKMOS_ALGO_SKEIN_512        = 0x00010000,
     AKMOS_ALGO_SKEIN_1024       = 0x00020000,
 
+    /* binary to text */
+    AKMOS_ALGO_BASE64           = 0x00100000,
+    AKMOS_ALGO_BASE64URL        = 0x00200000,
+
     /* cipher algo flag */
     AKMOS_ALGO_FLAG_EDE         = 0x10000000,
     AKMOS_ALGO_FLAG_EEE         = 0x20000000
@@ -93,6 +97,8 @@ typedef enum {
     /* cipher mode flag */
     AKMOS_MODE_ENCRYPT          = 0x10000000,
     AKMOS_MODE_DECRYPT          = 0x20000000,
+    AKMOS_MODE_ENCODE           = AKMOS_MODE_ENCRYPT,
+    AKMOS_MODE_DECODE           = AKMOS_MODE_DECRYPT
 } akmos_mode_id;
 
 /* Cipher */
@@ -158,6 +164,19 @@ int  akmos_mac       (akmos_algo_id, akmos_mode_id, const uint8_t *, size_t, con
 /* Key derivation function */
 int akmos_kdf_pbkdf2(uint8_t *, size_t, const uint8_t *, size_t, const uint8_t *, size_t, akmos_algo_id, uint32_t);
 int akmos_kdf_scrypt(uint8_t *, size_t, const uint8_t *, size_t, const uint8_t *, size_t, uint32_t, uint32_t);
+
+/* Base64 binary to text */
+typedef struct akmos_base64_s *akmos_base64_t;
+
+int akmos_base64_init  (akmos_base64_t *, akmos_algo_id, akmos_mode_id);
+int akmos_base64_update(akmos_base64_t, const uint8_t *, size_t, uint8_t *, size_t *);
+int akmos_base64_done  (akmos_base64_t, uint8_t *, size_t *);
+
+int akmos_base64_encode(akmos_algo_id, const uint8_t *, size_t, uint8_t *, size_t *);
+int akmos_base64_decode(akmos_algo_id, const uint8_t *, size_t, uint8_t *, size_t *);
+
+size_t akmos_base64_enclen(size_t);
+size_t akmos_base64_declen(size_t);
 
 /* Misc */
 akmos_mode_id akmos_str2mode(const char *);

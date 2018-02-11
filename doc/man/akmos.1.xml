@@ -10,7 +10,7 @@
                 <email>melanhit@gmail.com</email>
                 <contrib></contrib>
             </author>
-            <date>December, 2017</date>
+            <date>February, 2018</date>
             <productname>akmos 0.7</productname>
         </info>
 
@@ -58,6 +58,12 @@
                     <term><command>mac</command></term>
                     <listitem>
                         <para>compute message authentication code</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><command>base64</command></term>
+                    <listitem>
+                        <para>binary to text encoding</para>
                     </listitem>
                 </varlistentry>
                 <varlistentry>
@@ -525,6 +531,53 @@
                         <term><constant>CMAC</constant>   - Cipher-based Message Authentication Code</term>
                     </varlistentry>
                 </variablelist>
+            </refsect2>
+        </refsect1>
+
+        <refsect1>
+            <title>Base64 binary to text encoding</title>
+            <refsect2>
+                <cmdsynopsis>
+                    <command>akmos base64</command>
+                    <arg>-e | -d</arg>
+                    <arg>-u</arg>
+                    <arg>-V</arg>
+                    <arg>-h</arg>
+                    <arg choice='req'>input</arg>
+                    <arg choice='req'>output</arg>
+                </cmdsynopsis>
+            </refsect2>
+
+            <refsect2>
+                <title>Options</title>
+                <para>
+                    <variablelist>
+                        <varlistentry>
+                            <term><arg choice="plain">-e | -d</arg></term>
+                            <listitem>
+                                <para>Encode or decode input data</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-u</arg></term>
+                            <listitem>
+                                <para>Use base64url (safe for url and filename)</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-V</arg></term>
+                            <listitem>
+                                <para>Display akmos version</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-h</arg></term>
+                            <listitem>
+                                <para>Print a short help</para>
+                            </listitem>
+                        </varlistentry>
+                    </variablelist>
+                </para>
             </refsect2>
         </refsect1>
 

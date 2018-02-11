@@ -2,12 +2,12 @@
 .\"     Title: akmos
 .\"    Author: Andrew Romanenko <melanhit@gmail.com>
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: December, 2017
+.\"      Date: February, 2018
 .\"    Manual: AKMOS CLI REFERENCE
 .\"    Source: akmos 0.7
 .\"  Language: English
 .\"
-.TH "AKMOS" "1" "December, 2017" "akmos 0.7" "AKMOS CLI REFERENCE"
+.TH "AKMOS" "1" "February, 2018" "akmos 0.7" "AKMOS CLI REFERENCE"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -53,6 +53,11 @@ symmetric ciphering
 \fBmac\fR
 .RS 4
 compute message authentication code
+.RE
+.PP
+\fBbase64\fR
+.RS 4
+binary to text encoding
 .RE
 .PP
 \fBhelp\fR
@@ -342,6 +347,32 @@ Supported MAC modes:
 .PP
 \fBCMAC\fR \- Cipher\-based Message Authentication Code
 .RS 4
+.RE
+.SH "BASE64 BINARY TO TEXT ENCODING"
+.SS ""
+.HP \w'\fBakmos\ base64\fR\ 'u
+\fBakmos base64\fR [\-e\ |\ \-d] [\-u] [\-V] [\-h] {input} {output}
+.SS "Options"
+.PP
+.PP
+\-e\ |\ \-d
+.RS 4
+Encode or decode input data
+.RE
+.PP
+\-u
+.RS 4
+Use base64url (safe for url and filename)
+.RE
+.PP
+\-V
+.RS 4
+Display akmos version
+.RE
+.PP
+\-h
+.RS 4
+Print a short help
 .RE
 .SH "EXIT STATUS"
 .PP

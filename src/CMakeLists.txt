@@ -53,7 +53,8 @@ set(src_lib
     akmos.c
     cipher.c
     digest.c
-    mac.c)
+    mac.c
+    base64.c)
 
 set(src_amd64
     algo/amd64/threefish_256.s
@@ -76,7 +77,8 @@ set(src_cli
     cli/cipher.c
     cli/digest.c
     cli/pw.c
-    cli/mac.c)
+    cli/mac.c
+    cli/base64.c)
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
     set(ARCH_AMD64 true)

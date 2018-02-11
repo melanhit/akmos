@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,19 +26,16 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_CLI_H
-#define AKMOS_CLI_H
+#ifndef AKMOS_BASE64_H
+#define AKMOS_BASE64_H
 
-#define CLI_PBKDF2_ALGO     AKMOS_ALGO_SHA2_256
-#define CLI_PBKDF2_ITER     4096
+struct akmos_base64_s {
+    uint8_t blk[8];
+    size_t len;
+    size_t blklen;
 
-int amalloc(uint8_t **, size_t);
+    const uint8_t *sbox;
+    void(*update) (const uint8_t *, const uint8_t *, size_t, uint8_t *, size_t *);
+};
 
-int akmos_cli_help(void);
-int akmos_cli_version(void);
-int akmos_cli_digest(int, char **);
-int akmos_cli_cipher(int, char **, akmos_mode_id);
-int akmos_cli_mac(int, char **);
-int akmos_cli_base64(int, char **);
-
-#endif  /* AKMOS_CLI_H */
+#endif  /* AKMOS_BASE64_H */

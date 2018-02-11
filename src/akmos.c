@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -317,4 +317,18 @@ size_t akmos_digest_outlen(akmos_algo_id algo)
         return 0;
 
     return desc->outlen;
+}
+
+size_t akmos_base64_enclen(size_t len)
+{
+    len += (len % 6);
+
+    return ((len * 8) / 6);
+}
+
+size_t akmos_base64_declen(size_t len)
+{
+    len += (len % 8);
+
+    return ((len * 6) / 8);
 }
