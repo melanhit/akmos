@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -78,7 +78,7 @@ static unsigned ci_convert(const char *input)
     if((err == EOF) || (!err))
         ulen = 0;
 
-    ulen *= ci;
+    ulen *= (unsigned)(ci & UINT_MAX);
 
     free(str);
 
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
     }
 
     for(i = 0; i < opt.len; i++)
-        opt.blk[i] = i % UINT8_MAX;
+        opt.blk[i] = (i % UINT8_MAX) & UINT8_MAX;
 
     if(mode_str && !(algo & BENCH_CIPHER_MASK))
         fprintf(stderr, "Ignore cipher mode option \"-m %s\"\n", mode_str);
@@ -453,7 +453,7 @@ void bench_print(struct opt_bench_s *opt)
     char name[32];
     double speed;
 
-    speed = (opt->len * opt->cnt / (1024*1024)) / ((opt->stop - opt->start) / CLOCKS_PER_SEC);
+    speed = (double)(opt->len * opt->cnt / (1024*1024)) / ((opt->stop - opt->start) / CLOCKS_PER_SEC);
 
     if((opt->algo & BENCH_DIGEST_MASK) > 0)
         fprintf(stdout, " %-32s %12.2f MiB/s\n", akmos_digest_name(opt->algo), speed);

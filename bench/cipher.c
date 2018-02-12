@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -88,7 +88,7 @@ int bench_cipher(akmos_algo_id algo, akmos_mode_id mode, struct opt_bench_s *opt
         return EXIT_FAILURE;
 
     for(i = 0; i < sizeof(key); i++)
-        key[i] = i % UINT8_MAX;
+        key[i] = (i % UINT8_MAX) & UINT8_MAX;
 
     opt->key = key;
     for(i = cd->keymin; i <= cd->keymax; i += cd->keystep) {

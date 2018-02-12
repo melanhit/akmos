@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) 1999, Dr B. R Gladman (gladman@seven77.demon.co.uk)
  *   All rights reserved.
  *
@@ -60,16 +60,36 @@ static uint32_t h_fun(akmos_twofish_t *ctx, const uint32_t x, const uint32_t *ke
             b1 = (uint32_t)(Q0((uint8_t) b1) ^ EXTBYTE(key[3],1));
             b2 = (uint32_t)(Q0((uint8_t) b2) ^ EXTBYTE(key[3],2));
             b3 = (uint32_t)(Q1((uint8_t) b3) ^ EXTBYTE(key[3],3));
+
+            b0 = (uint32_t)(Q1((uint8_t) b0) ^ EXTBYTE(key[2],0));
+            b1 = (uint32_t)(Q1((uint8_t) b1) ^ EXTBYTE(key[2],1));
+            b2 = (uint32_t)(Q0((uint8_t) b2) ^ EXTBYTE(key[2],2));
+            b3 = (uint32_t)(Q0((uint8_t) b3) ^ EXTBYTE(key[2],3));
+
+            b0 = (uint32_t)(Q0((uint8_t) (Q0((uint8_t) b0) ^ EXTBYTE(key[1],0))) ^ EXTBYTE(key[0],0));
+            b1 = (uint32_t)(Q0((uint8_t) (Q1((uint8_t) b1) ^ EXTBYTE(key[1],1))) ^ EXTBYTE(key[0],1));
+            b2 = (uint32_t)(Q1((uint8_t) (Q0((uint8_t) b2) ^ EXTBYTE(key[1],2))) ^ EXTBYTE(key[0],2));
+            b3 = (uint32_t)(Q1((uint8_t) (Q1((uint8_t) b3) ^ EXTBYTE(key[1],3))) ^ EXTBYTE(key[0],3));
+            break;
+
         case 3:
             b0 = (uint32_t)(Q1((uint8_t) b0) ^ EXTBYTE(key[2],0));
             b1 = (uint32_t)(Q1((uint8_t) b1) ^ EXTBYTE(key[2],1));
             b2 = (uint32_t)(Q0((uint8_t) b2) ^ EXTBYTE(key[2],2));
             b3 = (uint32_t)(Q0((uint8_t) b3) ^ EXTBYTE(key[2],3));
+
+            b0 = (uint32_t)(Q0((uint8_t) (Q0((uint8_t) b0) ^ EXTBYTE(key[1],0))) ^ EXTBYTE(key[0],0));
+            b1 = (uint32_t)(Q0((uint8_t) (Q1((uint8_t) b1) ^ EXTBYTE(key[1],1))) ^ EXTBYTE(key[0],1));
+            b2 = (uint32_t)(Q1((uint8_t) (Q0((uint8_t) b2) ^ EXTBYTE(key[1],2))) ^ EXTBYTE(key[0],2));
+            b3 = (uint32_t)(Q1((uint8_t) (Q1((uint8_t) b3) ^ EXTBYTE(key[1],3))) ^ EXTBYTE(key[0],3));
+            break;
+
         case 2:
             b0 = (uint32_t)(Q0((uint8_t) (Q0((uint8_t) b0) ^ EXTBYTE(key[1],0))) ^ EXTBYTE(key[0],0));
             b1 = (uint32_t)(Q0((uint8_t) (Q1((uint8_t) b1) ^ EXTBYTE(key[1],1))) ^ EXTBYTE(key[0],1));
             b2 = (uint32_t)(Q1((uint8_t) (Q0((uint8_t) b2) ^ EXTBYTE(key[1],2))) ^ EXTBYTE(key[0],2));
             b3 = (uint32_t)(Q1((uint8_t) (Q1((uint8_t) b3) ^ EXTBYTE(key[1],3))) ^ EXTBYTE(key[0],3));
+            break;
     }
 
     return  S0(b0) ^ S1(b1) ^ S2(b2) ^ S3(b3);

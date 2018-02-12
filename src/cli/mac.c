@@ -295,6 +295,7 @@ static void mac_print_hex(struct opt_mac_s *opt, char *path, uint8_t *mac)
 
         case AKMOS_MODE_CBCMAC:
             opt->keylen /= 2;
+            break;
 
         case AKMOS_MODE_CMAC:
             algostr = akmos_cipher_name(opt->algo);
