@@ -70,8 +70,6 @@ struct opt_mac_s {
     int ver;
 };
 
-static char *path_stdin = "-";
-
 static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
 {
     char *algo_str, *mode_str, *keylen_str;
@@ -271,13 +269,42 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
     return EXIT_SUCCESS;
 }
 
-static void mac_print_hex(struct opt_mac_s *opt, char *path, uint8_t *mac)
+static void mac_print_hmac(akmos_algo_id algo, akmos_mode_id mode, const char *path)
 {
     const char *algostr, *modestr;
-    char str[32], *p;
-    size_t i;
 
-    modestr = akmos_mode2str(opt->mode);
+    algostr = akmos_digest_name(algo);
+    modestr = akmos_mode2str(mode);
+
+    printf(" = %s/%s(%s)\n", modestr, algostr, path);
+}
+
+static void mac_print_cmac(akmos_algo_id algo, akmos_mode_id mode, const char *path, size_t keylen)
+{
+    const char *algostr, *modestr;
+    char lenstr[8];
+
+    algostr = akmos_cipher_name(algo);
+    modestr = akmos_mode2str(mode);
+
+    switch(algo) {
+        case AKMOS_ALGO_THREEFISH_256:
+        case AKMOS_ALGO_THREEFISH_512:
+        case AKMOS_ALGO_THREEFISH_1024:
+            printf(" = %s/%s(%s)\n", modestr, algostr, path);
+            break;
+
+        default:
+            sprintf(lenstr, "%zd", keylen * 8);
+            printf(" = %s/%s-%s(%s)\n", modestr, algostr, lenstr, path);
+            break;
+    }
+}
+
+static void mac_print_hex(struct opt_mac_s *opt, char *path, uint8_t *mac)
+{
+    const char *path_stdin = "-", *p;
+    size_t i;
 
     for(i = 0; i < opt->maclen; i++)
         printf("%.2x", mac[i]);
@@ -289,28 +316,15 @@ static void mac_print_hex(struct opt_mac_s *opt, char *path, uint8_t *mac)
 
     switch(opt->mode) {
         case AKMOS_MODE_HMAC:
-            algostr = akmos_digest_name(opt->algo);
-            printf(" = %s/%s(%s)\n", modestr, algostr, p);
+            mac_print_hmac(opt->algo, opt->mode, path);
             break;
 
         case AKMOS_MODE_CBCMAC:
-            opt->keylen /= 2;
+            mac_print_cmac(opt->algo, opt->mode, path, opt->keylen / 2);
             break;
 
         case AKMOS_MODE_CMAC:
-            algostr = akmos_cipher_name(opt->algo);
-            sprintf(str, "%zd", opt->keylen*8);
-                switch(opt->algo) {
-                    case AKMOS_ALGO_THREEFISH_256:
-                    case AKMOS_ALGO_THREEFISH_512:
-                    case AKMOS_ALGO_THREEFISH_1024:
-                        printf(" = %s/%s(%s)\n", modestr, algostr, p);
-                        break;
-
-                    default:
-                        printf(" = %s/%s-%s(%s)\n", modestr, algostr, str, p);
-                        break;
-                }
+            mac_print_cmac(opt->algo, opt->mode, path, opt->keylen);
             break;
 
         default:
