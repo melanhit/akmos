@@ -41,12 +41,15 @@
 
 #include "../akmos.h"
 #include "../error.h"
+#include "../mask.h"
 
 #include "cli.h"
 #include "pw.h"
 
-#define DEFAULT_MODE    AKMOS_MODE_HMAC
-#define DEFAULT_KEYLEN  128
+#define MAC_MODE    AKMOS_MODE_HMAC
+
+#define CIPHER_ALGO AKMOS_ALGO_TWOFISH
+#define DIGEST_ALGO AKMOS_ALGO_SHA2_256
 
 struct opt_mac_s {
     akmos_algo_id algo;
@@ -72,6 +75,7 @@ struct opt_mac_s {
 
 static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
 {
+    const akmos_cipher_xdesc_t *desc;
     char *algo_str, *mode_str, *keylen_str;
     int err, c, len;
 
@@ -137,7 +141,7 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
     }
 
     if(!opt->set.mode) {
-        opt->mode = DEFAULT_MODE;
+        opt->mode = MAC_MODE;
         if(opt->set.algo) {
             fprintf(stderr, "Missing mac mode\n");
             return EXIT_FAILURE;
@@ -154,11 +158,11 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
         switch(opt->mode) {
             case AKMOS_MODE_CBCMAC:
             case AKMOS_MODE_CMAC:
-                opt->algo = AKMOS_ALGO_TWOFISH;
+                opt->algo = CIPHER_ALGO;
                 break;
 
             case AKMOS_MODE_HMAC:
-                opt->algo = AKMOS_ALGO_SHA2_256;
+                opt->algo = DIGEST_ALGO;
                 break;
 
             default:
@@ -194,47 +198,13 @@ static int parse_arg(struct opt_mac_s *opt, int argc, char **argv)
     }
 
     if(!opt->set.keylen) {
-        switch(opt->algo) {
-            case AKMOS_ALGO_THREEFISH_256:
-                opt->keylen = 256/8;
-                break;
+        if(opt->algo & AKMOS_ALGO_BLKCIPH_MASK) {
+            desc = akmos_cipher_desc(opt->algo);
+            opt->keylen = desc->keymin;
+        }
 
-            case AKMOS_ALGO_THREEFISH_512:
-                opt->keylen = 512/8;
-                break;
-
-            case AKMOS_ALGO_THREEFISH_1024:
-                opt->keylen = 1024/8;
-                break;
-
-            case AKMOS_ALGO_ANUBIS:
-            case AKMOS_ALGO_BLOWFISH:
-            case AKMOS_ALGO_CAMELLIA:
-            case AKMOS_ALGO_CAST6:
-            case AKMOS_ALGO_RC6:
-            case AKMOS_ALGO_SERPENT:
-            case AKMOS_ALGO_TWOFISH:
-            case AKMOS_ALGO_RIJNDAEL:
-                opt->keylen = 128/8;
-                break;
-
-            case AKMOS_ALGO_RIPEMD_160:
-            case AKMOS_ALGO_RIPEMD_256:
-            case AKMOS_ALGO_RIPEMD_320:
-            case AKMOS_ALGO_SHA1:
-            case AKMOS_ALGO_SHA2_224:
-            case AKMOS_ALGO_SHA2_256:
-            case AKMOS_ALGO_SHA2_384:
-            case AKMOS_ALGO_SHA2_512:
-            case AKMOS_ALGO_SHA3_224:
-            case AKMOS_ALGO_SHA3_256:
-            case AKMOS_ALGO_SHA3_384:
-            case AKMOS_ALGO_SHA3_512:
-                opt->keylen = akmos_digest_blklen(opt->algo);
-                break;
-
-            default:
-                break;
+        if(opt->algo & AKMOS_ALGO_DIGEST_MASK) {
+            opt->keylen = akmos_digest_blklen(opt->algo);
         }
     } else {
         if(keylen_str) {
@@ -316,15 +286,15 @@ static void mac_print_hex(struct opt_mac_s *opt, char *path, uint8_t *mac)
 
     switch(opt->mode) {
         case AKMOS_MODE_HMAC:
-            mac_print_hmac(opt->algo, opt->mode, path);
+            mac_print_hmac(opt->algo, opt->mode, p);
             break;
 
         case AKMOS_MODE_CBCMAC:
-            mac_print_cmac(opt->algo, opt->mode, path, opt->keylen / 2);
+            mac_print_cmac(opt->algo, opt->mode, p, opt->keylen / 2);
             break;
 
         case AKMOS_MODE_CMAC:
-            mac_print_cmac(opt->algo, opt->mode, path, opt->keylen);
+            mac_print_cmac(opt->algo, opt->mode, p, opt->keylen);
             break;
 
         default:
