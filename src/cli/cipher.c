@@ -273,7 +273,7 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
     return EXIT_SUCCESS;
 }
 
-static int padbuf_hook(akmos_cipher_t ctx, uint8_t *buf, size_t *rlen, size_t blklen, const int enc)
+static int padbuf_hook(akmos_cipher_t ctx, uint8_t *buf, size_t *rlen, size_t blklen, akmos_mode_id enc)
 {
     size_t len, tmplen;
 
