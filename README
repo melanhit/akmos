@@ -52,6 +52,9 @@ List of supported Key Derivation Function:
  * PBKDF2
  * Scrypt
 
+Binary to text encoding:
+ * Base64
+
 === Copyright ===
 
 Akmos is free software, distributed under the BSD License.
