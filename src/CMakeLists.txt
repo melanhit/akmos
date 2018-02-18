@@ -105,7 +105,7 @@ list(SORT src_cli)
 
 include_directories("${PROJECT_BINARY_DIR}/inc")
 
-set_source_files_properties(${src_lib} PROPERTIES COMPILE_DEFINITIONS "${C_DEFINE}")
+set_source_files_properties(${src_lib} ${src_cli} PROPERTIES COMPILE_DEFINITIONS "${C_DEFINE}")
 
 add_library(akmos_obj OBJECT ${src_lib})
 target_compile_options(akmos_obj PUBLIC ${C_FLAGS})
