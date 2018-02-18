@@ -453,7 +453,7 @@ void bench_print(struct opt_bench_s *opt)
     char name[32];
     double speed;
 
-    speed = (double)(opt->len * opt->cnt / (1024*1024)) / ((opt->stop - opt->start) / CLOCKS_PER_SEC);
+    speed = (double)(opt->len * opt->cnt / (1024*1024)) / ((double)(opt->stop - opt->start) / CLOCKS_PER_SEC);
 
     if((opt->algo & BENCH_DIGEST_MASK) > 0)
         fprintf(stdout, " %-32s %12.2f MiB/s\n", akmos_digest_name(opt->algo), speed);

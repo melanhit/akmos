@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -51,8 +51,8 @@ struct opt_bench_s {
     uint8_t *key;
     uint8_t *blk;
     uint64_t cnt;
-    double start;
-    double stop;
+    clock_t start;
+    clock_t stop;
     int err;
 };
 
