@@ -17,3 +17,8 @@ set_source_files_properties(${src} PROPERTIES COMPILE_DEFINITIONS "${C_DEFINE}")
 add_executable(akmos_bench ${src})
 target_compile_options(akmos_bench PUBLIC ${C_FLAGS})
 target_link_libraries(akmos_bench akmos_shared ${CMAKE_THREAD_LIBS_INIT})
+
+set(BINDIR bin)
+
+install(TARGETS akmos_bench
+        RUNTIME DESTINATION bin)
