@@ -1,3 +1,12 @@
+Changes to akmos-0.7 (18 February 2018)
+    * add Scrypt key derivation function
+    * add Base64 binary to text encoder
+    * add Skein digest algo
+    * add assembler version (amd64) of the 'chacha' cipher algo
+    * add benchmark suite
+    * fix build for Linux
+    * many fixes and optimizations
+
 Changes to akmos-0.5.1 (24 March 2016)
     * Fix build for i386 arch
     * Add hash tests

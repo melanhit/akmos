@@ -118,7 +118,7 @@ else()
     add_library(akmos_static STATIC $<TARGET_OBJECTS:akmos_obj>)
 endif()
 
-set_target_properties(akmos_shared PROPERTIES VERSION 0.6 SOVERSION 6 OUTPUT_NAME akmos)
+set_target_properties(akmos_shared PROPERTIES VERSION 0.7 SOVERSION 7 OUTPUT_NAME akmos)
 set_target_properties(akmos_static PROPERTIES OUTPUT_NAME akmos)
 
 add_executable(akmos ${src_cli})
