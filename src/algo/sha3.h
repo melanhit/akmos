@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -57,12 +57,12 @@ typedef struct akmos_sha3_s {
     };
 } __attribute__((aligned(16))) akmos_sha3_t;
 
-void akmos_sha3_224_init (akmos_sha3_t *);
-void akmos_sha3_256_init (akmos_sha3_t *);
-void akmos_sha3_384_init (akmos_sha3_t *);
-void akmos_sha3_512_init (akmos_sha3_t *);
+void akmos_sha3_224_init (akmos_digest_algo_t *);
+void akmos_sha3_256_init (akmos_digest_algo_t *);
+void akmos_sha3_384_init (akmos_digest_algo_t *);
+void akmos_sha3_512_init (akmos_digest_algo_t *);
 
-void akmos_sha3_update   (akmos_sha3_t *, const uint8_t *, size_t);
-void akmos_sha3_done     (akmos_sha3_t *, uint8_t *);
+void akmos_sha3_update   (akmos_digest_algo_t *, const uint8_t *, size_t);
+void akmos_sha3_done     (akmos_digest_algo_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_SHA3_H */

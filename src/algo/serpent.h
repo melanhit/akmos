@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) 2000, Dr B. R Gladman (gladman@seven77.demon.co.uk)
  *   All rights reserved.
  *
@@ -39,8 +39,8 @@ typedef struct {
     uint32_t l_key[140];
 } akmos_serpent_t;
 
-void akmos_serpent_setkey (akmos_serpent_t *, const uint8_t *, size_t);
-void akmos_serpent_encrypt(akmos_serpent_t *, const uint8_t *, uint8_t *);
-void akmos_serpent_decrypt(akmos_serpent_t *, const uint8_t *, uint8_t *);
+void akmos_serpent_setkey (akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_serpent_encrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
+void akmos_serpent_decrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
 
 #endif  /* AKMOS_SERPENT_H */

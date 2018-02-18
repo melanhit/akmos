@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2015, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -34,24 +34,24 @@
 
 const akmos_mac_xmode_t akmos_xmode_hmac = {
     AKMOS_MODE_HMAC, "HMAC",
-    (void *)&akmos_hmac_init,
-    (void *)&akmos_hmac_setkey,
-    (void *)&akmos_hmac_update,
-    (void *)&akmos_hmac_done
+    &akmos_hmac_init,
+    &akmos_hmac_setkey,
+    &akmos_hmac_update,
+    &akmos_hmac_done
 };
 
 const akmos_mac_xmode_t akmos_xmode_cmac = {
     AKMOS_MODE_CMAC, "CMAC",
-    (void *)&akmos_cmac_init,
-    (void *)&akmos_cmac_setkey,
-    (void *)&akmos_cmac_update,
-    (void *)&akmos_cmac_done
+    &akmos_cmac_init,
+    &akmos_cmac_setkey,
+    &akmos_cmac_update,
+    &akmos_cmac_done
 };
 
 const akmos_mac_xmode_t akmos_xmode_cbcmac = {
     AKMOS_MODE_CBCMAC, "CBC-MAC",
-    (void *)&akmos_cbcmac_init,
-    (void *)&akmos_cbcmac_setkey,
-    (void *)&akmos_cbcmac_update,
-    (void *)&akmos_cbcmac_done
+    &akmos_cbcmac_init,
+    &akmos_cbcmac_setkey,
+    &akmos_cbcmac_update,
+    &akmos_cbcmac_done
 };

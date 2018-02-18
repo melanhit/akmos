@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../digest.h"
 
 #include "sha1.h"
 
@@ -174,8 +175,12 @@ static void sha1_transform(uint32_t *h, const uint8_t *blk, size_t nb)
     }
 }
 
-void akmos_sha1_init(akmos_sha1_t *ctx)
+void akmos_sha1_init(akmos_digest_algo_t *uctx)
 {
+    akmos_sha1_t *ctx;
+
+    ctx = &uctx->sha1;
+
     ctx->h[0] = H0;
     ctx->h[1] = H1;
     ctx->h[2] = H2;
@@ -185,9 +190,12 @@ void akmos_sha1_init(akmos_sha1_t *ctx)
     ctx->total = ctx->len = 0;
 }
 
-void akmos_sha1_update(akmos_sha1_t *ctx, const uint8_t *input, size_t len)
+void akmos_sha1_update(akmos_digest_algo_t *uctx, const uint8_t *input, size_t len)
 {
+    akmos_sha1_t *ctx;
     size_t nb, tmp_len;
+
+    ctx = &uctx->sha1;
 
     tmp_len = len + ctx->len;
 
@@ -223,10 +231,13 @@ void akmos_sha1_update(akmos_sha1_t *ctx, const uint8_t *input, size_t len)
     ctx->total += nb;
 }
 
-void akmos_sha1_done(akmos_sha1_t *ctx, uint8_t *digest)
+void akmos_sha1_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
+    akmos_sha1_t *ctx;
     uint64_t len_b;
     size_t i;
+
+    ctx = &uctx->sha1;
 
     len_b = ((ctx->total * AKMOS_SHA1_BLKLEN) + ctx->len) * 8;
     ctx->block[ctx->len] = 0x80;

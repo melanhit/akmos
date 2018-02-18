@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -59,12 +59,12 @@ typedef struct akmos_sha2_s {
     };
 } akmos_sha2_t;
 
-void akmos_sha2_224_init  (akmos_sha2_t *);
-void akmos_sha2_256_init  (akmos_sha2_t *);
-void akmos_sha2_384_init  (akmos_sha2_t *);
-void akmos_sha2_512_init  (akmos_sha2_t *);
+void akmos_sha2_224_init  (akmos_digest_algo_t *);
+void akmos_sha2_256_init  (akmos_digest_algo_t *);
+void akmos_sha2_384_init  (akmos_digest_algo_t *);
+void akmos_sha2_512_init  (akmos_digest_algo_t *);
 
-void akmos_sha2_update    (akmos_sha2_t *, const uint8_t *, size_t);
-void akmos_sha2_done      (akmos_sha2_t *, uint8_t *);
+void akmos_sha2_update    (akmos_digest_algo_t *, const uint8_t *, size_t);
+void akmos_sha2_done      (akmos_digest_algo_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_SHA2_H */

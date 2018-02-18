@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -45,9 +45,9 @@ typedef struct {
 } akmos_salsa_t;
 #endif
 
-void akmos_salsa_setiv (akmos_salsa_t *, const uint8_t *);
-void akmos_salsa_setcnt(akmos_salsa_t *, const uint8_t *);
-void akmos_salsa_setkey(akmos_salsa_t *, const uint8_t *, size_t);
-void akmos_salsa_stream(akmos_salsa_t *, uint8_t *);
+void akmos_salsa_setiv (akmos_cipher_algo_t *, const uint8_t *);
+void akmos_salsa_setcnt(akmos_cipher_algo_t *, const uint8_t *);
+void akmos_salsa_setkey(akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_salsa_stream(akmos_cipher_algo_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_SALSA_H */

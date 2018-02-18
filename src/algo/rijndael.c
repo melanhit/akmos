@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "rijndael.h"
 
@@ -115,10 +116,13 @@ static void rijndael_setkey256(uint32_t *k)
     }
 }
 
-void akmos_rijndael_setkey(akmos_rijndael_t *ctx, const uint8_t *key, size_t len)
+void akmos_rijndael_setkey(akmos_cipher_algo_t *uctx, const uint8_t *key, size_t len)
 {
+    akmos_rijndael_t *ctx;
     uint32_t *k;
     size_t i, j;
+
+    ctx = &uctx->rijndael;
 
     for(i = 0; i < len / 4; i++)
         ctx->ke[i] = PACK32LE(key + (i * 4));
@@ -172,9 +176,12 @@ void akmos_rijndael_setkey(akmos_rijndael_t *ctx, const uint8_t *key, size_t len
 
 }
 
-void akmos_rijndael_encrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_rijndael_encrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_rijndael_t *ctx;
     uint32_t s[4], *w, *k, i;
+
+    ctx = &uctx->rijndael;
 
     w = ctx->w;
     k = ctx->ke;
@@ -216,9 +223,12 @@ void akmos_rijndael_encrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_
     UNPACK32LE(out_blk + 8, s[2]); UNPACK32LE(out_blk + 12, s[3]);
 }
 
-void akmos_rijndael_decrypt(akmos_rijndael_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_rijndael_decrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_rijndael_t *ctx;
     uint32_t s[4], *w, *k, i;
+
+    ctx = &uctx->rijndael;
 
     w = ctx->w;
     k = ctx->kd;

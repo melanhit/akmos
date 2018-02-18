@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -39,8 +39,8 @@ typedef struct {
     uint8_t  block[AKMOS_SHA1_BLKLEN];
 } akmos_sha1_t;
 
-void akmos_sha1_init  (akmos_sha1_t *);
-void akmos_sha1_update(akmos_sha1_t *, const uint8_t *, size_t);
-void akmos_sha1_done  (akmos_sha1_t *, uint8_t *);
+void akmos_sha1_init  (akmos_digest_algo_t *);
+void akmos_sha1_update(akmos_digest_algo_t *, const uint8_t *, size_t);
+void akmos_sha1_done  (akmos_digest_algo_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_SHA1_H */

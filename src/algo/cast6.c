@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) 1999 Dr Brian Gladman (gladman@seven77.demon.co.uk)
  *   All rights reserved.
  *
@@ -32,6 +32,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "cast6.h"
 
@@ -79,9 +80,12 @@
     f1(k[0], k[1], tr[6], tm[6]);           \
     f2(k[7], k[0], tr[7], tm[7])
 
-void akmos_cast6_setkey(akmos_cast6_t *ctx, const uint8_t *key, size_t len)
+void akmos_cast6_setkey(akmos_cipher_algo_t *uctx, const uint8_t *key, size_t len)
 {
+    akmos_cast6_t *ctx;
     uint32_t *l_key, i, j, t, cm, cr, *lk, *tm, *tr;
+
+    ctx = &uctx->cast6;
 
     lk = ctx->lk;
     tm = lk + 8;
@@ -119,10 +123,13 @@ void akmos_cast6_setkey(akmos_cast6_t *ctx, const uint8_t *key, size_t len)
     }
 }
 
-void akmos_cast6_encrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_cast6_encrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_cast6_t *ctx;
     uint32_t *l_key, t;
     uint32_t a, b, c, d;
+
+    ctx = &uctx->cast6;
 
     l_key = ctx->l_key;
 
@@ -140,10 +147,13 @@ void akmos_cast6_encrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out
     UNPACK32LE(out_blk + 8, c); UNPACK32LE(out_blk + 12, d);
 }
 
-void akmos_cast6_decrypt(akmos_cast6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_cast6_decrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_cast6_t *ctx;
     uint32_t *l_key, t;
     uint32_t a, b, c, d;
+
+    ctx = &uctx->cast6;
 
     l_key = ctx->l_key;
 

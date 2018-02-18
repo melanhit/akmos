@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -46,8 +46,8 @@ typedef struct {
     uint8_t  b[AKMOS_BLOWFISH_BLKLEN];
 } akmos_blowfish_t;
 
-void akmos_blowfish_setkey (akmos_blowfish_t *, const uint8_t *, size_t);
-void akmos_blowfish_encrypt(akmos_blowfish_t *, const uint8_t *, uint8_t *);
-void akmos_blowfish_decrypt(akmos_blowfish_t *, const uint8_t *, uint8_t *);
+void akmos_blowfish_setkey (akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_blowfish_encrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
+void akmos_blowfish_decrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_BLOWFISH_H */

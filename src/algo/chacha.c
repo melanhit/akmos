@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "chacha.h"
 
@@ -49,18 +50,30 @@
     s[c] += s[d]; s[b] = ROTL32((s[b] ^ s[c]),  7); \
 }
 
-void akmos_chacha_setiv(akmos_chacha_t *ctx, const uint8_t *iv)
+void akmos_chacha_setiv(akmos_cipher_algo_t *uctx, const uint8_t *iv)
 {
+    akmos_chacha_t *ctx;
+
+    ctx = &uctx->chacha;
+
     memcpy(ctx->s + 13, iv, 12);
 }
 
-void akmos_chacha_setcnt(akmos_chacha_t *ctx, const uint8_t *cnt)
+void akmos_chacha_setcnt(akmos_cipher_algo_t *uctx, const uint8_t *cnt)
 {
+    akmos_chacha_t *ctx;
+
+    ctx = &uctx->chacha;
+
     ctx->s[12] = PACK32BE(cnt);
 }
 
-void akmos_chacha_setkey(akmos_chacha_t *ctx, const uint8_t *in_key, size_t __attribute__((unused)) len)
+void akmos_chacha_setkey(akmos_cipher_algo_t *uctx, const uint8_t *in_key, size_t __attribute__((unused)) len)
 {
+    akmos_chacha_t *ctx;
+
+    ctx = &uctx->chacha;
+
     ctx->s[0] = C0;
     ctx->s[1] = C1;
     ctx->s[2] = C2;
@@ -69,10 +82,13 @@ void akmos_chacha_setkey(akmos_chacha_t *ctx, const uint8_t *in_key, size_t __at
     memcpy(ctx->s + 4, in_key, AKMOS_CHACHA_KEYMAX);
 }
 
-void akmos_chacha_stream(akmos_chacha_t *ctx, uint8_t *out_blk)
+void akmos_chacha_stream(akmos_cipher_algo_t *uctx, uint8_t *out_blk)
 {
+    akmos_chacha_t *ctx;
     size_t i;
     uint32_t s[16];
+
+    ctx = &uctx->chacha;
 
     for(i = 0; i < 16; i++)
         s[i] = ctx->s[i];

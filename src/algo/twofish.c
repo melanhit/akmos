@@ -32,6 +32,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "twofish.h"
 
@@ -185,10 +186,13 @@ static uint32_t mds_rem(uint32_t p0, uint32_t p1)
     return p1;
 }
 
-void akmos_twofish_setkey(akmos_twofish_t *ctx, const uint8_t *in_key, size_t len)
+void akmos_twofish_setkey(akmos_cipher_algo_t *uctx, const uint8_t *in_key, size_t len)
 {
+    akmos_twofish_t *ctx;
     uint32_t  i, a, b, *me_key, *mo_key;
     uint32_t *l_key, *s_key;
+
+    ctx = &uctx->twofish;
 
     me_key = ctx->me_key;
     mo_key = me_key + 4;
@@ -230,12 +234,16 @@ void akmos_twofish_setkey(akmos_twofish_t *ctx, const uint8_t *in_key, size_t le
     blk[0] = ROTR32(blk[0] ^ (t0 + t1 + l_key[4 * (i) + 10]), 1);   \
     blk[1] = ROTL32(blk[1], 1) ^ (t0 + 2 * t1 + l_key[4 * (i) + 11])
 
-void akmos_twofish_encrypt(akmos_twofish_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_twofish_encrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_twofish_t *ctx;
     uint32_t  t0, t1, blk[4];
+    uint32_t *l_key, *mk_tab;
+    
+    ctx = &uctx->twofish;
 
-    uint32_t *l_key = ctx->l_key;
-    uint32_t *mk_tab = ctx->mk_tab;
+    l_key  = ctx->l_key;
+    mk_tab = ctx->mk_tab;
 
     blk[0] = PACK32BE(in_blk     ); blk[0] ^= l_key[0];
     blk[1] = PACK32BE(in_blk +  4); blk[1] ^= l_key[1];
@@ -260,11 +268,16 @@ void akmos_twofish_encrypt(akmos_twofish_t *ctx, const uint8_t *in_blk, uint8_t 
     blk[0] = ROTL32(blk[0], 1) ^ (t0 + t1 + l_key[4 * (i) +  8]);       \
     blk[1] = ROTR32(blk[1] ^ (t0 + 2 * t1 + l_key[4 * (i) +  9]), 1)
 
-void akmos_twofish_decrypt(akmos_twofish_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_twofish_decrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_twofish_t *ctx;
     uint32_t  t0, t1, blk[4];
-    uint32_t *l_key = ctx->l_key;
-    uint32_t *mk_tab = ctx->mk_tab;
+    uint32_t *l_key, *mk_tab;
+    
+    ctx = &uctx->twofish;
+
+    l_key  = ctx->l_key;
+    mk_tab = ctx->mk_tab;
 
     blk[0] = PACK32BE(in_blk     ); blk[0] ^= l_key[4];
     blk[1] = PACK32BE(in_blk +  4); blk[1] ^= l_key[5];

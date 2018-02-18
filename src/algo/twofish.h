@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) 1999, Dr B. R Gladman (gladman@seven77.demon.co.uk)
  *   All rights reserved.
  *
@@ -47,8 +47,8 @@ typedef struct {
     uint32_t me_key[8];
 } akmos_twofish_t;
 
-void akmos_twofish_setkey (akmos_twofish_t *, const uint8_t *, size_t);
-void akmos_twofish_encrypt(akmos_twofish_t *, const uint8_t *, uint8_t *);
-void akmos_twofish_decrypt(akmos_twofish_t *, const uint8_t *, uint8_t *);
+void akmos_twofish_setkey (akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_twofish_encrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
+void akmos_twofish_decrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_TWOFISH_H */

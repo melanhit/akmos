@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../digest.h"
 
 #include "whirlpool.h"
 
@@ -179,17 +180,24 @@ static void whirlpool_transform(uint64_t *h, const uint8_t *blk, size_t nb)
     }
 }
 
-void akmos_whirlpool_init(akmos_whirlpool_t *ctx)
+void akmos_whirlpool_init(akmos_digest_algo_t *uctx)
 {
+    akmos_whirlpool_t *ctx;
+
+    ctx = &uctx->whirlpool;
+
     ctx->h[0] = ctx->h[1] = ctx->h[2] = ctx->h[3] = 0;
     ctx->h[4] = ctx->h[5] = ctx->h[6] = ctx->h[7] = 0;
 
     ctx->len = ctx->total = 0;
 }
 
-void akmos_whirlpool_update(akmos_whirlpool_t *ctx, const uint8_t *input, size_t len)
+void akmos_whirlpool_update(akmos_digest_algo_t *uctx, const uint8_t *input, size_t len)
 {
+    akmos_whirlpool_t *ctx;
     size_t nb, tmp_len;
+
+    ctx = &uctx->whirlpool;
 
     tmp_len = len + ctx->len;
 
@@ -225,10 +233,13 @@ void akmos_whirlpool_update(akmos_whirlpool_t *ctx, const uint8_t *input, size_t
     ctx->total += nb;
 }
 
-void akmos_whirlpool_done(akmos_whirlpool_t *ctx, uint8_t *digest)
+void akmos_whirlpool_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
+    akmos_whirlpool_t *ctx;
     uint64_t len_b;
     size_t i;
+
+    ctx = &uctx->whirlpool;
 
     len_b = ((ctx->total * AKMOS_WHIRLPOOL_BLKLEN) + ctx->len) * 8;
     ctx->block[ctx->len] = 0x80;

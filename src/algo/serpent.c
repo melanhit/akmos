@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) 1998, Dr B. R Gladman (gladman@seven77.demon.co.uk)
  *   Copyright (c) 1998, Sam Simpson (s.simpson@mia.co.uk)
  *   All rights reserved.
@@ -33,6 +33,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "serpent.h"
 
@@ -403,12 +404,15 @@
     a = ROTR32(a, 13);              \
 }
 
-void akmos_serpent_setkey(akmos_serpent_t *ctx, const uint8_t *key, size_t len)
+void akmos_serpent_setkey(akmos_cipher_algo_t *uctx, const uint8_t *key, size_t len)
 {
+    akmos_serpent_t *ctx;
     uint32_t i, lk, a, b, c, d, e, f, g, h;
     uint32_t t1, t2, t3, t4, t5, t6, t7, t8;
     uint32_t t9, t10, t11, t12, t13, t14, t15, t16;
     uint32_t bits;
+
+    ctx = &uctx->serpent;
 
     bits = (len * 8) & 0xffffffff;
 
@@ -472,11 +476,14 @@ void akmos_serpent_setkey(akmos_serpent_t *ctx, const uint8_t *key, size_t len)
     k_set(32,a,b,c,d); sb3(a,b,c,d,e,f,g,h); k_get(32,e,f,g,h);
 }
 
-void akmos_serpent_encrypt(akmos_serpent_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_serpent_encrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_serpent_t *ctx;
     uint32_t a, b, c, d, e, f, g, h;
     uint32_t t1, t2, t3, t4, t5, t6, t7, t8;
     uint32_t t9, t10, t11, t12, t13, t14, t15, t16;
+
+    ctx = &uctx->serpent;
 
     a = PACK32BE(in_blk     );
     b = PACK32BE(in_blk + 4 );
@@ -522,11 +529,14 @@ void akmos_serpent_encrypt(akmos_serpent_t *ctx, const uint8_t *in_blk, uint8_t 
     UNPACK32BE(out_blk + 12, d);
 }
 
-void akmos_serpent_decrypt(akmos_serpent_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_serpent_decrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_serpent_t *ctx;
     uint32_t a, b, c, d, e, f, g, h;
     uint32_t t1, t2, t3, t4, t5, t6, t7, t8;
     uint32_t t9, t10, t11, t12, t13, t14, t15, t16;
+
+    ctx = &uctx->serpent;
 
     a = PACK32BE(in_blk     );
     b = PACK32BE(in_blk + 4 );

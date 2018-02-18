@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "threefish.h"
 #include "threefish_mix.h"
@@ -39,12 +40,15 @@
 #define ROUNDS_256  (72 / 8)
 #define SKEYS_256   ((ROUNDS_256 * 2) + 1)
 
-void akmos_threefish_256_setkey(akmos_threefish_256_t *ctx,
+void akmos_threefish_256_setkey(akmos_cipher_algo_t *uctx,
                                 const uint8_t *key,
                                 size_t __attribute__((unused)) len)
 {
+    akmos_threefish_256_t *ctx;
     uint64_t *k, *S;
     size_t i, j;
+
+    ctx = &uctx->tf_256;
 
     k = ctx->k;
 
@@ -64,12 +68,15 @@ void akmos_threefish_256_setkey(akmos_threefish_256_t *ctx,
     }
 }
 
-void akmos_threefish_256_encrypt(akmos_threefish_256_t *ctx,
+void akmos_threefish_256_encrypt(akmos_cipher_algo_t *uctx,
                                  const uint8_t *in_blk,
                                  uint8_t *out_blk)
 {
+    akmos_threefish_256_t *ctx;
     uint64_t s[WORDS_256], *S;
     int i, j;
+
+    ctx = &uctx->tf_256;
 
     for(i = 0; i < WORDS_256; i++, in_blk += 8)
         s[i] = PACK64BE(in_blk);
@@ -92,12 +99,15 @@ void akmos_threefish_256_encrypt(akmos_threefish_256_t *ctx,
         UNPACK64BE(out_blk, s[i] + S[i]);
 }
 
-void akmos_threefish_256_decrypt(akmos_threefish_256_t *ctx,
+void akmos_threefish_256_decrypt(akmos_cipher_algo_t *uctx,
                                  const uint8_t *in_blk,
                                  uint8_t *out_blk)
 {
+    akmos_threefish_256_t *ctx;
     uint64_t s[WORDS_256], *S;
     int i, j;
+
+    ctx = &uctx->tf_256;
 
     for(i = 0; i < WORDS_256; i++, in_blk += 8)
         s[i] = PACK64BE(in_blk);

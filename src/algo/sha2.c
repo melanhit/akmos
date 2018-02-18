@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (C) 2005, 2007, Olivier Gay <olivier.gay@a3.epfl.ch>
  *   All rights reserved.
  *
@@ -35,6 +35,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../digest.h"
 
 #include "sha2.h"
 
@@ -289,8 +290,12 @@ static void sha512_out(struct akmos_sha2_s *ctx, uint8_t *digest)
         UNPACK64LE(digest + (i * sizeof(uint64_t)), ctx->h.h64[i]);
 }
 
-void akmos_sha2_224_init(akmos_sha2_t *ctx)
+void akmos_sha2_224_init(akmos_digest_algo_t *uctx)
 {
+    akmos_sha2_t *ctx;
+
+    ctx = &uctx->sha2;
+
     ctx->h.h32[0] = sha224_h0[0];
     ctx->h.h32[1] = sha224_h0[1];
     ctx->h.h32[2] = sha224_h0[2];
@@ -308,8 +313,12 @@ void akmos_sha2_224_init(akmos_sha2_t *ctx)
     ctx->out       = sha256_out;
 }
 
-void akmos_sha2_256_init(akmos_sha2_t *ctx)
+void akmos_sha2_256_init(akmos_digest_algo_t *uctx)
 {
+    akmos_sha2_t *ctx;
+
+    ctx = &uctx->sha2;
+
     ctx->h.h32[0] = sha256_h0[0];
     ctx->h.h32[1] = sha256_h0[1];
     ctx->h.h32[2] = sha256_h0[2];
@@ -327,8 +336,12 @@ void akmos_sha2_256_init(akmos_sha2_t *ctx)
     ctx->out       = sha256_out;
 }
 
-void akmos_sha2_384_init(akmos_sha2_t *ctx)
+void akmos_sha2_384_init(akmos_digest_algo_t *uctx)
 {
+    akmos_sha2_t *ctx;
+
+    ctx = &uctx->sha2;
+
     ctx->h.h64[0] = sha384_h0[0];
     ctx->h.h64[1] = sha384_h0[1];
     ctx->h.h64[2] = sha384_h0[2];
@@ -346,8 +359,12 @@ void akmos_sha2_384_init(akmos_sha2_t *ctx)
     ctx->out       = sha512_out;
 }
 
-void akmos_sha2_512_init(akmos_sha2_t *ctx)
+void akmos_sha2_512_init(akmos_digest_algo_t *uctx)
 {
+    akmos_sha2_t *ctx;
+
+    ctx = &uctx->sha2;
+
     ctx->h.h64[0] = sha512_h0[0];
     ctx->h.h64[1] = sha512_h0[1];
     ctx->h.h64[2] = sha512_h0[2];
@@ -365,9 +382,12 @@ void akmos_sha2_512_init(akmos_sha2_t *ctx)
     ctx->out       = sha512_out;
 }
 
-void akmos_sha2_update(akmos_sha2_t *ctx, const uint8_t *input, size_t len)
+void akmos_sha2_update(akmos_digest_algo_t *uctx, const uint8_t *input, size_t len)
 {
+    akmos_sha2_t *ctx;
     size_t nb, tmp_len;
+
+    ctx = &uctx->sha2;
 
     tmp_len = len + ctx->len;
 
@@ -403,9 +423,12 @@ void akmos_sha2_update(akmos_sha2_t *ctx, const uint8_t *input, size_t len)
     ctx->total += nb;
 }
 
-void akmos_sha2_done(akmos_sha2_t *ctx, uint8_t *digest)
+void akmos_sha2_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
+    akmos_sha2_t *ctx;
     uint64_t len_b;
+
+    ctx = &uctx->sha2;
 
     len_b = ((ctx->total * ctx->blklen) + ctx->len) * 8;
     ctx->block[ctx->len] = 0x80;

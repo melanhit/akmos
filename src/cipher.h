@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -32,6 +32,8 @@
 #define AKMOS_CIPHER_MAX_BLKLEN AKMOS_THREEFISH_1024_BLKLEN
 #define AKMOS_CIPHER_MAX_IVLEN  AKMOS_THREEFISH_1024_BLKLEN
 
+typedef union akmos_cipher_algo_u akmos_cipher_algo_t;
+
 #include "algo/anubis.h"
 #include "algo/cast6.h"
 #include "algo/rc6.h"
@@ -51,7 +53,7 @@
 #include "mode/ctr.h"
 #include "mode/cfb.h"
 
-typedef union {
+union akmos_cipher_algo_u {
     akmos_anubis_t          anubis;
     akmos_blowfish_t        blowfish;
     akmos_camellia_t        camellia;
@@ -66,7 +68,7 @@ typedef union {
     akmos_threefish_512_t   tf_512;
     akmos_threefish_1024_t  tf_1024;
     akmos_twofish_t         twofish;
-} akmos_cipher_algo_t;
+};
 
 typedef union {
     akmos_cbc_t cbc;
@@ -79,16 +81,16 @@ typedef struct akmos_cipher_xalgo_s {
     akmos_cipher_xdesc_t desc;
 
     /* stream cipher routines */
-    void (*setcnt)  (void *, const uint8_t *);
-    void (*setiv)   (void *, const uint8_t *);
-    void (*stream)  (void *, uint8_t *);
+    void (*setcnt)  (akmos_cipher_algo_t *, const uint8_t *);
+    void (*setiv)   (akmos_cipher_algo_t *, const uint8_t *);
+    void (*stream)  (akmos_cipher_algo_t *, uint8_t *);
 
     /* common cipher routines */
-    void (*setkey)  (void *, const uint8_t *, size_t);
+    void (*setkey)  (akmos_cipher_algo_t *, const uint8_t *, size_t);
 
     /* block cipher routines */
-    void (*encrypt) (void *, const uint8_t *, uint8_t *);
-    void (*decrypt) (void *, const uint8_t *, uint8_t *);
+    void (*encrypt) (akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
+    void (*decrypt) (akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
 } akmos_cipher_xalgo_t;
 
 typedef struct {

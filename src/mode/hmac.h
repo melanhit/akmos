@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -41,9 +41,9 @@ typedef struct {
     akmos_digest_t dctx;
 } akmos_hmac_t;
 
-int  akmos_hmac_init  (akmos_hmac_t *, akmos_algo_id);
-int  akmos_hmac_setkey(akmos_hmac_t *, const uint8_t *, size_t);
-void akmos_hmac_update(akmos_hmac_t *, const uint8_t *, size_t);
-int  akmos_hmac_done  (akmos_hmac_t *, uint8_t *);
+int  akmos_hmac_init  (akmos_mac_mode_t *, akmos_algo_id);
+int  akmos_hmac_setkey(akmos_mac_mode_t *, const uint8_t *, size_t);
+void akmos_hmac_update(akmos_mac_mode_t *, const uint8_t *, size_t);
+int  akmos_hmac_done  (akmos_mac_mode_t *, uint8_t *);
 
 #endif  /* AKMOS_MODE_HMAC_H */

@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../digest.h"
 
 #include "sha3.h"
 #include "sha3_transform.h"
@@ -61,8 +62,12 @@ static void sha3_out(akmos_sha3_t *ctx, uint8_t *digest)
         UNPACK64BE(digest, ctx->S[i]);
 }
 
-void akmos_sha3_224_init(akmos_sha3_t *ctx)
+void akmos_sha3_224_init(akmos_digest_algo_t *uctx)
 {
+    akmos_sha3_t *ctx;
+
+    ctx = &uctx->sha3;
+
     ctx->blklen = AKMOS_SHA3_224_BLKLEN;
     ctx->diglen = AKMOS_SHA3_224_DIGLEN;
 
@@ -71,8 +76,12 @@ void akmos_sha3_224_init(akmos_sha3_t *ctx)
     ctx->out = sha3_224_out;
 }
 
-void akmos_sha3_256_init(akmos_sha3_t *ctx)
+void akmos_sha3_256_init(akmos_digest_algo_t *uctx)
 {
+    akmos_sha3_t *ctx;
+
+    ctx = &uctx->sha3;
+
     ctx->blklen = AKMOS_SHA3_256_BLKLEN;
     ctx->diglen = AKMOS_SHA3_256_DIGLEN;
 
@@ -81,8 +90,12 @@ void akmos_sha3_256_init(akmos_sha3_t *ctx)
     ctx->out = sha3_out;
 }
 
-void akmos_sha3_384_init(akmos_sha3_t *ctx)
+void akmos_sha3_384_init(akmos_digest_algo_t *uctx)
 {
+    akmos_sha3_t *ctx;
+
+    ctx = &uctx->sha3;
+
     ctx->blklen = AKMOS_SHA3_384_BLKLEN;
     ctx->diglen = AKMOS_SHA3_384_DIGLEN;
 
@@ -91,8 +104,12 @@ void akmos_sha3_384_init(akmos_sha3_t *ctx)
     ctx->out = sha3_out;
 }
 
-void akmos_sha3_512_init(akmos_sha3_t *ctx)
+void akmos_sha3_512_init(akmos_digest_algo_t *uctx)
 {
+    akmos_sha3_t *ctx;
+
+    ctx = &uctx->sha3;
+
     ctx->blklen = AKMOS_SHA3_512_BLKLEN;
     ctx->diglen = AKMOS_SHA3_512_DIGLEN;
 
@@ -101,9 +118,12 @@ void akmos_sha3_512_init(akmos_sha3_t *ctx)
     ctx->out = sha3_out;
 }
 
-void akmos_sha3_update(akmos_sha3_t *ctx, const uint8_t *input, size_t len)
+void akmos_sha3_update(akmos_digest_algo_t *uctx, const uint8_t *input, size_t len)
 {
+    akmos_sha3_t *ctx;
     size_t nb, tmp_len;
+
+    ctx = &uctx->sha3;
 
     tmp_len = len + ctx->len;
 
@@ -136,8 +156,12 @@ void akmos_sha3_update(akmos_sha3_t *ctx, const uint8_t *input, size_t len)
     }
 }
 
-void akmos_sha3_done(akmos_sha3_t *ctx, uint8_t *digest)
+void akmos_sha3_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
+    akmos_sha3_t *ctx;
+
+    ctx = &uctx->sha3;
+
     memset(ctx->block + ctx->len, 0, ctx->blklen - ctx->len);
 
     ctx->block[ctx->len] = 0x06;

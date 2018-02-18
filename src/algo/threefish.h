@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -65,16 +65,16 @@ typedef struct {
     uint64_t k[AKMOS_THREEFISH_WORDS_1024 + 1];
 } akmos_threefish_1024_t;
 
-void akmos_threefish_256_setkey (akmos_threefish_256_t *, const uint8_t *, size_t);
-void akmos_threefish_256_encrypt(akmos_threefish_256_t *, const uint8_t *, uint8_t *);
-void akmos_threefish_256_decrypt(akmos_threefish_256_t *, const uint8_t *, uint8_t *);
+void akmos_threefish_256_setkey (akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_threefish_256_encrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
+void akmos_threefish_256_decrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
 
-void akmos_threefish_512_setkey (akmos_threefish_512_t *, const uint8_t *, size_t);
-void akmos_threefish_512_encrypt(akmos_threefish_512_t *, const uint8_t *, uint8_t *);
-void akmos_threefish_512_decrypt(akmos_threefish_512_t *, const uint8_t *, uint8_t *);
+void akmos_threefish_512_setkey (akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_threefish_512_encrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
+void akmos_threefish_512_decrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
 
-void akmos_threefish_1024_setkey (akmos_threefish_1024_t *, const uint8_t *, size_t);
-void akmos_threefish_1024_encrypt(akmos_threefish_1024_t *, const uint8_t *, uint8_t *);
-void akmos_threefish_1024_decrypt(akmos_threefish_1024_t *, const uint8_t *, uint8_t *);
+void akmos_threefish_1024_setkey (akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_threefish_1024_encrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
+void akmos_threefish_1024_decrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_THREEFISH_H */

@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -41,8 +41,8 @@ typedef struct {
     uint32_t lk[24];
 } akmos_cast6_t;
 
-void akmos_cast6_setkey (akmos_cast6_t *, const uint8_t *, size_t);
-void akmos_cast6_encrypt(akmos_cast6_t *, const uint8_t *, uint8_t *);
-void akmos_cast6_decrypt(akmos_cast6_t *, const uint8_t *, uint8_t *);
+void akmos_cast6_setkey (akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_cast6_encrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
+void akmos_cast6_decrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_CAST6_H */

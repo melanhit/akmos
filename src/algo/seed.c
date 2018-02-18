@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "seed.h"
 
@@ -78,10 +79,13 @@
     t ^= (uint64_t)(d);         \
 }
 
-void akmos_seed_setkey(akmos_seed_t *ctx, const uint8_t *in_key, size_t len)
+void akmos_seed_setkey(akmos_cipher_algo_t *uctx, const uint8_t *in_key, size_t len)
 {
+    akmos_seed_t *ctx;
     uint32_t k0, k1, k2, k3, t;
     size_t i, y;
+
+    ctx = &uctx->seed;
 
     k0 = PACK32LE(in_key    ); k1 = PACK32LE(in_key +  4);
     k2 = PACK32LE(in_key + 8); k3 = PACK32LE(in_key + 12);
@@ -101,11 +105,14 @@ void akmos_seed_setkey(akmos_seed_t *ctx, const uint8_t *in_key, size_t len)
     }
 }
 
-void akmos_seed_encrypt(akmos_seed_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_seed_encrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_seed_t *ctx;
     uint64_t l, r, t;
     uint32_t c, d;
     size_t i, y;
+
+    ctx = &uctx->seed;
 
     l = PACK64LE(in_blk); r = PACK64LE(in_blk + 8);
 
@@ -121,14 +128,16 @@ void akmos_seed_encrypt(akmos_seed_t *ctx, const uint8_t *in_blk, uint8_t *out_b
     UNPACK64LE(out_blk, l); UNPACK64LE(out_blk + 8, r);
 }
 
-void akmos_seed_decrypt(akmos_seed_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_seed_decrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_seed_t *ctx;
     uint64_t l, r, t;
     uint32_t c, d;
     size_t i, y;
 
-    l = PACK64LE(in_blk); r = PACK64LE(in_blk + 8);
+    ctx = &uctx->seed;
 
+    l = PACK64LE(in_blk); r = PACK64LE(in_blk + 8);
 
     for(i = 0, y = 30; i < 15; i++, y -= 2) {
         F(r, ctx->key[y], ctx->key[y + 1], t, c, d);

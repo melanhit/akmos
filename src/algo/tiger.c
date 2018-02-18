@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../digest.h"
 
 #include "tiger.h"
 
@@ -129,8 +130,12 @@ static void tiger_transform(uint64_t *h, const uint8_t *blk, size_t nb)
     h[0] = a; h[1] = b; h[2] = c;
 }
 
-void akmos_tiger_init(akmos_tiger_t *ctx)
+void akmos_tiger_init(akmos_digest_algo_t *uctx)
 {
+    akmos_tiger_t *ctx;
+
+    ctx = &uctx->tiger;
+
     ctx->h[0] = H0;
     ctx->h[1] = H1;
     ctx->h[2] = H2;
@@ -138,9 +143,12 @@ void akmos_tiger_init(akmos_tiger_t *ctx)
     ctx->total = ctx->len = 0;
 }
 
-void akmos_tiger_update(akmos_tiger_t *ctx, const uint8_t *input, size_t len)
+void akmos_tiger_update(akmos_digest_algo_t *uctx, const uint8_t *input, size_t len)
 {
+    akmos_tiger_t *ctx;
     size_t nb, tmp_len;
+
+    ctx = &uctx->tiger;
 
     tmp_len = len + ctx->len;
 
@@ -176,10 +184,13 @@ void akmos_tiger_update(akmos_tiger_t *ctx, const uint8_t *input, size_t len)
     ctx->total += nb;
 }
 
-void akmos_tiger_done(akmos_tiger_t *ctx, uint8_t *digest)
+void akmos_tiger_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
+    akmos_tiger_t *ctx;
     uint64_t len_b;
     size_t i;
+
+    ctx = &uctx->tiger;
 
     len_b = ((ctx->total * AKMOS_TIGER_BLKLEN) + ctx->len) * 8;
     ctx->block[ctx->len] = 0x01;

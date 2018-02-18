@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -41,8 +41,8 @@ typedef struct {
     size_t   len;
 } akmos_tiger_t;
 
-void akmos_tiger_init   (akmos_tiger_t *);
-void akmos_tiger_update (akmos_tiger_t *, const uint8_t *, size_t);
-void akmos_tiger_done   (akmos_tiger_t *, uint8_t *);
+void akmos_tiger_init   (akmos_digest_algo_t *);
+void akmos_tiger_update (akmos_digest_algo_t *, const uint8_t *, size_t);
+void akmos_tiger_done   (akmos_digest_algo_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_TIGER_H */

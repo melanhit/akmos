@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -88,17 +88,17 @@ static void cipher_init_stream(akmos_cipher_t ctx)
 
 static void cipher_setkey(akmos_cipher_t ctx, const uint8_t *key, size_t len)
 {
-    ctx->xalgo->setkey(&ctx->actx, key, len);
+    ctx->xalgo->setkey(&ctx->actx[0], key, len);
 }
 
 static void cipher_encrypt(akmos_cipher_t ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    ctx->xalgo->encrypt(&ctx->actx, in_blk, out_blk);
+    ctx->xalgo->encrypt(&ctx->actx[0], in_blk, out_blk);
 }
 
 static void cipher_decrypt(akmos_cipher_t ctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
-    ctx->xalgo->decrypt(&ctx->actx, in_blk, out_blk);
+    ctx->xalgo->decrypt(&ctx->actx[0], in_blk, out_blk);
 }
 
 static void cipher_tde_setkey(akmos_cipher_t ctx, const uint8_t *key, size_t len)

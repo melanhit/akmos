@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "camellia.h"
 
@@ -224,8 +225,12 @@ static void camellia_setkey256(akmos_camellia_t *ctx, const uint8_t *key, size_t
     ctx->k[23] = Q2ROTL(k [1], k [0], 111);
 }
 
-void akmos_camellia_setkey(akmos_camellia_t *ctx, const uint8_t *key, size_t len)
+void akmos_camellia_setkey(akmos_cipher_algo_t *uctx, const uint8_t *key, size_t len)
 {
+    akmos_camellia_t *ctx;
+
+    ctx = &uctx->camellia;
+
     ctx->bits = len * 8;
     switch(len) {
         case 16:
@@ -242,9 +247,12 @@ void akmos_camellia_setkey(akmos_camellia_t *ctx, const uint8_t *key, size_t len
     }
 }
 
-void akmos_camellia_encrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_camellia_encrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_camellia_t *ctx;
     uint64_t pt[2], ct[2], t;
+
+    ctx = &uctx->camellia;
 
     pt[0] = PACK64LE(in_blk); pt[1] = PACK64LE(in_blk + 8);
 
@@ -298,9 +306,12 @@ out:
     UNPACK64LE(out_blk, ct[1]); UNPACK64LE(out_blk + 8, ct[0]);
 }
 
-void akmos_camellia_decrypt(akmos_camellia_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_camellia_decrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_camellia_t *ctx;
     uint64_t pt[2], ct[2], t;
+
+    ctx = &uctx->camellia;
 
     ct[0] = PACK64LE(in_blk); ct[1] = PACK64LE(in_blk + 8);
 

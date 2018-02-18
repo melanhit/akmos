@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -48,8 +48,8 @@ typedef struct {
     uint32_t state[4];
 } akmos_anubis_t;
 
-void akmos_anubis_setkey (akmos_anubis_t *, const uint8_t *, size_t);
-void akmos_anubis_encrypt(akmos_anubis_t *, const uint8_t *, uint8_t *);
-void akmos_anubis_decrypt(akmos_anubis_t *, const uint8_t *, uint8_t *);
+void akmos_anubis_setkey (akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_anubis_encrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
+void akmos_anubis_decrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_ANUBIS_H */

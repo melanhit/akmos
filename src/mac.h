@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -29,23 +29,25 @@
 #ifndef AKMOS_MAC_H
 #define AKMOS_MAC_H
 
+typedef union akmos_mac_mode_u akmos_mac_mode_t;
+
 #include "mode/hmac.h"
 #include "mode/cmac.h"
 #include "mode/cbc-mac.h"
 
-typedef union {
+union akmos_mac_mode_u {
     akmos_hmac_t    hmac;
     akmos_cmac_t    cmac;
     akmos_cbcmac_t  cbcmac;
-} akmos_mac_mode_t;
+};
 
 typedef struct {
     akmos_mode_id   id;
     char *name;
-    int  (*init)    (void *, akmos_algo_id);
-    int  (*setkey)  (void *, const uint8_t *, size_t);
-    void (*update)  (void *, const uint8_t *, size_t);
-    int  (*done)    (void *, uint8_t *);
+    int  (*init)    (akmos_mac_mode_t *, akmos_algo_id);
+    int  (*setkey)  (akmos_mac_mode_t *, const uint8_t *, size_t);
+    void (*update)  (akmos_mac_mode_t *, const uint8_t *, size_t);
+    int  (*done)    (akmos_mac_mode_t *, uint8_t *);
 } akmos_mac_xmode_t;
 
 struct akmos_mac_s {

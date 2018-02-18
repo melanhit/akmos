@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "salsa.h"
 
@@ -45,20 +46,32 @@
 #define QROUND(a, b, c, n)             \
     s[a] ^= ROTL32((s[b] + s[c]), n);
 
-void akmos_salsa_setiv(akmos_salsa_t *ctx, const uint8_t *iv)
+void akmos_salsa_setiv(akmos_cipher_algo_t *uctx, const uint8_t *iv)
 {
+    akmos_salsa_t *ctx;
+
+    ctx = &uctx->salsa;
+
     ctx->s[6] = PACK32BE(iv    );
     ctx->s[7] = PACK32BE(iv + 4);
 }
 
-void akmos_salsa_setcnt(akmos_salsa_t *ctx, const uint8_t *cnt)
+void akmos_salsa_setcnt(akmos_cipher_algo_t *uctx, const uint8_t *cnt)
 {
+    akmos_salsa_t *ctx;
+
+    ctx = &uctx->salsa;
+
     ctx->s[8] = PACK32BE(cnt    );
     ctx->s[9] = PACK32BE(cnt + 4);
 }
 
-void akmos_salsa_setkey(akmos_salsa_t *ctx, const uint8_t *in_key, size_t len)
+void akmos_salsa_setkey(akmos_cipher_algo_t *uctx, const uint8_t *in_key, size_t len)
 {
+    akmos_salsa_t *ctx;
+
+    ctx = &uctx->salsa;
+
     switch(len) {
         case 16:
             ctx->s[ 1] = PACK32BE(in_key     );
@@ -98,10 +111,13 @@ void akmos_salsa_setkey(akmos_salsa_t *ctx, const uint8_t *in_key, size_t len)
     }
 }
 
-void akmos_salsa_stream(akmos_salsa_t *ctx, uint8_t *out_blk)
+void akmos_salsa_stream(akmos_cipher_algo_t *uctx, uint8_t *out_blk)
 {
+    akmos_salsa_t *ctx;
     size_t i;
     uint32_t s[16];
+
+    ctx = &uctx->salsa;
 
     for(i = 0; i < 16; i++)
         s[i] = ctx->s[i];

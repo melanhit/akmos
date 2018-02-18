@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2017-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../digest.h"
 
 #include "skein.h"
 #include "skein_transform.h"
@@ -75,8 +76,12 @@ static void skein_init(akmos_skein_t *ctx)
     ctx->tw[1] = SKEIN_MSG_FLAG;
 }
 
-void akmos_skein_256_init(akmos_skein_t *ctx)
+void akmos_skein_256_init(akmos_digest_algo_t *uctx)
 {
+    akmos_skein_t *ctx;
+
+    ctx = &uctx->skein;
+
     memset(ctx, 0, sizeof(akmos_skein_t));
 
     ctx->blklen = AKMOS_SKEIN_256_BLKLEN;
@@ -85,8 +90,12 @@ void akmos_skein_256_init(akmos_skein_t *ctx)
     skein_init(ctx);
 }
 
-void akmos_skein_512_init(akmos_skein_t *ctx)
+void akmos_skein_512_init(akmos_digest_algo_t *uctx)
 {
+    akmos_skein_t *ctx;
+
+    ctx = &uctx->skein;
+
     memset(ctx, 0, sizeof(akmos_skein_t));
 
     ctx->blklen = AKMOS_SKEIN_512_BLKLEN;
@@ -95,8 +104,12 @@ void akmos_skein_512_init(akmos_skein_t *ctx)
     skein_init(ctx);
 }
 
-void akmos_skein_1024_init(akmos_skein_t *ctx)
+void akmos_skein_1024_init(akmos_digest_algo_t *uctx)
 {
+    akmos_skein_t *ctx;
+
+    ctx = &uctx->skein;
+
     memset(ctx, 0, sizeof(akmos_skein_t));
 
     ctx->blklen = AKMOS_SKEIN_1024_BLKLEN;
@@ -105,9 +118,12 @@ void akmos_skein_1024_init(akmos_skein_t *ctx)
     skein_init(ctx);
 }
 
-void akmos_skein_update(akmos_skein_t *ctx, const uint8_t *input, size_t len)
+void akmos_skein_update(akmos_digest_algo_t *uctx, const uint8_t *input, size_t len)
 {
+    akmos_skein_t *ctx;
     size_t tmp_len, rem_len, nb;
+
+    ctx = &uctx->skein;
 
     tmp_len = ctx->len + len;
 
@@ -143,9 +159,12 @@ void akmos_skein_update(akmos_skein_t *ctx, const uint8_t *input, size_t len)
         ctx->transform(ctx, input, nb, ctx->blklen);
 }
 
-void akmos_skein_done(akmos_skein_t *ctx, uint8_t *digest)
+void akmos_skein_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
+    akmos_skein_t *ctx;
     size_t i;
+
+    ctx = &uctx->skein;
 
     if(ctx->len < ctx->blklen)
         memset(ctx->buf + ctx->len, 0, ctx->blklen - ctx->len);

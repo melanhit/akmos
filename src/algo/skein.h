@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2017-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -79,11 +79,11 @@ typedef struct akmos_skein_s {
     };
 } akmos_skein_t;
 
-void akmos_skein_256_init   (akmos_skein_t *);
-void akmos_skein_512_init   (akmos_skein_t *);
-void akmos_skein_1024_init  (akmos_skein_t *);
+void akmos_skein_256_init   (akmos_digest_algo_t *);
+void akmos_skein_512_init   (akmos_digest_algo_t *);
+void akmos_skein_1024_init  (akmos_digest_algo_t *);
 
-void akmos_skein_update     (akmos_skein_t *, const uint8_t *, size_t);
-void akmos_skein_done       (akmos_skein_t *, uint8_t *);
+void akmos_skein_update     (akmos_digest_algo_t *, const uint8_t *, size_t);
+void akmos_skein_done       (akmos_digest_algo_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_SKEIN_H */

@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../digest.h"
 
 #include "ripemd.h"
 
@@ -649,8 +650,12 @@ static void ripemd_320_transform(uint32_t *h, const uint8_t *block, size_t nb)
     }
 }
 
-void akmos_ripemd_160_init(akmos_ripemd_t *ctx)
+void akmos_ripemd_160_init(akmos_digest_algo_t *uctx)
 {
+    akmos_ripemd_t *ctx;
+
+    ctx = &uctx->ripemd;
+
     ctx->h[0] = H0;
     ctx->h[1] = H1;
     ctx->h[2] = H2;
@@ -663,8 +668,12 @@ void akmos_ripemd_160_init(akmos_ripemd_t *ctx)
     ctx->transform = ripemd_160_transform;
 }
 
-void akmos_ripemd_256_init(akmos_ripemd_t *ctx)
+void akmos_ripemd_256_init(akmos_digest_algo_t *uctx)
 {
+    akmos_ripemd_t *ctx;
+
+    ctx = &uctx->ripemd;
+
     ctx->h[0] = H0;
     ctx->h[1] = H1;
     ctx->h[2] = H2;
@@ -680,8 +689,12 @@ void akmos_ripemd_256_init(akmos_ripemd_t *ctx)
     ctx->transform = ripemd_256_transform;
 }
 
-void akmos_ripemd_320_init(akmos_ripemd_t *ctx)
+void akmos_ripemd_320_init(akmos_digest_algo_t *uctx)
 {
+    akmos_ripemd_t *ctx;
+
+    ctx = &uctx->ripemd;
+
     ctx->h[0] = H0;
     ctx->h[1] = H1;
     ctx->h[2] = H2;
@@ -699,9 +712,12 @@ void akmos_ripemd_320_init(akmos_ripemd_t *ctx)
     ctx->transform = ripemd_320_transform;
 }
 
-void akmos_ripemd_update(akmos_ripemd_t *ctx, const uint8_t *input, size_t len)
+void akmos_ripemd_update(akmos_digest_algo_t *uctx, const uint8_t *input, size_t len)
 {
+    akmos_ripemd_t *ctx;
     size_t nb, tmp_len;
+
+    ctx = &uctx->ripemd;
 
     tmp_len = len + ctx->len;
 
@@ -737,10 +753,13 @@ void akmos_ripemd_update(akmos_ripemd_t *ctx, const uint8_t *input, size_t len)
     ctx->total += nb;
 }
 
-void akmos_ripemd_done(akmos_ripemd_t *ctx, uint8_t *digest)
+void akmos_ripemd_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
+    akmos_ripemd_t *ctx;
     uint64_t len_b;
     size_t i;
+
+    ctx = &uctx->ripemd;
 
     len_b = ((ctx->total * AKMOS_RIPEMD_BLKLEN) + ctx->len) * 8;
     ctx->block[ctx->len] = 0x80;

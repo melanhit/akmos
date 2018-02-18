@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) 1999, Dr Brian Gladman (gladman@seven77.demon.co.uk)
  *   All rights reserved.
  *
@@ -32,6 +32,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "rc6.h"
 
@@ -47,11 +48,14 @@
         c = ROTR32(c - l_key[i + 1], t) ^ u;\
         a = ROTR32(a - l_key[i], u) ^ t
 
-void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *in_key, size_t len)
+void akmos_rc6_setkey(akmos_cipher_algo_t *uctx, const uint8_t *in_key, size_t len)
 {
+    akmos_rc6_t *ctx;
     uint32_t i, j, k, a, b;
     uint32_t *key, *l_key, *l;
     size_t t;
+
+    ctx   = &uctx->rc6;
 
     l     = ctx->l;
     key   = ctx->key;
@@ -81,11 +85,13 @@ void akmos_rc6_setkey(akmos_rc6_t *ctx, const uint8_t *in_key, size_t len)
     }
 }
 
-void akmos_rc6_encrypt(akmos_rc6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_rc6_encrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_rc6_t *ctx;
     uint32_t a, b, c, d, t, u;
     uint32_t *l_key;
 
+    ctx   = &uctx->rc6;
     l_key = ctx->l_key;
 
     a = PACK32BE(in_blk     );
@@ -110,11 +116,13 @@ void akmos_rc6_encrypt(akmos_rc6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk
     UNPACK32BE(out_blk + 12, d);
 }
 
-void akmos_rc6_decrypt(akmos_rc6_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_rc6_decrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_rc6_t *ctx;
     uint32_t a, b, c, d, t, u;
     uint32_t *l_key;
 
+    ctx   = &uctx->rc6;
     l_key = ctx->l_key;
 
     a = PACK32BE(in_blk     ) - l_key[42];

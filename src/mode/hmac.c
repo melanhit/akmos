@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2013-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2013-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,7 @@
 #include "../akmos.h"
 #include "../error.h"
 #include "../digest.h"
+#include "../mac.h"
 
 #include "hmac.h"
 
@@ -51,9 +52,12 @@ static int hmac_expkey(akmos_algo_id algo, const uint8_t *key, size_t len, uint8
     return AKMOS_ERR_SUCCESS;
 }
 
-int akmos_hmac_init(akmos_hmac_t *ctx, akmos_algo_id algo)
+int akmos_hmac_init(akmos_mac_mode_t *uctx, akmos_algo_id algo)
 {
+    akmos_hmac_t *ctx;
     int err;
+
+    ctx = &uctx->hmac;
 
     err = akmos_digest_init(&ctx->dctx, algo);
     if(err)
@@ -72,10 +76,13 @@ int akmos_hmac_init(akmos_hmac_t *ctx, akmos_algo_id algo)
     return AKMOS_ERR_SUCCESS;
 }
 
-int akmos_hmac_setkey(akmos_hmac_t *ctx, const uint8_t *key, size_t len)
+int akmos_hmac_setkey(akmos_mac_mode_t *uctx, const uint8_t *key, size_t len)
 {
+    akmos_hmac_t *ctx;
     int err;
     size_t i;
+
+    ctx = &uctx->hmac;
 
     err = AKMOS_ERR_SUCCESS;
 
@@ -118,15 +125,22 @@ out:
     return err;
 }
 
-void akmos_hmac_update(akmos_hmac_t *ctx, const uint8_t *blk, size_t len)
+void akmos_hmac_update(akmos_mac_mode_t *uctx, const uint8_t *blk, size_t len)
 {
+    akmos_hmac_t *ctx;
+
+    ctx = &uctx->hmac;
+
     akmos_digest_update(ctx->dctx, blk, len);
 }
 
-int akmos_hmac_done(akmos_hmac_t *ctx, uint8_t *mac)
+int akmos_hmac_done(akmos_mac_mode_t *uctx, uint8_t *mac)
 {
+    akmos_hmac_t *ctx;
     uint8_t *buf;
     int err;
+
+    ctx = &uctx->hmac;
 
     buf = malloc(ctx->outlen);
     if(!buf)

@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -45,9 +45,9 @@ typedef struct {
 } akmos_chacha_t;
 #endif
 
-void akmos_chacha_setiv (akmos_chacha_t *, const uint8_t *);
-void akmos_chacha_setcnt(akmos_chacha_t *, const uint8_t *);
-void akmos_chacha_setkey(akmos_chacha_t *, const uint8_t *, size_t);
-void akmos_chacha_stream(akmos_chacha_t *, uint8_t *);
+void akmos_chacha_setiv (akmos_cipher_algo_t *, const uint8_t *);
+void akmos_chacha_setcnt(akmos_cipher_algo_t *, const uint8_t *);
+void akmos_chacha_setkey(akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_chacha_stream(akmos_cipher_algo_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_CHACHA_H */

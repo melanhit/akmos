@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -44,8 +44,8 @@ typedef struct {
     size_t bits;
 } akmos_camellia_t;
 
-void akmos_camellia_setkey (akmos_camellia_t *, const uint8_t *, size_t);
-void akmos_camellia_encrypt(akmos_camellia_t *, const uint8_t *, uint8_t *);
-void akmos_camellia_decrypt(akmos_camellia_t *, const uint8_t *, uint8_t *);
+void akmos_camellia_setkey (akmos_cipher_algo_t *, const uint8_t *, size_t);
+void akmos_camellia_encrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
+void akmos_camellia_decrypt(akmos_cipher_algo_t *, const uint8_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_CAMELLIA_H */

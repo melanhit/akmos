@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -47,11 +47,11 @@ typedef struct {
     };
 } akmos_ripemd_t;
 
-void akmos_ripemd_160_init(akmos_ripemd_t *);
-void akmos_ripemd_256_init(akmos_ripemd_t *);
-void akmos_ripemd_320_init(akmos_ripemd_t *);
+void akmos_ripemd_160_init(akmos_digest_algo_t *);
+void akmos_ripemd_256_init(akmos_digest_algo_t *);
+void akmos_ripemd_320_init(akmos_digest_algo_t *);
 
-void akmos_ripemd_update (akmos_ripemd_t *, const uint8_t *, size_t);
-void akmos_ripemd_done   (akmos_ripemd_t *, uint8_t *);
+void akmos_ripemd_update (akmos_digest_algo_t *, const uint8_t *, size_t);
+void akmos_ripemd_done   (akmos_digest_algo_t *, uint8_t *);
 
 #endif  /* AKMOS_ALGO_RIPEMD_H */

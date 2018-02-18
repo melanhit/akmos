@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -44,9 +44,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_ANUBIS_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_anubis_setkey,
-        (void *)&akmos_anubis_encrypt,
-        (void *)&akmos_anubis_decrypt,
+        &akmos_anubis_setkey,
+        &akmos_anubis_encrypt,
+        &akmos_anubis_decrypt,
     },
     {
         {
@@ -58,9 +58,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_BLOWFISH_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_blowfish_setkey,
-        (void *)&akmos_blowfish_encrypt,
-        (void *)&akmos_blowfish_decrypt
+        &akmos_blowfish_setkey,
+        &akmos_blowfish_encrypt,
+        &akmos_blowfish_decrypt
     },
     {
         {
@@ -72,9 +72,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_CAMELLIA_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_camellia_setkey,
-        (void *)&akmos_camellia_encrypt,
-        (void *)&akmos_camellia_decrypt
+        &akmos_camellia_setkey,
+        &akmos_camellia_encrypt,
+        &akmos_camellia_decrypt
     },
     {
         {
@@ -86,9 +86,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_CAST6_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_cast6_setkey,
-        (void *)&akmos_cast6_encrypt,
-        (void *)&akmos_cast6_decrypt
+        &akmos_cast6_setkey,
+        &akmos_cast6_encrypt,
+        &akmos_cast6_decrypt
     },
     {
         {
@@ -100,9 +100,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_RC6_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_rc6_setkey,
-        (void *)&akmos_rc6_encrypt,
-        (void *)&akmos_rc6_decrypt
+        &akmos_rc6_setkey,
+        &akmos_rc6_encrypt,
+        &akmos_rc6_decrypt
     },
     {
         {
@@ -114,9 +114,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_RIJNDAEL_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_rijndael_setkey,
-        (void *)&akmos_rijndael_encrypt,
-        (void *)&akmos_rijndael_decrypt
+        &akmos_rijndael_setkey,
+        &akmos_rijndael_encrypt,
+        &akmos_rijndael_decrypt
     },
     {
         {
@@ -128,9 +128,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_SERPENT_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_serpent_setkey,
-        (void *)&akmos_serpent_encrypt,
-        (void *)&akmos_serpent_decrypt
+        &akmos_serpent_setkey,
+        &akmos_serpent_encrypt,
+        &akmos_serpent_decrypt
     },
     {
         {
@@ -142,9 +142,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_SEED_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_seed_setkey,
-        (void *)&akmos_seed_encrypt,
-        (void *)&akmos_seed_decrypt
+        &akmos_seed_setkey,
+        &akmos_seed_encrypt,
+        &akmos_seed_decrypt
     },
     {
         {
@@ -156,9 +156,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_THREEFISH_256_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_threefish_256_setkey,
-        (void *)&akmos_threefish_256_encrypt,
-        (void *)&akmos_threefish_256_decrypt
+        &akmos_threefish_256_setkey,
+        &akmos_threefish_256_encrypt,
+        &akmos_threefish_256_decrypt
     },
     {
         {
@@ -170,9 +170,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_THREEFISH_512_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_threefish_512_setkey,
-        (void *)&akmos_threefish_512_encrypt,
-        (void *)&akmos_threefish_512_decrypt
+        &akmos_threefish_512_setkey,
+        &akmos_threefish_512_encrypt,
+        &akmos_threefish_512_decrypt
     },
     {
         {
@@ -184,9 +184,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_THREEFISH_1024_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_threefish_1024_setkey,
-        (void *)&akmos_threefish_1024_encrypt,
-        (void *)&akmos_threefish_1024_decrypt
+        &akmos_threefish_1024_setkey,
+        &akmos_threefish_1024_encrypt,
+        &akmos_threefish_1024_decrypt
     },
     {
         {
@@ -198,9 +198,9 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_TWOFISH_KEYSTEP
         },
         NULL, NULL, NULL,
-        (void *)&akmos_twofish_setkey,
-        (void *)&akmos_twofish_encrypt,
-        (void *)&akmos_twofish_decrypt
+        &akmos_twofish_setkey,
+        &akmos_twofish_encrypt,
+        &akmos_twofish_decrypt
     },
     {
         {
@@ -211,10 +211,10 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_SALSA_KEYMAX,
             AKMOS_SALSA_KEYSTEP
         },
-        (void *)&akmos_salsa_setcnt,
-        (void *)&akmos_salsa_setiv,
-        (void *)&akmos_salsa_stream,
-        (void *)&akmos_salsa_setkey,
+        &akmos_salsa_setcnt,
+        &akmos_salsa_setiv,
+        &akmos_salsa_stream,
+        &akmos_salsa_setkey,
         NULL, NULL
     },
     {
@@ -226,10 +226,10 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
             AKMOS_CHACHA_KEYMAX,
             AKMOS_CHACHA_KEYSTEP
         },
-        (void *)&akmos_chacha_setcnt,
-        (void *)&akmos_chacha_setiv,
-        (void *)&akmos_chacha_stream,
-        (void *)&akmos_chacha_setkey,
+        &akmos_chacha_setcnt,
+        &akmos_chacha_setiv,
+        &akmos_chacha_stream,
+        &akmos_chacha_setkey,
         NULL, NULL
     },
     {
@@ -243,39 +243,39 @@ const akmos_cipher_xalgo_t akmos_cipher_xlist[] = {
 const akmos_cipher_xmode_t akmos_xmode_ecb = {
     AKMOS_MODE_ECB, "ECB",
     NULL, NULL,
-    (void *)&akmos_ecb_encrypt,
-    (void *)&akmos_ecb_decrypt
+    &akmos_ecb_encrypt,
+    &akmos_ecb_decrypt
 };
 
 const akmos_cipher_xmode_t akmos_xmode_cbc = {
     AKMOS_MODE_CBC, "CBC",
-    (void *)&akmos_cbc_setiv,
+    &akmos_cbc_setiv,
     NULL,
-    (void *)&akmos_cbc_encrypt,
-    (void *)&akmos_cbc_decrypt
+    &akmos_cbc_encrypt,
+    &akmos_cbc_decrypt
 };
 
 const akmos_cipher_xmode_t akmos_xmode_cfb = {
     AKMOS_MODE_CFB, "CFB",
-    (void *)&akmos_cfb_setiv,
+    &akmos_cfb_setiv,
     NULL,
-    (void *)&akmos_cfb_encrypt,
-    (void *)&akmos_cfb_decrypt
+    &akmos_cfb_encrypt,
+    &akmos_cfb_decrypt
 };
 
 /* some modes use only encrypt() routines */
 const akmos_cipher_xmode_t akmos_xmode_ctr = {
     AKMOS_MODE_CTR, "CTR",
-    (void *)&akmos_ctr_setiv,
-    (void *)&akmos_ctr_setcnt,
-    (void *)&akmos_ctr_encrypt,
-    (void *)&akmos_ctr_encrypt
+    &akmos_ctr_setiv,
+    &akmos_ctr_setcnt,
+    &akmos_ctr_encrypt,
+    &akmos_ctr_encrypt
 };
 
 const akmos_cipher_xmode_t akmos_xmode_ofb = {
     AKMOS_MODE_OFB, "OFB",
-    (void *)&akmos_ofb_setiv,
+    &akmos_ofb_setiv,
     NULL,
-    (void *)&akmos_ofb_encrypt,
-    (void *)&akmos_ofb_encrypt
+    &akmos_ofb_encrypt,
+    &akmos_ofb_encrypt
 };

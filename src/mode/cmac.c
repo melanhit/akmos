@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -35,6 +35,7 @@
 #include "../akmos.h"
 #include "../error.h"
 #include "../cipher.h"
+#include "../mac.h"
 
 #include "cmac.h"
 
@@ -99,9 +100,12 @@ static void cmac_update(akmos_cmac_t *ctx, const uint8_t *in_blk, size_t len)
         akmos_cipher_crypt(ctx->actx, in_blk + i, AKMOS_BUFSZ & SIZE_T_MAX, ctx->buf);
 }
 
-int akmos_cmac_init(akmos_cmac_t *ctx, akmos_algo_id algo)
+int akmos_cmac_init(akmos_mac_mode_t *uctx, akmos_algo_id algo)
 {
+    akmos_cmac_t *ctx;
     int err;
+
+    ctx = &uctx->cmac;
 
     memset(ctx, 0, sizeof(akmos_cmac_t));
 
@@ -116,11 +120,14 @@ int akmos_cmac_init(akmos_cmac_t *ctx, akmos_algo_id algo)
     return AKMOS_ERR_SUCCESS;
 }
 
-int akmos_cmac_setkey(akmos_cmac_t *ctx, const uint8_t *key, size_t len)
+int akmos_cmac_setkey(akmos_mac_mode_t *uctx, const uint8_t *key, size_t len)
 {
+    akmos_cmac_t *ctx;
     uint8_t *k0;
     size_t l;
     int err;
+
+    ctx = &uctx->cmac;
 
     l = akmos_cipher_blklen(ctx->algo);
     k0 = malloc(l);
@@ -175,10 +182,13 @@ out:
     return err;
 }
 
-void akmos_cmac_update(akmos_cmac_t *ctx, const uint8_t *in_blk, size_t len)
+void akmos_cmac_update(akmos_mac_mode_t *uctx, const uint8_t *in_blk, size_t len)
 {
+    akmos_cmac_t *ctx;
     size_t new_len, rem_len, tmp_len;
     const uint8_t *tbuf;
+
+    ctx = &uctx->cmac;
 
     tmp_len = AKMOS_BUFSZ - ctx->len;
     rem_len = len < tmp_len ? len : tmp_len;
@@ -205,11 +215,14 @@ void akmos_cmac_update(akmos_cmac_t *ctx, const uint8_t *in_blk, size_t len)
     ctx->c = 1;
 }
 
-int akmos_cmac_done(akmos_cmac_t *ctx, uint8_t *mac)
+int akmos_cmac_done(akmos_mac_mode_t *uctx, uint8_t *mac)
 {
+    akmos_cmac_t *ctx;
     uint8_t *p;
     size_t i, blklen, tmplen;
     int err;
+
+    ctx = &uctx->cmac;
 
     err = AKMOS_ERR_SUCCESS;
     blklen = akmos_cipher_blklen(ctx->algo);

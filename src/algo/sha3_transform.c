@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,9 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "../akmos.h"
 #include "../bits.h"
+#include "../digest.h"
 
 #include "sha3.h"
 #include "sha3_transform.h"

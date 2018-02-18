@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -39,9 +39,9 @@ typedef struct {
     size_t blklen;
 } akmos_cbcmac_t;
 
-int  akmos_cbcmac_init  (akmos_cbcmac_t *, akmos_algo_id);
-int  akmos_cbcmac_setkey(akmos_cbcmac_t *, const uint8_t *, size_t);
-void akmos_cbcmac_update(akmos_cbcmac_t *, const uint8_t *, size_t);
-int  akmos_cbcmac_done  (akmos_cbcmac_t *, uint8_t *);
+int  akmos_cbcmac_init  (akmos_mac_mode_t *, akmos_algo_id);
+int  akmos_cbcmac_setkey(akmos_mac_mode_t *, const uint8_t *, size_t);
+void akmos_cbcmac_update(akmos_mac_mode_t *, const uint8_t *, size_t);
+int  akmos_cbcmac_done  (akmos_mac_mode_t *, uint8_t *);
 
 #endif /* AKMOS_MODE_CBCMAC_H */

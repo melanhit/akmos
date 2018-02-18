@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   Copyright (c) Paulo S.L.M. Barreto, Vincent Rijmen
  *   All rights reserved.
  *
@@ -33,6 +33,7 @@
 
 #include "../akmos.h"
 #include "../bits.h"
+#include "../cipher.h"
 
 #include "anubis.h"
 
@@ -51,12 +52,15 @@ static const uint32_t rc[] = {
     0xf726ffed, 0xe89d6f8e, 0x19a0f089
 };
 
-void akmos_anubis_setkey(akmos_anubis_t *ctx, const uint8_t *key, size_t len)
+void akmos_anubis_setkey(akmos_cipher_algo_t *uctx, const uint8_t *key, size_t len)
 {
+    akmos_anubis_t *ctx;
     int N, R, i, j, r;
     uint32_t *kappa, *inter;
     uint32_t v, K0, K1, K2, K3;
     uint32_t *e_key, *d_key;
+
+    ctx = &uctx->anubis;
 
     N = (len / 4) & INT_MAX;
     ctx->r = R = 8 + N;
@@ -222,12 +226,18 @@ static void anubis_crypt(akmos_anubis_t *ctx,
     UNPACK32LE(out_blk + 12, inter[3]);
 }
 
-void akmos_anubis_encrypt(akmos_anubis_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_anubis_encrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_anubis_t *ctx;
+
+    ctx = &uctx->anubis;
     anubis_crypt(ctx, ctx->e_key, in_blk, out_blk);
 }
 
-void akmos_anubis_decrypt(akmos_anubis_t *ctx, const uint8_t *in_blk, uint8_t *out_blk)
+void akmos_anubis_decrypt(akmos_cipher_algo_t *uctx, const uint8_t *in_blk, uint8_t *out_blk)
 {
+    akmos_anubis_t *ctx;
+
+    ctx = &uctx->anubis;
     anubis_crypt(ctx, ctx->d_key, in_blk, out_blk);
 }
