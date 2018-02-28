@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,7 @@ struct opt_digest_s {
     struct {
         int algo;
         int bin;
+        int quiet;
     } set;
     int ver;
 };
@@ -71,7 +72,7 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
     int c, err;
     unsigned num;
 
-    while((c = getopt(argc, argv, "a:n:bVh")) != -1) {
+    while((c = getopt(argc, argv, "a:n:bqVh")) != -1) {
         switch(c) {
             case 'a':
                 algo = akmos_digest_id(optarg);
@@ -97,7 +98,10 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
                 }
 
                 opt->thr_num = num;
+                break;
 
+            case 'q':
+                opt->set.quiet = c;
                 break;
 
             case 'V':
@@ -106,7 +110,7 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
 
             case 'h':
             default:
-                printf("Usage: akmos dgst [-a algo] [-n thread] [-b] [-V] <input>\n");
+                printf("Usage: akmos dgst [-a algo] [-n thread] [-q] [-b] [-V] <input>\n");
                 return EXIT_FAILURE;
         }
     }
@@ -125,7 +129,7 @@ static int parse_arg(struct opt_digest_s *opt, int argc, char **argv)
     return EXIT_SUCCESS;
 }
 
-static void print_hex(const char *path, const char *stralg, uint8_t *md, size_t len)
+static void print_hex(const char *path, const char *stralg, uint8_t *md, size_t len, int quiet)
 {
     size_t i;
     const char *s = "-";
@@ -133,10 +137,14 @@ static void print_hex(const char *path, const char *stralg, uint8_t *md, size_t 
     for(i = 0; i < len; i++)
         printf("%.2x", md[i]);
 
-    if(!path)
-        path = s;
+    if(!quiet) {
+        if(!path)
+            path = s;
 
-    printf(" = %s(%s)\n", stralg, path);
+        printf(" = %s(%s)\n", stralg, path);
+    } else {
+        printf("\n");
+    }
 }
 
 static void print_raw(uint8_t *md, size_t len)
@@ -259,7 +267,7 @@ int akmos_cli_digest(int argc, char **argv)
 
         for(j = 0; j < thr_cnt; j++) {
             if(!opt.set.bin)
-                print_hex(thr_opt[j].input, desc->name, thr_opt[j].md, desc->outlen);
+                print_hex(thr_opt[j].input, desc->name, thr_opt[j].md, desc->outlen, opt.set.quiet);
             else
                 print_raw(thr_opt[j].md, desc->outlen);
         }
