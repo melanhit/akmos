@@ -58,6 +58,8 @@ akmos_mode_id akmos_str2mode(const char *name)
         return AKMOS_MODE_CTR;
     else if(strcasecmp(name, akmos_xmode_cfb.name) == 0)
         return AKMOS_MODE_CFB;
+    else if(strcasecmp(name, akmos_xmode_cfb1.name) == 0)
+        return AKMOS_MODE_CFB1;
     else if(strcasecmp(name, akmos_xmode_cbcmac.name) == 0)
         return AKMOS_MODE_CBCMAC;
     else if(strcasecmp(name, akmos_xmode_cmac.name) == 0)
@@ -86,6 +88,9 @@ const char *akmos_mode2str(akmos_mode_id mode)
 
         case AKMOS_MODE_CFB:
             return akmos_xmode_cfb.name;
+
+        case AKMOS_MODE_CFB1:
+            return akmos_xmode_cfb1.name;
 
         case AKMOS_MODE_CBCMAC:
             return akmos_xmode_cbcmac.name;

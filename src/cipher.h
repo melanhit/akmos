@@ -126,6 +126,7 @@ extern const akmos_cipher_xalgo_t akmos_cipher_xlist[];
 extern const akmos_cipher_xmode_t akmos_xmode_ecb;
 extern const akmos_cipher_xmode_t akmos_xmode_cbc;
 extern const akmos_cipher_xmode_t akmos_xmode_cfb;
+extern const akmos_cipher_xmode_t akmos_xmode_cfb1;
 extern const akmos_cipher_xmode_t akmos_xmode_ctr;
 extern const akmos_cipher_xmode_t akmos_xmode_ofb;
 

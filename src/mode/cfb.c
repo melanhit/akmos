@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -63,18 +63,46 @@ void akmos_cfb_encrypt(akmos_cipher_t ctx, const uint8_t *in_blk, size_t in_len,
 
 void akmos_cfb_decrypt(akmos_cipher_t ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
-    akmos_cfb_t *ptr;
+    akmos_cfb_t *cfb;
     size_t i, nb, blklen;
 
-    ptr = &ctx->mctx.cfb;
+    cfb = &ctx->mctx.cfb;
     blklen = ctx->xalgo->desc.blklen;
 
     nb = in_len / blklen;
 
     for(i = 0; i < nb; i++, in_blk += blklen, out_blk += blklen) {
-        ctx->encrypt(ctx, ptr->iv, ptr->buf);
-        memcpy(ptr->iv, in_blk, blklen);
+        ctx->encrypt(ctx, cfb->iv, cfb->buf);
+        memcpy(cfb->iv, in_blk, blklen);
 
-        ctx->pxor(ptr->buf, in_blk, out_blk);
+        ctx->pxor(cfb->buf, in_blk, out_blk);
+    }
+}
+
+void akmos_cfb1_encrypt(akmos_cipher_t ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+{
+    akmos_cfb_t *cfb;
+    size_t i;
+
+    cfb = &ctx->mctx.cfb;
+
+    for(i = 0; i < in_len; i++) {
+        ctx->encrypt(ctx, cfb->iv, cfb->iv);
+        cfb->iv[0] ^= in_blk[i];
+        out_blk[i] = cfb->iv[0];
+    }
+}
+
+void akmos_cfb1_decrypt(akmos_cipher_t ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
+{
+    akmos_cfb_t *cfb;
+    size_t i;
+
+    cfb = &ctx->mctx.cfb;
+
+    for(i = 0; i < in_len; i++) {
+        ctx->encrypt(ctx, cfb->iv, cfb->iv);
+        cfb->iv[0] = in_blk[i];
+        out_blk[i] = cfb->iv[0] ^ in_blk[i];
     }
 }

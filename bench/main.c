@@ -222,6 +222,9 @@ int main(int argc, char **argv)
     err = bench_cipher(AKMOS_ALGO_ANUBIS, AKMOS_MODE_CFB, &opt);
     if(err) goto out;
 
+    err = bench_cipher(AKMOS_ALGO_ANUBIS, AKMOS_MODE_CFB1, &opt);
+    if(err) goto out;
+
     err = bench_cipher(AKMOS_ALGO_ANUBIS, AKMOS_MODE_OFB, &opt);
     if(err) goto out;
 
@@ -235,6 +238,9 @@ int main(int argc, char **argv)
     if(err) goto out;
 
     err = bench_cipher(AKMOS_ALGO_BLOWFISH, AKMOS_MODE_CFB, &opt);
+    if(err) goto out;
+
+    err = bench_cipher(AKMOS_ALGO_BLOWFISH, AKMOS_MODE_CFB1, &opt);
     if(err) goto out;
 
     err = bench_cipher(AKMOS_ALGO_BLOWFISH, AKMOS_MODE_OFB, &opt);
@@ -252,6 +258,9 @@ int main(int argc, char **argv)
     err = bench_cipher(AKMOS_ALGO_CAMELLIA, AKMOS_MODE_CFB, &opt);
     if(err) goto out;
 
+    err = bench_cipher(AKMOS_ALGO_CAMELLIA, AKMOS_MODE_CFB1, &opt);
+    if(err) goto out;
+
     err = bench_cipher(AKMOS_ALGO_CAMELLIA, AKMOS_MODE_OFB, &opt);
     if(err) goto out;
 
@@ -265,6 +274,9 @@ int main(int argc, char **argv)
     if(err) goto out;
 
     err = bench_cipher(AKMOS_ALGO_CAST6, AKMOS_MODE_CFB, &opt);
+    if(err) goto out;
+
+    err = bench_cipher(AKMOS_ALGO_CAST6, AKMOS_MODE_CFB1, &opt);
     if(err) goto out;
 
     err = bench_cipher(AKMOS_ALGO_CAST6, AKMOS_MODE_OFB, &opt);
@@ -285,6 +297,9 @@ int main(int argc, char **argv)
     err = bench_cipher(AKMOS_ALGO_RC6, AKMOS_MODE_CFB, &opt);
     if(err) goto out;
 
+    err = bench_cipher(AKMOS_ALGO_RC6, AKMOS_MODE_CFB1, &opt);
+    if(err) goto out;
+
     err = bench_cipher(AKMOS_ALGO_RC6, AKMOS_MODE_OFB, &opt);
     if(err) goto out;
 
@@ -298,6 +313,9 @@ int main(int argc, char **argv)
     if(err) goto out;
 
     err = bench_cipher(AKMOS_ALGO_RIJNDAEL, AKMOS_MODE_CFB, &opt);
+    if(err) goto out;
+
+    err = bench_cipher(AKMOS_ALGO_RIJNDAEL, AKMOS_MODE_CFB1, &opt);
     if(err) goto out;
 
     err = bench_cipher(AKMOS_ALGO_RIJNDAEL, AKMOS_MODE_OFB, &opt);
@@ -318,6 +336,9 @@ int main(int argc, char **argv)
     err = bench_cipher(AKMOS_ALGO_SEED, AKMOS_MODE_CFB, &opt);
     if(err) goto out;
 
+    err = bench_cipher(AKMOS_ALGO_SEED, AKMOS_MODE_CFB1, &opt);
+    if(err) goto out;
+
     err = bench_cipher(AKMOS_ALGO_SEED, AKMOS_MODE_OFB, &opt);
     if(err) goto out;
 
@@ -331,6 +352,9 @@ int main(int argc, char **argv)
     if(err) goto out;
 
     err = bench_cipher(AKMOS_ALGO_SERPENT, AKMOS_MODE_CFB, &opt);
+    if(err) goto out;
+
+    err = bench_cipher(AKMOS_ALGO_SERPENT, AKMOS_MODE_CFB1, &opt);
     if(err) goto out;
 
     err = bench_cipher(AKMOS_ALGO_SERPENT, AKMOS_MODE_OFB, &opt);
@@ -348,6 +372,9 @@ int main(int argc, char **argv)
     err = bench_cipher(AKMOS_ALGO_THREEFISH_256, AKMOS_MODE_CFB, &opt);
     if(err) goto out;
 
+    err = bench_cipher(AKMOS_ALGO_THREEFISH_256, AKMOS_MODE_CFB1, &opt);
+    if(err) goto out;
+
     err = bench_cipher(AKMOS_ALGO_THREEFISH_256, AKMOS_MODE_OFB, &opt);
     if(err) goto out;
 
@@ -363,6 +390,9 @@ int main(int argc, char **argv)
     err = bench_cipher(AKMOS_ALGO_THREEFISH_512, AKMOS_MODE_CFB, &opt);
     if(err) goto out;
 
+    err = bench_cipher(AKMOS_ALGO_THREEFISH_512, AKMOS_MODE_CFB1, &opt);
+    if(err) goto out;
+
     err = bench_cipher(AKMOS_ALGO_THREEFISH_512, AKMOS_MODE_OFB, &opt);
     if(err) goto out;
 
@@ -376,6 +406,9 @@ int main(int argc, char **argv)
     if(err) goto out;
 
     err = bench_cipher(AKMOS_ALGO_THREEFISH_1024, AKMOS_MODE_CFB, &opt);
+    if(err) goto out;
+
+    err = bench_cipher(AKMOS_ALGO_THREEFISH_1024, AKMOS_MODE_CFB1, &opt);
     if(err) goto out;
 
     err = bench_cipher(AKMOS_ALGO_THREEFISH_1024, AKMOS_MODE_OFB, &opt);

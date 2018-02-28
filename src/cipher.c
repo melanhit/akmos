@@ -60,6 +60,10 @@ static int cipher_init_mode(akmos_cipher_t ctx, akmos_mode_id mode)
             ctx->xmode  = &akmos_xmode_cfb;
             break;
 
+        case AKMOS_MODE_CFB1:
+            ctx->xmode  = &akmos_xmode_cfb1;
+            break;
+
         default:
             return AKMOS_ERR_MODEID;
     }

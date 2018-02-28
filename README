@@ -39,6 +39,7 @@ digests:
 List of supported block cipher modes:
  * CBC
  * CFB
+ * CFB1
  * CTR
  * ECB
  * OFB

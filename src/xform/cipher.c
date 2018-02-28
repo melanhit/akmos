@@ -263,6 +263,14 @@ const akmos_cipher_xmode_t akmos_xmode_cfb = {
     &akmos_cfb_decrypt
 };
 
+const akmos_cipher_xmode_t akmos_xmode_cfb1 = {
+    AKMOS_MODE_CFB1, "CFB1",
+    &akmos_cfb_setiv,
+    NULL,
+    &akmos_cfb1_encrypt,
+    &akmos_cfb1_decrypt
+};
+
 /* some modes use only encrypt() routines */
 const akmos_cipher_xmode_t akmos_xmode_ctr = {
     AKMOS_MODE_CTR, "CTR",

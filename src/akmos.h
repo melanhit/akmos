@@ -88,6 +88,8 @@ typedef enum {
     AKMOS_MODE_OFB              = 0x00000003,
     AKMOS_MODE_CTR              = 0x00000004,
     AKMOS_MODE_CFB              = 0x00000005,
+    /* 1 byte */
+    AKMOS_MODE_CFB1             = 0x00000006,
 
     /* MAC mode */
     AKMOS_MODE_HMAC             = 0x00000010,
