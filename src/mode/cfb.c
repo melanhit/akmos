@@ -88,6 +88,7 @@ void akmos_cfb1_encrypt(akmos_cipher_t ctx, const uint8_t *in_blk, size_t in_len
 
     for(i = 0; i < in_len; i++) {
         ctx->encrypt(ctx, cfb->iv, cfb->iv);
+
         cfb->iv[0] ^= in_blk[i];
         out_blk[i] = cfb->iv[0];
     }
@@ -96,13 +97,16 @@ void akmos_cfb1_encrypt(akmos_cipher_t ctx, const uint8_t *in_blk, size_t in_len
 void akmos_cfb1_decrypt(akmos_cipher_t ctx, const uint8_t *in_blk, size_t in_len, uint8_t *out_blk)
 {
     akmos_cfb_t *cfb;
+    uint8_t t;
     size_t i;
 
     cfb = &ctx->mctx.cfb;
 
     for(i = 0; i < in_len; i++) {
         ctx->encrypt(ctx, cfb->iv, cfb->iv);
+
+        t = cfb->iv[0] ^ in_blk[i];
         cfb->iv[0] = in_blk[i];
-        out_blk[i] = cfb->iv[0] ^ in_blk[i];
+        out_blk[i] = t;
     }
 }
