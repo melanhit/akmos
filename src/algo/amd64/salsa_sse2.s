@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -123,10 +123,10 @@ akmos_salsa_setkey:
 .type   akmos_salsa_stream, @function
 akmos_salsa_stream:
 
-    movdqa    (%rdi), %xmm12
-    movdqa  16(%rdi), %xmm13
-    movdqa  32(%rdi), %xmm14
-    movdqa  48(%rdi), %xmm15
+    movdqu    (%rdi), %xmm12
+    movdqu  16(%rdi), %xmm13
+    movdqu  32(%rdi), %xmm14
+    movdqu  48(%rdi), %xmm15
 
     movdqa  %xmm12, %xmm0
     movdqa  %xmm13, %xmm1

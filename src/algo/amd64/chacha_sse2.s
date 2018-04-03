@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2017-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -98,10 +98,10 @@ akmos_chacha_setkey:
 .globl  akmos_chacha_stream
 .type   akmos_chacha_stream, @function
 akmos_chacha_stream:
-    movdqa    (%rdi), %xmm0
-    movdqa  16(%rdi), %xmm1
-    movdqa  32(%rdi), %xmm2
-    movdqa  48(%rdi), %xmm3
+    movdqu    (%rdi), %xmm0
+    movdqu  16(%rdi), %xmm1
+    movdqu  32(%rdi), %xmm2
+    movdqu  48(%rdi), %xmm3
 
     movdqa  %xmm0, %xmm10
     movdqa  %xmm1, %xmm11
