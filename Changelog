@@ -1,4 +1,4 @@
-Changes to akmos-0.7.1 (04 April 2018)
+Changes to akmos-0.7.2 (04 April 2018)
     * fix segfault for Salsa and ChaCha ciphers (asm version)
 
 Changes to akmos-0.7 (18 February 2018)
