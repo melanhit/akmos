@@ -83,6 +83,7 @@
                     <arg>-a <replaceable>algo[:flag]</replaceable></arg>
                     <arg>-k <replaceable>keyfile</replaceable></arg>
                     <arg>-p | -P <replaceable>passfile</replaceable></arg>
+                    <arg>-l <replaceable>algo</replaceable></arg>
                     <arg>-y</arg>
                     <arg>-V</arg>
                     <arg>-h</arg>
@@ -130,6 +131,12 @@
                             <term><arg choice="plain">-P passfile</arg></term>
                             <listitem>
                                 <para>Read passphrase from a file</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term><arg choice="plain">-l algo</arg></term>
+                            <listitem>
+                                <para>List all vailable cipher forms for given <constant>algo</constant>.</para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>

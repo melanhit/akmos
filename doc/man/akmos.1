@@ -67,7 +67,7 @@ Print a short help
 .SH "SYMMETRIC CIPHERING"
 .SS ""
 .HP \w'\fBakmos\ enc|dec\fR\ 'u
-\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-k\ \fIkeyfile\fR] [\-p\ |\ \-P\ \fIpassfile\fR] [\-y] [\-V] [\-h] {input} {output}
+\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-k\ \fIkeyfile\fR] [\-p\ |\ \-P\ \fIpassfile\fR] [\-l\ \fIalgo\fR] [\-y] [\-V] [\-h] {input} {output}
 .SS "Options"
 .PP
 .PP
@@ -110,6 +110,12 @@ Use a passphrase as a component of the keyfile
 \-P\ passfile
 .RS 4
 Read passphrase from a file
+.RE
+.PP
+\-l\ algo
+.RS 4
+List all vailable cipher forms for given
+\fBalgo\fR\&.
 .RE
 .PP
 \-y

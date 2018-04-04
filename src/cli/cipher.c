@@ -51,6 +51,108 @@
 
 #define BUFLEN  (BUFSIZ*2)
 
+const char *cipher_mode[] = {"CBC", "CFB", "CTR", "ECB", "OFB", "OFB1", NULL};
+
+static void cipher_list_blk(const char *algo, size_t keymin, size_t keymax, size_t keystep)
+{
+    const char **p;
+    char buf[32];
+    size_t i, j;
+
+    for(i = keymin, j = 0, p = cipher_mode; i <= keymax; i += keystep, p = cipher_mode) {
+        while(*p) {
+            if(j == 3) {
+                j = 0;
+                fprintf(stdout, "\n");
+            }
+
+            snprintf(buf, sizeof(buf), "%s-%zd-%s", algo, i*8, *p);
+            fprintf(stdout, "%-24.24s", buf);
+
+            p++;
+            j++;
+        }
+    }
+
+    fprintf(stdout, "\n");
+}
+
+static void cipher_list_strm(const char *algo, size_t keymin, size_t keymax, size_t keystep)
+{
+    char buf[32];
+    size_t i, j;
+
+    for(i = keymin, j = 0; i <= keymax; i += keystep, j++) {
+        if(j == 3) {
+            j = 0;
+            fprintf(stdout, "\n");
+        }
+
+        snprintf(buf, sizeof(buf), "%s-%zd", algo, i*8);
+        fprintf(stdout, "%-24.24s", buf);
+    }
+
+    fprintf(stdout, "\n");
+}
+
+static int cipher_list_common(const char *algo_str)
+{
+    akmos_algo_id algo;
+    const akmos_cipher_xdesc_t *desc;
+
+    algo = akmos_cipher_id(algo_str);
+    if(!algo)
+        return akmos_perror(AKMOS_ERR_ALGOID);
+
+    desc = akmos_cipher_desc(algo);
+    if(!desc) {
+        fprintf(stderr, "Invalid cipher algorithm\n");
+        return EXIT_FAILURE;
+    }
+
+    if((algo == AKMOS_ALGO_SALSA) || (algo == AKMOS_ALGO_CHACHA))
+        cipher_list_strm(desc->name, desc->keymin, desc->keymax, desc->keystep);
+    else
+        cipher_list_blk(desc->name, desc->keymin, desc->keymax, desc->keystep);
+
+    return EXIT_SUCCESS;
+}
+
+static int cipher_list_threefish()
+{
+    akmos_algo_id algo;
+    const akmos_cipher_xdesc_t *desc;
+    const char *name = "Threefish";
+    char buf[16];
+    size_t i;
+
+    for(i = 256; i <= 1024; i *= 2) {
+        snprintf(buf, sizeof(buf), "%s-%zd", name, i);
+
+        algo = akmos_cipher_id(buf);
+        if(!algo)
+            return akmos_perror(AKMOS_ERR_ALGOID);
+
+        desc = akmos_cipher_desc(algo);
+        if(!desc) {
+            fprintf(stderr, "Invalid cipher algorithm\n");
+            return EXIT_FAILURE;
+        }
+
+        cipher_list_blk(name, desc->keymin, desc->keymax, desc->keystep);
+    }
+
+    return EXIT_SUCCESS;
+}
+
+static int cipher_list(const char *algo_str)
+{
+    if(strcasecmp(algo_str, "threefish") != 0)
+        return cipher_list_common(algo_str);
+    else
+        return cipher_list_threefish();
+}
+
 static int prompt_over(char *s)
 {
     int ans;
@@ -135,7 +237,7 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
 
     algo_str = NULL;
 
-    while((c = getopt(argc, argv, "a:pP:k:i:yVh")) != -1) {
+    while((c = getopt(argc, argv, "a:pP:k:l:i:yVh")) != -1) {
         switch(c) {
             case 'a':
                 algo_str = optarg;
@@ -164,12 +266,21 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
                 opt->ver = c;
                 return EXIT_SUCCESS;
 
+            case 'l':
+                opt->set.list = c;
+                opt->s_algo = optarg;
+                break;
+
             case 'h':
             default:
-                printf("Usage: akmos enc|dec [-a algo] [-k key] [-p | -P passfile] [-y] [-h] [-V] <input> <output>\n");
+                printf("Usage: akmos enc|dec [-a algo] [-k key] [-p | -P passfile] [-l algo] [-y] [-h] [-V] <input> <output>\n");
                 return EXIT_FAILURE;
         }
     }
+
+    /* print cipher algo forms */
+    if(opt->set.list)
+        return EXIT_SUCCESS;
 
     /* check input/output */
     len = argc - optind;
@@ -360,6 +471,9 @@ int akmos_cli_cipher(int argc, char **argv, akmos_mode_id enc)
 
     if(opt.ver)
         return akmos_cli_version();
+
+    if(opt.set.list)
+        return cipher_list(opt.s_algo);
 
     /* Setup master keys */
     keylen = opt.keylen * 2;
