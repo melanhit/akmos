@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2017, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2017-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -57,11 +57,9 @@ typedef struct cipher_opt_s {
     char *output;
     struct {
         int algo;
-        int mode;
         int passw;
         int passf;
         int key;
-        int keylen;
         int over;
     } set;
     int ver;

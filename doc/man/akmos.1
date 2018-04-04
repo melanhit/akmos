@@ -2,12 +2,12 @@
 .\"     Title: akmos
 .\"    Author: Andrew Romanenko <melanhit@gmail.com>
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: February, 2018
+.\"      Date: April, 2018
 .\"    Manual: AKMOS CLI REFERENCE
 .\"    Source: akmos 0.7
 .\"  Language: English
 .\"
-.TH "AKMOS" "1" "February, 2018" "akmos 0.7" "AKMOS CLI REFERENCE"
+.TH "AKMOS" "1" "April, 2018" "akmos 0.7" "AKMOS CLI REFERENCE"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -67,33 +67,31 @@ Print a short help
 .SH "SYMMETRIC CIPHERING"
 .SS ""
 .HP \w'\fBakmos\ enc|dec\fR\ 'u
-\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-m\ \fImode\fR] [\-k\ \fIkeyfile\fR] [\-l\ \fIkeylen\fR] [\-p\ |\ \-P\ \fIpassfile\fR] [\-y] [\-V] [\-h] {input} {output}
+\fBakmos enc|dec\fR [\-a\ \fIalgo[:flag]\fR] [\-k\ \fIkeyfile\fR] [\-p\ |\ \-P\ \fIpassfile\fR] [\-y] [\-V] [\-h] {input} {output}
 .SS "Options"
 .PP
 .PP
 \-a\ algo[:flag]
 .RS 4
 Crypto algorithm to use\&. By default is
-\fBTwofish\fR
-.sp
-Supported FLAGS
+\fBTwofish\-128\-CBC\fR
+.RE
+.PP
+.RS 4
+Supported tdea
+\fBflag\fR:
 .sp
 \fB:ede\fR
 flag put cipher into Encrypt\-Decrypt\-Encrypt mode (like 3DES)
 .sp
 \fB:eee\fR
 flag put cipher into Encrypt\-Encrypt\-Encrypt mode
-.sp
-NOTE: TDEA not available with stream ciphers
 .RE
 .PP
-\-m\ mode
 .RS 4
-Crypto mode to use\&. By default is
-\fBCBC\fR
-for block ciphers, and
-\fBCTR\fR
-for stream ciphers\&.
+NOTE:
+\fBflag\fR
+not available with stream ciphers
 .RE
 .PP
 \-k\ keyfile
@@ -112,13 +110,6 @@ Use a passphrase as a component of the keyfile
 \-P\ passfile
 .RS 4
 Read passphrase from a file
-.RE
-.PP
-\-l\ keylen
-.RS 4
-Key length (in bits) to use with the given crypto algorithm\&. By default is
-\fB128\fR
-bits
 .RE
 .PP
 \-y
@@ -142,97 +133,7 @@ Supported symmetric crypto algorithms:
 .SS "Modes"
 .PP
 Supported cipher modes:
-.PP
-\fBCBC\fR \- Cipher Block Chaining
-.RS 4
-.RE
-.PP
-\fBCFB\fR \- Cipher Feedback
-.RS 4
-.RE
-.PP
-\fBCTR\fR \- Counter
-.RS 4
-.RE
-.PP
-\fBECB\fR \- Electronic Codebook
-.RS 4
-.RE
-.PP
-\fBOFB\fR \- Output Feedback
-.RS 4
-.RE
-.SS "Key length"
-.PP
-\fBAnubis\fR
-.RS 4
-\fI128\fR, \fI192\fR, \fI256\fR, \fI320\fR
-.RE
-.PP
-\fBBlowfish\fR
-.RS 4
-\fI128\fR, \fI160\fR, \fI192\fR, \fI224\fR, \fI256\fR, \fI288\fR, \fI320\fR, \fI352\fR, \fI384\fR, \fI416\fR, \fI448\fR
-.RE
-.PP
-\fBChacha\fR
-.RS 4
-\fI256\fR
-.RE
-.PP
-\fBCamellia\fR
-.RS 4
-\fI128\fR, \fI192\fR, \fI256\fR
-.RE
-.PP
-\fBCAST6\fR
-.RS 4
-\fI128\fR, \fI192\fR, \fI256\fR
-.RE
-.PP
-\fBRC6\fR
-.RS 4
-\fI128\fR, \fI192\fR, \fI256\fR
-.RE
-.PP
-\fBRijndael\fR
-.RS 4
-\fI128\fR, \fI192\fR, \fI256\fR
-.RE
-.PP
-\fBSalsa\fR
-.RS 4
-\fI128\fR, \fI256\fR
-.RE
-.PP
-\fBSEED\fR
-.RS 4
-\fI128\fR
-.RE
-.PP
-\fBSerpent\fR
-.RS 4
-\fI128\fR, \fI192\fR, \fI256\fR
-.RE
-.PP
-\fBThreefish\-256\fR
-.RS 4
-\fI256\fR
-.RE
-.PP
-\fBThreefish\-512\fR
-.RS 4
-\fI512\fR
-.RE
-.PP
-\fBThreefish\-1024\fR
-.RS 4
-\fI1024\fR
-.RE
-.PP
-\fBTwofish\fR
-.RS 4
-\fI128\fR, \fI192\fR, \fI256\fR
-.RE
+\fICBC\fR, \fICFB\fR, \fICTR\fR, \fIECB\fR, \fIOFB\fR, \fIOFB1\fR
 .SH "HASHING"
 .SS ""
 .HP \w'\fBakmos\ dgst\fR\ 'u

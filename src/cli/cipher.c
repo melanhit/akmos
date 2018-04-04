@@ -70,62 +70,76 @@ static int prompt_over(char *s)
 
 static int parse_algo(cipher_opt_t *opt, char *algo_str)
 {
-    char *s1, *s2, *sv;
+    char s[32], s_algo[16], s_keylen[8], s_mode[8], s_tdea[8];
+    int err, n;
 
-    if(!algo_str) {
-        fprintf(stderr, "Missing cipher algorithm\n");
+    n = sscanf(algo_str, "%15[^-]-%7[^-]-%7[^:]:%7s", s_algo, s_keylen, s_mode, s_tdea);
+    if(n < 2) {
+        fprintf(stderr, "Invalid cipher algorithm\n");
         return EXIT_FAILURE;
     }
 
-    s1 = strtok_r(algo_str, ":", &sv);
-    s2 = strtok_r(NULL, ":", &sv);
+    /* set cipher algo id */
+    if(strcasecmp("threefish", s_algo) == 0)
+        snprintf(s, sizeof(s), "%s-%s", s_algo, s_keylen);
+    else
+        strcpy(s, s_algo);
 
-    if(!s2) {
-        if(strcasecmp(s1, algo_str) != 0) {
-            akmos_perror(AKMOS_ERR_ALGOID);
-            return EXIT_FAILURE;
-        }
-        opt->flag = 0;
-    } else {
-        if(strcasecmp(s2, "ede") == 0)
-            opt->flag = AKMOS_ALGO_FLAG_EDE;
-        else if(strcasecmp(s2, "eee") == 0)
-            opt->flag = AKMOS_ALGO_FLAG_EEE;
-        else {
-            fprintf(stderr, "Unknown cipher flag \'%s\'\n", s2);
-            return EXIT_FAILURE;
-        }
-    }
-
-    opt->algo = akmos_cipher_id(s1);
+    opt->algo = akmos_cipher_id(s);
     if(!opt->algo)
         return akmos_perror(AKMOS_ERR_ALGOID);
+
+    /* set cipher key length */
+    err = sscanf(s_keylen, "%4zu", &opt->keylen);
+    if(err == EOF || !err)
+        return akmos_perror(AKMOS_ERR_KEYLEN);
+
+    /* check for stream cipher */
+    if((opt->algo == AKMOS_ALGO_SALSA) || (opt->algo == AKMOS_ALGO_CHACHA)) {
+        if(n != 2) {
+            fprintf(stderr, "Invalid cipher algorithm\n");
+            return EXIT_FAILURE;
+        }
+        opt->mode = CIPHER_DEFAULT_SMODE;
+        opt->flag = 0;
+
+        return EXIT_SUCCESS;
+    }
+
+    /* set cipher mode */
+    opt->mode = akmos_str2mode(s_mode);
+    if(!opt->mode)
+    return akmos_perror(AKMOS_ERR_MODEID);
+
+    /* set tdea */
+    if(n == 4) {
+        if(strcasecmp(s_tdea, "ede") == 0)
+            opt->flag = AKMOS_ALGO_FLAG_EDE;
+        else if(strcasecmp(s_tdea, "eee") == 0)
+            opt->flag = AKMOS_ALGO_FLAG_EEE;
+        else {
+            fprintf(stderr, "Unknown cipher flag \'%s\'\n", s_tdea);
+            return EXIT_FAILURE;
+        }
+    } else {
+        opt->flag = 0;
+    }
 
     return EXIT_SUCCESS;
 }
 
 static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
 {
-    char *algo_str, *mode_str, *keylen_str;
+    char *algo_str;
     int c, err, len;
 
-    algo_str = mode_str = keylen_str = NULL;
+    algo_str = NULL;
 
-    while((c = getopt(argc, argv, "a:m:l:pP:k:i:yVh")) != -1) {
+    while((c = getopt(argc, argv, "a:pP:k:i:yVh")) != -1) {
         switch(c) {
             case 'a':
                 algo_str = optarg;
                 opt->set.algo = c;
-                break;
-
-            case 'm':
-                mode_str = optarg;
-                opt->set.mode = c;
-                break;
-
-            case 'l':
-                keylen_str = optarg;
-                opt->set.keylen = c;
                 break;
 
             case 'p':
@@ -152,7 +166,7 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
 
             case 'h':
             default:
-                printf("Usage: akmos enc|dec [-a algo] [-m mode] [-k key] [-l keylen] [-p | -P passfile] [-y] [-h] [-V] <input> <output>\n");
+                printf("Usage: akmos enc|dec [-a algo] [-k key] [-p | -P passfile] [-y] [-h] [-V] <input> <output>\n");
                 return EXIT_FAILURE;
         }
     }
@@ -177,65 +191,13 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
 
     /* set algo */
     if(!opt->set.algo) {
-        opt->algo = CIPHER_DEFAULT_EALGO;
+        opt->algo   = CIPHER_DEFAULT_EALGO;
+        opt->mode   = CIPHER_DEFAULT_BMODE;
+        opt->keylen = CIPHER_DEFAULT_KEYLEN;
     } else {
         err = parse_algo(opt, algo_str);
         if(err)
             return err;
-    }
-
-    /* set mode */
-    if(!opt->set.mode) {
-        switch(opt->algo) {
-            case AKMOS_ALGO_SALSA:
-            case AKMOS_ALGO_CHACHA:
-                opt->mode = CIPHER_DEFAULT_SMODE;
-                break;
-
-            default:
-                opt->mode = CIPHER_DEFAULT_BMODE;
-                break;
-        }
-    } else {
-        if(mode_str) {
-            opt->mode = akmos_str2mode(mode_str);
-            if(!opt->mode)
-                return akmos_perror(AKMOS_ERR_MODEID);
-        }
-    }
-
-    if(!opt->set.key && !opt->set.passw && !opt->set.passf)
-        opt->set.passw = 'p';
-
-    /* set keylen */
-    if(!opt->set.keylen) {
-        switch(opt->algo) {
-            case AKMOS_ALGO_THREEFISH_256:
-                opt->keylen = 256;
-                break;
-
-            case AKMOS_ALGO_THREEFISH_512:
-                opt->keylen = 512;
-                break;
-
-            case AKMOS_ALGO_THREEFISH_1024:
-                opt->keylen = 1024;
-                break;
-
-            case AKMOS_ALGO_CHACHA:
-                opt->keylen = 256;
-                break;
-
-            default:
-                opt->keylen = CIPHER_DEFAULT_KEYLEN;
-                break;
-       }
-    } else {
-        if(keylen_str) {
-            err = sscanf(keylen_str, "%4zu", &opt->keylen);
-            if(err == EOF || !err)
-                return akmos_perror(AKMOS_ERR_KEYLEN);
-        }
     }
 
     if(opt->keylen > (CIPHER_MAX_KEYLEN*8) || opt->keylen == 0 || (opt->keylen % 8) != 0) {
@@ -248,6 +210,9 @@ static int parse_arg(cipher_opt_t *opt, int argc, char **argv)
         fprintf(stderr, "Invalid cipher algorithm\n");
         return EXIT_FAILURE;
     }
+
+    if(!opt->set.key && !opt->set.passw && !opt->set.passf)
+        opt->set.passw = 'p';
 
     /* read password */
     if(opt->set.passw && opt->set.passf) {

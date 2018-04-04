@@ -10,7 +10,7 @@
                 <email>melanhit@gmail.com</email>
                 <contrib></contrib>
             </author>
-            <date>February, 2018</date>
+            <date>April, 2018</date>
             <productname>akmos 0.7</productname>
         </info>
 
@@ -81,9 +81,7 @@
                 <cmdsynopsis>
                     <command>akmos enc|dec</command>
                     <arg>-a <replaceable>algo[:flag]</replaceable></arg>
-                    <arg>-m <replaceable>mode</replaceable></arg>
                     <arg>-k <replaceable>keyfile</replaceable></arg>
-                    <arg>-l <replaceable>keylen</replaceable></arg>
                     <arg>-p | -P <replaceable>passfile</replaceable></arg>
                     <arg>-y</arg>
                     <arg>-V</arg>
@@ -100,20 +98,19 @@
                         <varlistentry>
                             <term><arg choice="plain">-a algo[:flag]</arg></term>
                             <listitem>
-                                <para>Crypto algorithm to use. By default is <constant>Twofish</constant></para>
-                                <para>Supported FLAGS</para>
-                                <para><constant>:ede</constant> flag put cipher into Encrypt-Decrypt-Encrypt mode (like 3DES)</para>
-                                <para><constant>:eee</constant> flag put cipher into Encrypt-Encrypt-Encrypt mode</para>
-                                <para>NOTE: TDEA not available with stream ciphers</para>
+                                <para>Crypto algorithm to use. By default is <constant>Twofish-128-CBC</constant></para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
-                            <term><arg choice="plain">-m mode</arg></term>
                             <listitem>
-                                <para>
-                                    Crypto mode to use. By default is <constant>CBC</constant> for block ciphers,
-                                    and <constant>CTR</constant> for stream ciphers.
-                                </para>
+                                <para>Supported tdea <constant>flag</constant>:</para>
+                                <para><constant>:ede</constant> flag put cipher into Encrypt-Decrypt-Encrypt mode (like 3DES)</para>
+                                <para><constant>:eee</constant> flag put cipher into Encrypt-Encrypt-Encrypt mode</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <listitem>
+                                <para>NOTE: <constant>flag</constant> not available with stream ciphers</para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
@@ -133,15 +130,6 @@
                             <term><arg choice="plain">-P passfile</arg></term>
                             <listitem>
                                 <para>Read passphrase from a file</para>
-                            </listitem>
-                        </varlistentry>
-                        <varlistentry>
-                            <term><arg choice="plain">-l keylen</arg></term>
-                            <listitem>
-                                <para>
-                                    Key length (in bits) to use with the given crypto algorithm.
-                                    By default is <constant>128</constant> bits
-                                </para>
                             </listitem>
                         </varlistentry>
                         <varlistentry>
@@ -191,168 +179,17 @@
 
             <refsect2>
                 <title>Modes</title>
-                <para>Supported cipher modes:</para>
-                <variablelist spacing='compact'>
-                    <varlistentry>
-                        <term><constant>CBC</constant> - Cipher Block Chaining</term>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>CFB</constant> - Cipher Feedback</term>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>CTR</constant> - Counter</term>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>ECB</constant> - Electronic Codebook</term>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>OFB</constant> - Output Feedback</term>
-                    </varlistentry>
-                </variablelist>
-            </refsect2>
-
-            <refsect2>
-                <title>Key length</title>
-                <variablelist spacing='compact'>
-                    <varlistentry>
-                        <term><constant>Anubis</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>128</parameter></member>
-                                <member><parameter class='option'>192</parameter></member>
-                                <member><parameter class='option'>256</parameter></member>
-                                <member><parameter class='option'>320</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>Blowfish</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>128</parameter></member>
-                                <member><parameter class='option'>160</parameter></member>
-                                <member><parameter class='option'>192</parameter></member>
-                                <member><parameter class='option'>224</parameter></member>
-                                <member><parameter class='option'>256</parameter></member>
-                                <member><parameter class='option'>288</parameter></member>
-                                <member><parameter class='option'>320</parameter></member>
-                                <member><parameter class='option'>352</parameter></member>
-                                <member><parameter class='option'>384</parameter></member>
-                                <member><parameter class='option'>416</parameter></member>
-                                <member><parameter class='option'>448</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>Chacha</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>256</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>Camellia</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>128</parameter></member>
-                                <member><parameter class='option'>192</parameter></member>
-                                <member><parameter class='option'>256</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>CAST6</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>128</parameter></member>
-                                <member><parameter class='option'>192</parameter></member>
-                                <member><parameter class='option'>256</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>RC6</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>128</parameter></member>
-                                <member><parameter class='option'>192</parameter></member>
-                                <member><parameter class='option'>256</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>Rijndael</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>128</parameter></member>
-                                <member><parameter class='option'>192</parameter></member>
-                                <member><parameter class='option'>256</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>Salsa</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>128</parameter></member>
-                                <member><parameter class='option'>256</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>SEED</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>128</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>Serpent</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>128</parameter></member>
-                                <member><parameter class='option'>192</parameter></member>
-                                <member><parameter class='option'>256</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>Threefish-256</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>256</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>Threefish-512</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>512</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>Threefish-1024</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>1024</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                    <varlistentry>
-                        <term><constant>Twofish</constant></term>
-                        <listitem>
-                            <simplelist type='inline'>
-                                <member><parameter class='option'>128</parameter></member>
-                                <member><parameter class='option'>192</parameter></member>
-                                <member><parameter class='option'>256</parameter></member>
-                            </simplelist>
-                        </listitem>
-                    </varlistentry>
-                </variablelist>
+                <para>
+                    Supported cipher modes:
+                    <simplelist type='inline'>
+                        <member><parameter class='option'>CBC</parameter></member>
+                        <member><parameter class='option'>CFB</parameter></member>
+                        <member><parameter class='option'>CTR</parameter></member>
+                        <member><parameter class='option'>ECB</parameter></member>
+                        <member><parameter class='option'>OFB</parameter></member>
+                        <member><parameter class='option'>OFB1</parameter></member>
+                    </simplelist>
+                </para>
             </refsect2>
         </refsect1>
 
