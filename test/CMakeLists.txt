@@ -51,6 +51,7 @@ set(vector
     ecb-twofish-128.bin
     ecb-twofish-192.bin
     ecb-twofish-256.bin
+    digest-blake2-512.bin
     digest-ripemd-160.bin
     digest-ripemd-256.bin
     digest-ripemd-320.bin

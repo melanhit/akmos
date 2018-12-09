@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2015-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2015-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -69,6 +69,8 @@ int main(int __attribute__((unused)) argc, char **argv)
         return EXIT_FAILURE;
 
     /* digest */
+    if(test_digest(AKMOS_ALGO_BLAKE2B, argv[0]))
+        return EXIT_FAILURE;
     if(test_digest(AKMOS_ALGO_RIPEMD_160, argv[0]))
         return EXIT_FAILURE;
     if(test_digest(AKMOS_ALGO_RIPEMD_256, argv[0]))

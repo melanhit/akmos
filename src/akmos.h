@@ -71,6 +71,7 @@ typedef enum {
     AKMOS_ALGO_SKEIN_256        = 0x0000f000,
     AKMOS_ALGO_SKEIN_512        = 0x00010000,
     AKMOS_ALGO_SKEIN_1024       = 0x00020000,
+    AKMOS_ALGO_BLAKE2B          = 0x00030000,
 
     /* binary to text */
     AKMOS_ALGO_BASE64           = 0x00100000,

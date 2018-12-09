@@ -28,6 +28,7 @@ stream ciphers:
  * Chacha
 
 digests:
+ * Blake2 (Blake2b)
  * Ripemd (160/256/320)
  * SHA1
  * SHA2 (224/256/384/512)

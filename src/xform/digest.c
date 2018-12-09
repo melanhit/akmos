@@ -187,6 +187,15 @@ const akmos_digest_xalgo_t akmos_digest_xlist[] = {
         &akmos_skein_done
     },
     {
+        {
+            AKMOS_ALGO_BLAKE2B, "Blake2-512",
+            AKMOS_BLAKE2B_BLKLEN, AKMOS_BLAKE2B_DIGLEN
+        },
+        &akmos_blake2b_init,
+        &akmos_blake2b_update,
+        &akmos_blake2b_done
+    },
+    {
         { 0, NULL, 0, 0 },
         NULL, NULL, NULL
     }

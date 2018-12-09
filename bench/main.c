@@ -432,6 +432,9 @@ int main(int argc, char **argv)
     /* diegsts */
     printf("Digests:\n");
 
+    err = bench_digest(AKMOS_ALGO_BLAKE2B, &opt);
+    if(err) goto out;
+
     err = bench_digest(AKMOS_ALGO_RIPEMD_160, &opt);
     if(err) goto out;
 

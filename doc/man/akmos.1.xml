@@ -10,8 +10,8 @@
                 <email>melanhit@gmail.com</email>
                 <contrib></contrib>
             </author>
-            <date>April, 2018</date>
-            <productname>akmos 0.7</productname>
+            <date>December, 2018</date>
+            <productname>akmos 0.8</productname>
         </info>
 
         <refmeta>
@@ -257,6 +257,7 @@
                 <para>
                     Supported digest algorithms:
                     <simplelist type='inline'>
+                        <member><parameter class='option'>BLAKE2-512</parameter></member>
                         <member><parameter class='option'>RIPEMD-160</parameter></member>
                         <member><parameter class='option'>RIPEMD-256</parameter></member>
                         <member><parameter class='option'>RIPEMD-320</parameter></member>
