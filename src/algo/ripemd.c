@@ -757,7 +757,6 @@ void akmos_ripemd_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
     akmos_ripemd_t *ctx;
     uint64_t len_b;
-    size_t i;
 
     ctx = &uctx->ripemd;
 
@@ -775,6 +774,5 @@ void akmos_ripemd_done(akmos_digest_algo_t *uctx, uint8_t *digest)
     UNPACK64BE(ctx->block + (AKMOS_RIPEMD_BLKLEN - sizeof(uint64_t)), len_b);
     ctx->transform(ctx->h, ctx->block, 1);
 
-    for(i = 0; i < (ctx->diglen / 4); i++, digest += sizeof(uint32_t))
-        UNPACK32BE(digest, ctx->h[i]);
+    memcpy(digest, ctx->h, ctx->diglen);
 }

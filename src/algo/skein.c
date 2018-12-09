@@ -162,7 +162,6 @@ void akmos_skein_update(akmos_digest_algo_t *uctx, const uint8_t *input, size_t 
 void akmos_skein_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
     akmos_skein_t *ctx;
-    size_t i;
 
     ctx = &uctx->skein;
 
@@ -178,6 +177,5 @@ void akmos_skein_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 
     ctx->transform(ctx, ctx->buf, 1, sizeof(uint64_t));
 
-    for(i = 0; i < (ctx->blklen / sizeof(uint64_t)); i++, digest += 8)
-        UNPACK64BE(digest, ctx->key[i]);
+    memcpy(digest, ctx->key, ctx->blklen);
 }

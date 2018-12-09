@@ -44,24 +44,6 @@
     akmos_sha3_transform(ctx->S, blk, ctx->r, nb);  \
 }
 
-static void sha3_224_out(akmos_sha3_t *ctx, uint8_t *digest)
-{
-    uint32_t *p;
-    size_t i;
-
-    p = (uint32_t *)ctx->S;
-    for(i = 0; i < ctx->diglen / sizeof(uint32_t); i++, digest += sizeof(uint32_t))
-        UNPACK32BE(digest, p[i]);
-}
-
-static void sha3_out(akmos_sha3_t *ctx, uint8_t *digest)
-{
-    size_t i;
-
-    for(i = 0; i < ctx->diglen / sizeof(uint64_t); i++, digest += sizeof(uint64_t))
-        UNPACK64BE(digest, ctx->S[i]);
-}
-
 void akmos_sha3_224_init(akmos_digest_algo_t *uctx)
 {
     akmos_sha3_t *ctx;
@@ -72,8 +54,6 @@ void akmos_sha3_224_init(akmos_digest_algo_t *uctx)
     ctx->diglen = AKMOS_SHA3_224_DIGLEN;
 
     ctx->r = AKMOS_SHA3_224_BLKLEN / sizeof(uint64_t);
-
-    ctx->out = sha3_224_out;
 }
 
 void akmos_sha3_256_init(akmos_digest_algo_t *uctx)
@@ -86,8 +66,6 @@ void akmos_sha3_256_init(akmos_digest_algo_t *uctx)
     ctx->diglen = AKMOS_SHA3_256_DIGLEN;
 
     ctx->r = AKMOS_SHA3_256_BLKLEN / sizeof(uint64_t);
-
-    ctx->out = sha3_out;
 }
 
 void akmos_sha3_384_init(akmos_digest_algo_t *uctx)
@@ -100,8 +78,6 @@ void akmos_sha3_384_init(akmos_digest_algo_t *uctx)
     ctx->diglen = AKMOS_SHA3_384_DIGLEN;
 
     ctx->r = AKMOS_SHA3_384_BLKLEN / sizeof(uint64_t);
-
-    ctx->out = sha3_out;
 }
 
 void akmos_sha3_512_init(akmos_digest_algo_t *uctx)
@@ -114,8 +90,6 @@ void akmos_sha3_512_init(akmos_digest_algo_t *uctx)
     ctx->diglen = AKMOS_SHA3_512_DIGLEN;
 
     ctx->r = AKMOS_SHA3_512_BLKLEN / sizeof(uint64_t);
-
-    ctx->out = sha3_out;
 }
 
 void akmos_sha3_update(akmos_digest_algo_t *uctx, const uint8_t *input, size_t len)
@@ -169,5 +143,5 @@ void akmos_sha3_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 
     sha3_transform(ctx, ctx->block, 1 & SIZE_T_MAX);
 
-    ctx->out(ctx, digest);
+    memcpy(digest, ctx->S, ctx->diglen);
 }

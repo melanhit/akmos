@@ -188,7 +188,6 @@ void akmos_tiger_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
     akmos_tiger_t *ctx;
     uint64_t len_b;
-    size_t i;
 
     ctx = &uctx->tiger;
 
@@ -206,6 +205,5 @@ void akmos_tiger_done(akmos_digest_algo_t *uctx, uint8_t *digest)
     UNPACK64BE(ctx->block + (AKMOS_TIGER_BLKLEN - sizeof(uint64_t)), len_b);
     tiger_transform(ctx->h, ctx->block, 1);
 
-    for(i = 0; i < AKMOS_TIGER_DIGLEN / (sizeof(uint64_t)); i++, digest += sizeof(uint64_t))
-        UNPACK64BE(digest, ctx->h[i]);
+    memcpy(digest, ctx->h, AKMOS_TIGER_DIGLEN);
 }

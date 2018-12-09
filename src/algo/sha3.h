@@ -52,9 +52,6 @@ typedef struct akmos_sha3_s {
     size_t   blklen;
     size_t   diglen;
     size_t   len;
-    struct {
-        void(*out) (struct akmos_sha3_s *, uint8_t *);
-    };
 } __attribute__((aligned(16))) akmos_sha3_t;
 
 void akmos_sha3_224_init (akmos_digest_algo_t *);
