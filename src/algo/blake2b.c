@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/endian.h>
 
 #include <config.h>
 
@@ -65,11 +66,6 @@ static const uint8_t P[12][16] = {
     { 14, 10,  4,  8,  9, 15, 13,  6,  1, 12,  0,  2, 11,  7,  5,  3 }
 };
 
-#define WPACK64(w, blk, n)          \
-{                                   \
-    w[n] = PACK64BE(blk + (n * 8)); \
-}
-
 #define W(i, j) (w[P[i][j]])
 
 #define G_fun(a, b, c, d, p0, p1)   \
@@ -97,8 +93,7 @@ static void blake2b_transform(akmos_blake2b_t *ctx, const uint8_t *blk, size_t n
     size_t i, j;
 
     for(i = 0; i < nb; i++, blk += AKMOS_BLAKE2B_BLKLEN) {
-        for(j = 0; j < BLAKE2B_WORDS; j++)
-            WPACK64(w, blk, j);
+        memcpy(w, blk, 128);
 
         for(j = 0; j < 8; j++)
             v[j] = ctx->h[j];
