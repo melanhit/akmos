@@ -29,7 +29,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include <sys/endian.h>
 
 #include <config.h>
 
@@ -93,7 +92,7 @@ static void blake2b_transform(akmos_blake2b_t *ctx, const uint8_t *blk, size_t n
     size_t i, j;
 
     for(i = 0; i < nb; i++, blk += AKMOS_BLAKE2B_BLKLEN) {
-        memcpy(w, blk, 128);
+        memcpy(w, blk, AKMOS_BLAKE2B_BLKLEN);
 
         for(j = 0; j < 8; j++)
             v[j] = ctx->h[j];
@@ -186,7 +185,6 @@ void akmos_blake2b_update(akmos_digest_algo_t *uctx, const uint8_t *input, size_
 void akmos_blake2b_done(akmos_digest_algo_t *uctx, uint8_t *digest)
 {
     akmos_blake2b_t *ctx;
-    size_t i;
 
     ctx = &uctx->blake2b;
 
@@ -198,6 +196,5 @@ void akmos_blake2b_done(akmos_digest_algo_t *uctx, uint8_t *digest)
     ctx->final = BLAKE2B_FINAL;
     blake2b_transform(ctx, ctx->buf, 1);
 
-    for(i = 0; i < (AKMOS_BLAKE2B_DIGLEN / sizeof(uint64_t)); i++, digest += sizeof(uint64_t))
-        UNPACK64BE(digest, ctx->h[i]);
+    memcpy(digest, ctx->h, AKMOS_BLAKE2B_DIGLEN);
 }
