@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2014-2016, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2014-2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -107,6 +107,20 @@
 )
 #endif  /* PACK32BE */
 
+/* unpack uint64_t into 7 uint8_t (little-endian) */
+#ifndef UNPACK56LE
+#define UNPACK56LE(ct, st)                          \
+{                                                   \
+    (ct)[6] = (uint8_t)((st)	  );		    \
+    (ct)[5] = (uint8_t)((st) >>  8);                \
+    (ct)[4] = (uint8_t)((st) >> 16);                \
+    (ct)[3] = (uint8_t)((st) >> 24);                \
+    (ct)[2] = (uint8_t)((st) >> 32);                \
+    (ct)[1] = (uint8_t)((st) >> 40);                \
+    (ct)[0] = (uint8_t)((st) >> 48);                \
+}
+#endif  /* UNPACK56LE */
+
 /* unpack uint64_t into 8 uint8_t (little-endian) */
 #ifndef UNPACK64LE
 #define UNPACK64LE(ct, st)                          \
@@ -136,6 +150,20 @@
     (ct)[7] = (uint8_t)((st) >> 56);                \
 }
 #endif  /* UNPACK64BE */
+
+/* pack 7 uint8_t into uint64_t (little-endian) */
+#ifndef PACK56LE
+#define PACK56LE(pt)                                \
+(                                                   \
+      ((uint64_t)(pt)[6]      )			    \
+    ^ ((uint64_t)(pt)[5] <<  8)                     \
+    ^ ((uint64_t)(pt)[4] << 16)                     \
+    ^ ((uint64_t)(pt)[3] << 24)                     \
+    ^ ((uint64_t)(pt)[2] << 32)                     \
+    ^ ((uint64_t)(pt)[1] << 40)                     \
+    ^ ((uint64_t)(pt)[0] << 48)                     \
+)
+#endif  /* PACK56LE */
 
 /* pack 8 uint8_t into uint64_t (little-endian) */
 #ifndef PACK64LE

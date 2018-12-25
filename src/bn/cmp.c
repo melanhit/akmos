@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,25 +26,71 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_ERROR_H
-#define AKMOS_ERROR_H
+#include <stdlib.h>
+#include <stdint.h>
 
-#define AKMOS_ERR_SUCCESS      0
-#define AKMOS_ERR_FAILED      -1
+#include "bn.h"
 
-#define AKMOS_ERR_ALGOID    -100
-#define AKMOS_ERR_MODEID    -101
-#define AKMOS_ERR_FLAGID    -102
-#define AKMOS_ERR_KDFID     -102
+static int bn_cmp(const akmos_bn_t bn1, const akmos_bn_t bn2)
+{
+    uint64_t *n1, *n2, *b1, *b2;
+    int r1, r2;
 
-#define AKMOS_ERR_KEYLEN    -200
-#define AKMOS_ERR_BLKLEN    -201
+    if(bn1->n > bn2->n) {
+	r1 = BN_CMP_GT;
+	r2 = BN_CMP_LT;
 
-#define AKMOS_ERR_STMMODE   -300
-#define AKMOS_ERR_STMTDEA   -301
+	b1 = bn1->num;
+	b2 = bn2->num;
 
-#define AKMOS_ERR_ENOMEM    -400
+	n1 = bn1->num + (bn1->n - 1);
+	n2 = bn2->num + (bn2->n - 1);
+    } else {
+	r1 = BN_CMP_LT;
+	r2 = BN_CMP_GT;
 
-#define AKMOS_ERR_BNSMALL   -500
+	b1 = bn2->num;
+	b2 = bn1->num;
 
-#endif  /* AKMOS_ERROR_H */
+	n1 = bn2->num + (bn2->n - 1);
+	n2 = bn1->num + (bn1->n - 1);
+    }
+
+    for(; n1 >= b1; n1--) {
+	if(*n1 > *n2)
+	    return r1;
+
+	if(*n1 < *n2)
+	    return r2;
+
+	if(n2 == b2) {
+	    if(*n1)
+		return r1;
+
+	    continue;
+	}
+
+	n2--;
+    }
+
+    return BN_CMP_EQ;
+}
+
+int akmos_bn_cmp(const akmos_bn_t bn1, const akmos_bn_t bn2)
+{
+    int s1, s2;
+
+    s1 = BN_GET_SIGN(bn1);
+    s2 = BN_GET_SIGN(bn2);
+
+    if(s1 == s2)
+	return bn_cmp(bn1, bn2);
+
+    if(s1 < s2)
+	return BN_CMP_GT;
+
+    if(s1 > s2)
+	return BN_CMP_LT;
+
+    return BN_CMP_EQ;
+}

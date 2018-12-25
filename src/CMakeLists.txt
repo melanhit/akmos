@@ -55,7 +55,9 @@ set(src_lib
     cipher.c
     digest.c
     mac.c
-    base64.c)
+    base64.c
+    bn.c
+    bn/cmp.c)
 
 set(src_amd64
     algo/amd64/threefish_256.s

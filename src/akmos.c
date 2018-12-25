@@ -134,6 +134,10 @@ int akmos_perror(int err)
             fprintf(stderr, "Stream cipher unsupport TDEA (err = %d)\n", err);
             break;
 
+        case AKMOS_ERR_BNSMALL:
+            fprintf(stderr, "Bignum too small (err = %d)\n", err);
+            break;
+
         default:
             fprintf(stderr, "Unknown error (err = %d)\n", err);
             break;

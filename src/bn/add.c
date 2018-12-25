@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,25 +26,3 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_ERROR_H
-#define AKMOS_ERROR_H
-
-#define AKMOS_ERR_SUCCESS      0
-#define AKMOS_ERR_FAILED      -1
-
-#define AKMOS_ERR_ALGOID    -100
-#define AKMOS_ERR_MODEID    -101
-#define AKMOS_ERR_FLAGID    -102
-#define AKMOS_ERR_KDFID     -102
-
-#define AKMOS_ERR_KEYLEN    -200
-#define AKMOS_ERR_BLKLEN    -201
-
-#define AKMOS_ERR_STMMODE   -300
-#define AKMOS_ERR_STMTDEA   -301
-
-#define AKMOS_ERR_ENOMEM    -400
-
-#define AKMOS_ERR_BNSMALL   -500
-
-#endif  /* AKMOS_ERROR_H */

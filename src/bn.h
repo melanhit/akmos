@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016-2018, Andrew Romanenko <melanhit@gmail.com>
+ *   Copyright (c) 2018, Andrew Romanenko <melanhit@gmail.com>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -26,25 +26,39 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AKMOS_ERROR_H
-#define AKMOS_ERROR_H
+#ifndef AKMOS_BN_H
+#define AKMOS_BN_H
 
-#define AKMOS_ERR_SUCCESS      0
-#define AKMOS_ERR_FAILED      -1
+#define BN_CMP_LT	    -1
+#define BN_CMP_EQ	     0
+#define BN_CMP_GT	     1
 
-#define AKMOS_ERR_ALGOID    -100
-#define AKMOS_ERR_MODEID    -101
-#define AKMOS_ERR_FLAGID    -102
-#define AKMOS_ERR_KDFID     -102
+#define BN_FLAG_INT	    UINT64_C(0x8000000000000000)
+#define BN_FLAG_ZERO	    UINT64_C(0x4000000000000000)
 
-#define AKMOS_ERR_KEYLEN    -200
-#define AKMOS_ERR_BLKLEN    -201
+#define BN_BASE		    (sizeof(uint64_t) - 1)
 
-#define AKMOS_ERR_STMMODE   -300
-#define AKMOS_ERR_STMTDEA   -301
+#define BN_B2B(x, n)	    ((size_t)(((x) / (n)) + (((x) % (n)) > 0 ? 1 : 0)))
 
-#define AKMOS_ERR_ENOMEM    -400
+#define BN_SET_INT(x)	    (!(x->num[x->n - 1] & BN_FLAG_ZERO) ? x->num[x->n - 1] |= BN_FLAG_INT : 0)
+#define BN_SET_UINT(x)	    (!(x->num[x->n - 1] & BN_FLAG_ZERO) ? x->num[x->n - 1] &= ~BN_FLAG_INT : 0)
 
-#define AKMOS_ERR_BNSMALL   -500
+#define BN_GET_SIGN(x)	    ((x->num[x->n - 1] & BN_FLAG_INT) ? 1 : 0)
 
-#endif  /* AKMOS_ERROR_H */
+typedef struct akmos_bn_s {
+    size_t b;	/* length bignum in bytes */
+    size_t l;	/* legnth bignum via *num */
+    size_t n;	/* number of uint64_t chunks */
+    uint64_t *num;
+} *akmos_bn_t;
+
+int  akmos_bn_init  (akmos_bn_t *, size_t);
+void akmos_bn_free  (akmos_bn_t);
+
+int  akmos_bn_load  (akmos_bn_t, const uint8_t *, size_t);
+int  akmos_bn_store (akmos_bn_t, uint8_t *, size_t);
+void akmos_bn_zero  (akmos_bn_t);
+
+int  akmos_bn_cmp   (const akmos_bn_t, const akmos_bn_t);
+
+#endif  /* AKMOS_BN_H */
